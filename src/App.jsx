@@ -5,6 +5,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
 import { ProfileProvider } from "./context/ProfileContext"; 
+import AOS from "aos";
+import "aos/dist/aos.css";
+AOS.init();
 
 
 function App() {

@@ -1,104 +1,158 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";  
-import { Button, Card, CardContent, Typography, Avatar, Grid } from "@mui/material";
-import { ProfileContext } from "../../../context/ProfileContext";  
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ProfileContext } from "../../../context/ProfileContext";
+import { Container, Row, Col, Card, Button, Image, Form } from "react-bootstrap";
+import { FaPen } from "react-icons/fa";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import "./userProfile.css";
 
 const UserProfile = () => {
-  const navigate = useNavigate();  
-  const { profileData } = useContext(ProfileContext); // ✅ Get updated profile data
+  const navigate = useNavigate();
+  const { profileData, updateProfile } = useContext(ProfileContext);
+  const [profileImage, setProfileImage] = useState(profileData.profileImage || "");
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [title, setTitle] = useState(profileData.title || "No title added");
+  const fileInputRef = useRef(null);
 
-  // Navigation functions
-  const goToEditEducation = () => navigate("/user/profile/edit-education");
-  const goToEditExperience = () => navigate("/user/profile/edit-experience");
-  const goToEditSkills = () => navigate("/user/profile/edit-skills");
-  const goToEditCV = () => navigate("/user/profile/edit-cv");
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
+
+  // Handle image upload
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setProfileImage(fileUrl);
+      updateProfile("profileImage", fileUrl);
+    }
+  };
+
+  // Open file picker
+  const openFilePicker = () => {
+    fileInputRef.current.click();
+  };
+
+  // Handle title editing
+  const handleTitleClick = () => setEditingTitle(true);
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleTitleBlur = () => {
+    setEditingTitle(false);
+    updateProfile("title", title);
+  };
 
   return (
-    <Grid container sx={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Card sx={{ width: "80%", maxWidth: "900px", height: "90vh", overflowY: "auto", padding: "20px" }}>
-        {/* Top Section */}
-        <Grid container alignItems="center" justifyContent="space-between">
-          <Grid item sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar src={profileData.profileImage} sx={{ width: 100, height: 100, mr: 2 }} />
-            <Typography variant="h5">{profileData.name}</Typography>
-          </Grid>
-          <Button variant="contained" color="primary" onClick={() => navigate("/user/profile/edit-personal")}>
+    <Container fluid className="user-profile-container">
+      {/* Profile Image, Name, and Title */}
+      <Row className="profile-header text-center">
+        <Col xs={12} data-aos="fade-down">
+          <div className="profile-img-container" onClick={openFilePicker}>
+            <Image src={profileImage} roundedCircle className="profile-img" />
+            <div className="edit-icon">
+              <FaPen size={15} color="#fff" />
+            </div>
+          </div>
+          <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} className="d-none" />
+          
+          {/* Name Below Image */}
+          <h2 className="mt-2">{profileData.name}</h2>
+
+          {/* Editable Title */}
+          {editingTitle ? (
+            <Form.Control
+              type="text"
+              value={title}
+              onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              autoFocus
+              className="title-input"
+            />
+          ) : (
+            <h5 className="text-muted title-text" onClick={handleTitleClick}>
+              {title} <FaPen className="title-edit-icon" />
+            </h5>
+          )}
+
+          <Button variant="primary" className="mt-3" onClick={() => navigate("/user/profile/edit-personal")}>
             Edit Profile
           </Button>
-        </Grid>
+        </Col>
+      </Row>
 
-        {/* Main Section */}
-        <Grid container spacing={2} sx={{ mt: 3 }}>
-          {/* Left Side (Details) */}
-          <Grid item xs={12} md={6}>
-            <Card sx={{ mb: 2 }}>
-              <CardContent>
-                <Typography variant="h6">Education</Typography>
-                {profileData.education.length > 0 ? (
-                  profileData.education.map((edu, index) => (
-                    <Typography key={index}>{`${edu.degree} at ${edu.university}`}</Typography>
-                  ))
-                ) : (
-                  <Typography>No education added</Typography>
-                )}
-                <Button variant="outlined" color="primary" onClick={goToEditEducation} sx={{ mt: 1 }}>
-                  Edit Education
-                </Button>
-              </CardContent>
-            </Card>
+      {/* Main Content */}
+      <Row className="content-section">
+        <Col md={8} className="left-section" data-aos="fade-right">
+          {/* Education */}
+          <Card className="mb-3">
+            <Card.Body>
+              <h4>Education</h4>
+              {profileData.education.length > 0 ? (
+                profileData.education.map((edu, index) => (
+                  <p key={index}>{`${edu.degree} at ${edu.university}`}</p>
+                ))
+              ) : (
+                <p className="text-muted">No education added</p>
+              )}
+              <Button variant="outline-primary" onClick={() => navigate("/user/profile/edit-education")}>
+                Edit Education
+              </Button>
+            </Card.Body>
+          </Card>
 
-            <Card sx={{ mb: 2 }}>
-              <CardContent>
-                <Typography variant="h6">Experience</Typography>
-                {profileData.experience.length > 0 ? (
-                  profileData.experience.map((exp, index) => (
-                    <Typography key={index}>{`${exp.jobTitle} at ${exp.company}`}</Typography>
-                  ))
-                ) : (
-                  <Typography>No experience added</Typography>
-                )}
-                <Button variant="outlined" color="primary" onClick={goToEditExperience} sx={{ mt: 1 }}>
-                  Edit Experience
-                </Button>
-              </CardContent>
-            </Card>
+          {/* Experience */}
+          <Card className="mb-3">
+            <Card.Body>
+              <h4>Experience</h4>
+              {profileData.experience.length > 0 ? (
+                profileData.experience.map((exp, index) => (
+                  <p key={index}>{`${exp.jobTitle} at ${exp.company}`}</p>
+                ))
+              ) : (
+                <p className="text-muted">No experience added</p>
+              )}
+              <Button variant="outline-primary" onClick={() => navigate("/user/profile/edit-experience")}>
+                Edit Experience
+              </Button>
+            </Card.Body>
+          </Card>
 
-            <Card sx={{ mb: 2 }}>
-              <CardContent>
-                <Typography variant="h6">Skills</Typography>
-                {profileData.skills.length > 0 ? (
-                  profileData.skills.map((skill, index) => <Typography key={index}>{skill}</Typography>)
-                ) : (
-                  <Typography>No skills added</Typography>
-                )}
-                <Button variant="outlined" color="primary" onClick={goToEditSkills} sx={{ mt: 1 }}>
-                  Edit Skills
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+          {/* Skills */}
+          <Card className="mb-3">
+            <Card.Body>
+              <h4>Skills</h4>
+              {profileData.skills.length > 0 ? (
+                profileData.skills.map((skill, index) => <span key={index} className="skill-badge">{skill}</span>)
+              ) : (
+                <p className="text-muted">No skills added</p>
+              )}
+              <Button variant="outline-primary" onClick={() => navigate("/user/profile/edit-skills")} className="mt-2">
+                Edit Skills
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
 
-          {/* Right Side (CV Upload & Display) */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">CV</Typography>
-                {profileData.cv ? (
-                  <a href={profileData.cv} target="_blank" rel="noopener noreferrer">
-                    View CV
-                  </a>
-                ) : (
-                  <Typography>No CV uploaded</Typography>
-                )}
-                <Button variant="outlined" color="primary" onClick={goToEditCV} sx={{ mt: 1 }}>
-                  Edit CV
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Card>
-    </Grid>
+        {/* CV Section */}
+        <Col md={4} className="cv-section" data-aos="fade-left">
+          <Card>
+            <Card.Body className="text-center">
+              <h4>CV</h4>
+              {profileData.cv ? (
+                <a href={profileData.cv} target="_blank" rel="noopener noreferrer" className="cv-link">
+                  View CV
+                </a>
+              ) : (
+                <p className="text-muted">No CV uploaded</p>
+              )}
+              <Button variant="outline-primary" onClick={() => navigate("/user/profile/edit-cv")} className="mt-2">
+                Upload / Edit CV
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
