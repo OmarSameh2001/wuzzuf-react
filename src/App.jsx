@@ -2,14 +2,17 @@ import React, { useState, Suspense } from 'react'
 import './App.css'
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router";
-import Navbar from './components/Navbar/Navbar';
-import Footer from './components/Footer/Footer';
+import Navbar from './components/navbar/Navbar';
+import Footer from './components/footer/Footer';
+import Login from "./pages/user/authentication/Login";
+import Signup from "./pages/user/authentication/Signup";
+import Profile from "./pages/user/home/Profile";
 
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
   const UserJobs = React.lazy(() => import("./pages/user/jobs/Jobs"));
   const CompanyJobs = React.lazy(() => import("./pages/company/jobs/Jobs"));
-  const UserHome = React.lazy(() => import("./pages/user/home/Home"));
+  const UserHome = React.lazy(() => import("./pages/user/home/Profile"));
   const CompanyHome = React.lazy(() => import("./pages/company/home/Home"));
   const UserSaved = React.lazy(() => import("./pages/user/saved/Saved"));
   const UserApplications = React.lazy(() => import("./pages/user/applications/Applications"));
@@ -30,6 +33,9 @@ function App() {
               <Route path='/applicant/applications/:id' element={<UserSingleApplications />} />
               <Route path="/company" element={<CompanyHome />} />
               <Route path="/company/jobs" element={<CompanyJobs />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </Suspense>
         </div>
