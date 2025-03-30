@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
+import JobCreate from './components/job/JobCreate';
 
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
@@ -36,6 +37,8 @@ function App() {
               <Route path="/company" element={<CompanyHome />} />
               <Route path="/company/jobs" element={<CompanyJobs />} />
               <Route path="/company/talents" element={<CompanyTalents />} />
+              <Route path="/jobCreate" element={<JobCreate />} />
+
             </Routes>
           </Suspense>
         </div>
