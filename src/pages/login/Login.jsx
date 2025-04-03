@@ -26,6 +26,7 @@ function Login() {
     try {
       const res = await loginUser(email, password);
       localStorage.setItem("token", res.token);
+      localStorage.setItem("user_type", res.user_type.toLowerCase()); // Store user type
       setUser(res)
       navigate("/"); // Navigate to the home page after successful login
     } catch (error) {

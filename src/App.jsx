@@ -21,6 +21,9 @@ function App() {
   const UserProfile = React.lazy(() =>
     import("./pages/user/profile/userProfile")
   );
+  const CompanyProfile = React.lazy(() =>
+    import("./pages/user/profile/companyProfile")
+  );
   const EditPersonal = React.lazy(() =>
     import("./pages/user/profile/edit-profile/edit-personal")
   );
@@ -54,7 +57,7 @@ function App() {
   const CompanyTalents = React.lazy(() =>
     import("./pages/company/talents/Talents")
   );
-  const SingleJob = React.lazy(() => import("./pages/company/jobs/singleJob"));
+  const SingleJob = React.lazy(() => import("./pages/company/jobs/SingleJob"));
   const UserSingleJob = React.lazy(() => import("./pages/user/jobs/UserSingleJob"));
   const ApplicationForm = React.lazy(() => import("./pages/user/jobs/ApplicationForm"));
   // // const RegisterCompany = React.lazy(() => import("./pages/register/RegisterCompany"));
@@ -106,8 +109,12 @@ function App() {
 
                       {/* Applicant Profile */}
                       <Route
-                        path="/applicant/profile"
+                        path="/applicant/profile/jobseeker"
                         element={<UserProfile />}
+                      />
+                      <Route
+                        path="/applicant/profile/company"
+                        element={<CompanyProfile />}
                       />
                       <Route
                         path="/applicant/profile/edit-personal"

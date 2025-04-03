@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AxiosApi } from "./Api";
+import { AxiosApi } from "./api";
 
 // Login Function
 export const loginUser = async (email, password) => {
