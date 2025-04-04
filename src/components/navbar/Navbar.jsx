@@ -108,7 +108,6 @@ function Navbar() {
                   </li>
                 </>
               )}
-              {console.log(user)}
               {user === null || Object.keys(user).length === 0 ? (
                 <li className="nav-item">
                   <Link

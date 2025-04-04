@@ -16,7 +16,6 @@ export function UserContextProvider({ children }) {
     const fetchUser = async () => {
       if (token) {
         const response = await getUser();
-        console.log(response)
         setUser(response);
       }
     };

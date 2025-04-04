@@ -25,6 +25,9 @@ function Login() {
   async function handleLogin() {
     try {
       const res = await loginUser(email, password);
+      console.log("Login Response:", res); 
+
+      localStorage.setItem("userId", res.id);
       localStorage.setItem("token", res.token);
       localStorage.setItem("user_type", res.user_type.toLowerCase()); // Store user type
       setUser(res)
