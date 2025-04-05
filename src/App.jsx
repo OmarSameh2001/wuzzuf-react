@@ -54,7 +54,7 @@ function App() {
   const CompanyTalents = React.lazy(() =>
     import("./pages/company/talents/Talents")
   );
-  const SingleJob = React.lazy(() => import("./pages/company/jobs/singleJob"));
+  const SingleJob = React.lazy(() => import("./pages/company/jobs/SingleJob"));
   const UserSingleJob = React.lazy(() => import("./pages/user/jobs/UserSingleJob"));
   const ApplicationForm = React.lazy(() => import("./pages/user/jobs/ApplicationForm"));
   // // const RegisterCompany = React.lazy(() => import("./pages/register/RegisterCompany"));
