@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router";
 import ApplicantFooter from "./ApplicantFooter";
 import CompanyFooter from "./CompanyFooter";
+import { useContext } from "react";
+import { userContext } from "../../context/UserContext";
 
-function JobCard({ job, user }) {
-  const keywords = job?.keywords?.join(" · ") || "";
+function JobCard({ job, type }) {
+  // const keywords = job?.keywords?.join(" · ") || "";
+  const {user} = useContext(userContext)
   const navigate = useNavigate();
   return (
     <div
@@ -18,14 +21,18 @@ function JobCard({ job, user }) {
         marginBottom: "16px",
         display: "flex",
         flexDirection: "column",
+      }}
+    >
+      <div
+      style={{
         cursor: "pointer",
       }}
-      onClick={() => navigate(`/company/jobs/${job.id}`)}
-    >
+      onClick={() => user.user_type === 'COMPANY' ? navigate(`/company/jobs/${job.id}`) : navigate(`/applicant/jobs/${job.id}`)}
+      >
       <div style={{ display: "flex", alignItems: "center" }}>
         <img
-          src={job.companyLogo}
-          alt={job.companyName}
+          src={job.company_logo || 'https://static.thenounproject.com/png/3198584-200.png'}
+          alt={job.company_name}
           style={{
             width: "50px",
             height: "50px",
@@ -57,10 +64,10 @@ function JobCard({ job, user }) {
                     marginRight: "8px",
                   }}
                 >
-                  {job.type}
+                  {job.type_of_job}
                 </div>
               )}
-              {job.workStyle && (
+              {/* {job.workStyle && (
                 <div
                   style={{
                     backgroundColor: "#f5f5f5",
@@ -70,18 +77,31 @@ function JobCard({ job, user }) {
                 >
                   {job.workStyle}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
 
-          <p style={{ margin: "4px 0", color: "#666" }}>{job.companyName} - {job.location}</p>
+          <p style={{ margin: "4px 0", color: "#666" }}>{job.company_name} - {job.location}</p>
         </div>
       </div>
-      <p style={{ margin: "16px 0 8px", color: "#333", flexGrow: 1 }}>
+      <p
+        style={{
+          margin: "16px 0 8px",
+          color: "#333",
+          flexGrow: 1,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "-webkit-box",
+          WebkitLineClamp: 5,
+          lineClamp: 5,
+          WebkitBoxOrient: "vertical",
+        }}
+      >
         {job.description}
       </p>
-      <p style={{ color: "#666" }}>{keywords}</p>
-      {user === "company" ? <CompanyFooter /> : <ApplicantFooter />}
+      </div>
+      {/* <p style={{ color: "#666" }}>{keywords}</p> */}
+      {/* {user === "company" ? <CompanyFooter /> : <ApplicantFooter type={type} job_id={job.id}/>} */}
     </div>
   );
 }

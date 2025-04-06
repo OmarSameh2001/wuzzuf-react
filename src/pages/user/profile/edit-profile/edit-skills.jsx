@@ -11,6 +11,7 @@ const EditSkills = () => {
 
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill.trim())) {
+    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
       setSkills([...skills, newSkill.trim()]);
       setNewSkill(""); // Reset input field
     }

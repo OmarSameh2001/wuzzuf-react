@@ -13,8 +13,13 @@ export const getAllApplications = async () => {
 };
 
 // Get Applications by User ID
-export const getApplicationsByUserId = async (userId) => {
-  const response = await AxiosApi.get(`applications/?user_id=${userId}`);
+export const getApplicationsByUser = async ({ filters = {}, page = 1, pageSize = 10 }) => {
+  const params = new URLSearchParams({
+    ...filters,
+    page,
+    page_size: pageSize,
+  });
+  const response = await AxiosApi.get(`applications/?${params.toString()}`);
   return response.data;
 };
 
@@ -34,3 +39,10 @@ export const updateApplication = async (id, updatedData) => {
 export const deleteApplication = async (id) => {
   await AxiosApi.delete(`/applications/${id}/`);
 };
+
+// Patch Application by ID
+export const patchApplication = async (id, patchData) => {
+  const response = await AxiosApi.patch(`applications/${id}/`, patchData);
+  return response.data;
+};
+

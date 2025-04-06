@@ -1,3 +1,4 @@
+import axios from "axios";
 import { AxiosApi } from "./Api";
 
 // Create Job
@@ -6,10 +7,23 @@ export const createJob = async (jobData) => {
   return response.data;
 };
 
-// Get All Jobs
-export const getAllJobs = async () => {
-  const response = await AxiosApi.get("jobs/");
+// Get Recommended Jobs
+export const getRecommendedJobs = async (user_id) => {
+  const response = await AxiosApi.get(`jobs/recomm/${user_id}/`);
   return response.data;
+}
+
+// Get All Jobs with Filters and Pagination
+export const getAllJobs = async ({filters = {}, page = 1, pageSize = 10}) => {
+  const params = new URLSearchParams({
+    ...filters,
+    page,
+    page_size: pageSize,
+  });
+  // console.log(filters)
+  const response = await AxiosApi.get(`jobs/?${params.toString()}`);
+  // console.log(response)
+  return response;
 };
 
 // Get Job by ID

@@ -20,6 +20,26 @@ const EditPersonal = () => {
     setLocalData({ ...localData, [e.target.name]: e.target.value });
   };
 
+  const handleImageUpload = (e, field) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setLocalData({ ...localData, [field]: file });
+        updateProfile(field, reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAvatarClick = () => {
+    personalImageRef.current.click();
+  };
+
+  const handleNationalIdClick = () => {
+    nationalIdImageRef.current.click();
+  };
+
   const handleSave = () => {
     Object.keys(localData).forEach((key) => updateProfile(key, localData[key]));
     goToNextStep("/applicant/profile/edit-education");

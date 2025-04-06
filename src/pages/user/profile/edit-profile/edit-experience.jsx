@@ -19,6 +19,7 @@ const lightBg = "#fdf1f1"; // Soft matching background tone
 
 const EditExperience = () => {
   const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
+  const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
   const [experiences, setExperiences] = useState(profileData.experience || []);
 
   const handleAddExperience = () => {
@@ -53,6 +54,8 @@ const EditExperience = () => {
   };
 
   const handleSave = () => {
+    updateProfile("experience", experiences);
+    goToNextStep("/applicant/profile/edit-skills");
     updateProfile("experience", experiences);
     goToNextStep("/applicant/profile/edit-skills");
   };

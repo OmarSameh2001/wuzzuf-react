@@ -1,15 +1,20 @@
 import axios from "axios";
-import { useContext } from "react";
-import { userContext } from "../context/UserContext";
 
 const API_BASE_URL = "http://localhost:8000/";
 
-// Setup Axios instance
-const {token} = useContext(userContext);
 export const AxiosApi = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": `Token ${token}`,
   },
 });
+
+// Function to update Axios headers when the token changes
+export const setAuthToken = (token) => {
+  if (token) {
+    AxiosApi.defaults.headers.common["Authorization"] = `Token ${token}`;
+  } else {
+    delete AxiosApi.defaults.headers.common["Authorization"];
+  }
+};
+

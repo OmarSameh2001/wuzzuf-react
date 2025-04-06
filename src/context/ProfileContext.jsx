@@ -9,10 +9,17 @@ export const ProfileProvider = ({ children }) => {
     name: "",
     email: "",
     profileImage: "",
-    education: [],
-    experience: [],
-    skills: [],
-    cv: null,
+    education: "",
+    experience: "",
+    skills: "",
+    cv: "",
+    dob: "",
+    id: "",
+    img: "",
+    location: "",
+    national_id: "",
+    national_id_img: "",
+    phone_number: "",
   });
 
   const updateProfile = (field, value) => {
@@ -24,7 +31,7 @@ export const ProfileProvider = ({ children }) => {
   };
 
   return (
-    <ProfileContext.Provider value={{ profileData, updateProfile, goToNextStep }}>
+    <ProfileContext.Provider value={{ profileData, setProfileData, updateProfile, goToNextStep }}>
       {children}
     </ProfileContext.Provider>
   );

@@ -1,13 +1,13 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useState } from "react";
 
-function ProcessColumn({setter, column, phases}) {
+function ProcessColumnJobs({setter, column, phases}) {
 
     return (
         
         <ToggleButtonGroup
             orientation="horizontal"
-            sx={{ mt:2, scale:0.8, alignSelf:'center'}}
+            sx={{ mt:2, scale:0.8}}
             // onChange={handleChange}
         >
             {[1, 2, 3, 4, 5].map((val) => (
@@ -19,5 +19,5 @@ function ProcessColumn({setter, column, phases}) {
     );
 }
 
-export default ProcessColumn;
+export default ProcessColumnJobs;
 
