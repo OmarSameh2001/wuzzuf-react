@@ -104,6 +104,6 @@ const EditSkills = () => {
       </Button>
     </Box>
   );
-};
+}};
 
 export default EditSkills;
