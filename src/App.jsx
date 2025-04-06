@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
 import { ProfileProvider } from "./context/ProfileContext";
