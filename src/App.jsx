@@ -58,7 +58,7 @@ function App() {
   const UserSingleJob = React.lazy(() => import("./pages/user/jobs/UserSingleJob"));
   const ApplicationForm = React.lazy(() => import("./pages/user/jobs/ApplicationForm"));
   // // const RegisterCompany = React.lazy(() => import("./pages/register/RegisterCompany"));
-
+  const RecommendedJobs = React.lazy(() => import("./pages/user/profile/edit-profile/RecomJobs"));
   return (
     <>
       <QueryClientProvider client={new QueryClient()}>
@@ -132,6 +132,10 @@ function App() {
                       <Route
                         path="/applicant/profile/review"
                         element={<ReviewProfile />}
+                      />
+                      <Route 
+                        path="/applicant/profile/recom" 
+                        element={<RecommendedJobs />} 
                       />
                     </Routes>
                   </Suspense>

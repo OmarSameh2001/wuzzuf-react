@@ -29,6 +29,22 @@ const UserProfile = () => {
   const goToEditSkills = () => navigate("/applicant/profile/edit-skills");
   const goToEditCV = () => navigate("/applicant/profile/edit-cv");
   const goToEditPersonal = () => navigate("/applicant/profile/edit-personal");
+  //const ShowRecommendedJobs = () =>navigate("/applicant/profile/recom");
+  ;
+  const ShowRecommendedJobs = () => {
+    
+    if (user?.id) {
+      console.log("User ID:", user.id); // Debugging line
+      navigate(`/applicant/profile/recom`, { 
+        state: { userId: user.id }  // Explicitly pass the ID
+      });
+    } else {
+      console.error("No user ID available");
+      // Optionally show error to user
+    }
+  };
+
+
 
   if (profileData)
     return (
@@ -82,6 +98,7 @@ const UserProfile = () => {
                 >
                   Edit Profile
                 </Button>
+
               </Box>
             </Box>
 
@@ -93,7 +110,7 @@ const UserProfile = () => {
                   <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                     Education
                   </Typography>
-                  {profileData.education && profileData.education.length > 0 ? (
+                  {profileData.education?.length > 0 ? (
                     profileData.education.map((edu, index) => (
                       <Typography
                         key={index}
@@ -122,8 +139,7 @@ const UserProfile = () => {
                   <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                     Experience
                   </Typography>
-                  {profileData.experience &&
-                  profileData.experience.length > 0 ? (
+                  {profileData.experience?.length > 0 ?  (
                     profileData.experience.map((exp, index) => (
                       <Typography
                         key={index}
@@ -155,7 +171,7 @@ const UserProfile = () => {
                     Skills
                   </Typography>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                    {profileData.skills && profileData.skills.length > 0 ? (
+                    {profileData.skills?.length > 0 ? (
                       profileData.skills.map((skill, index) => (
                         <Typography
                           key={index}
@@ -213,8 +229,25 @@ const UserProfile = () => {
                     Edit CV
                   </Button>
                 </Card>
-              </Grid>
+           
+              </Grid> 
             </Grid>
+            <Card sx={{ mt: 2, padding: "15px" }}>
+                  <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+                    Job Recommendations
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 2 }}>
+                    Based on your profile, we've found some jobs that might interest you.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => ShowRecommendedJobs()}
+                    sx={{ mt: 2, mb: 2, width: "100%" }}
+                  >
+                    View Recommended Jobs
+                  </Button>
+                </Card>
           </Card>
         </Grid>
       </Grid>

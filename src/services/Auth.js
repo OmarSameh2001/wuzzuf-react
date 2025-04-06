@@ -17,8 +17,19 @@ export const signupUser = async (userData) => {
 
 // Get Authenticated User Data
 export const getUser = async () => {
+  try {
   const response = await AxiosApi.get("user/profile/");
+  // return response.data;
+  if (!response.data) {
+    throw new Error("No data received from server");
+  }
   return response.data;
+  } catch (error) {
+  console.error("Error fetching user:", error);
+  // Clear invalid token
+  localStorage.removeItem("token");
+  throw error;
+}
 };
 
 // Logout Function
