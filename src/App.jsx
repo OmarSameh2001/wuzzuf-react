@@ -11,7 +11,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AxiosProvider from "./services/AxiosProvider";
 import Login from './pages/login/Login';
 
-
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
   const UserJobs = React.lazy(() => import("./pages/user/jobs/Jobs"));
@@ -54,10 +53,17 @@ function App() {
   const CompanyTalents = React.lazy(() =>
     import("./pages/company/talents/Talents")
   );
-  const SingleJob = React.lazy(() => import("./pages/company/jobs/singleJob"));
+  const SingleJob = React.lazy(() => import("./pages/company/jobs/SingleJob"));
   const UserSingleJob = React.lazy(() => import("./pages/user/jobs/UserSingleJob"));
   const ApplicationForm = React.lazy(() => import("./pages/user/jobs/ApplicationForm"));
-  // // const RegisterCompany = React.lazy(() => import("./pages/register/RegisterCompany"));
+  
+  // Add company profile components with correct path
+  const CompanyProfile = React.lazy(() => import("./pages/company/profile/CompanyProfile"));
+  const ProfileView = React.lazy(() => import("./pages/company/profile/ProfileView"));
+  const AboutCompany = React.lazy(() => import("./pages/company/profile/AboutCompany"));
+  const BasicInfo = React.lazy(() => import("./pages/company/profile/BasicInfo"));
+  const ContactInfo = React.lazy(() => import("./pages/company/profile/ContactInfo"));
+  const ErrorBoundary = React.lazy(() => import("./pages/company/profile/ErrorBoundary"));
 
   return (
     <>
@@ -99,16 +105,18 @@ function App() {
                         element={<CompanyTalents />}
                       />
                       <Route path="/company/jobCreate" element={<JobCreate />} />
-                      {/* <Route path="/company/register" element={<RegisterCompany />} /> */}
                       <Route path="/applicant/jobs/:jobId" element={<UserSingleJob />} />
                       <Route path="/application-form" element={<ApplicationForm />} />
 
-
                       {/* Applicant Profile */}
                       <Route
-                        path="/applicant/profile"
-                        element={<UserProfile />}
-                      />
+                          path="/applicant/profile"
+                          element={
+                            <ErrorBoundary>
+                              <UserProfile />
+                            </ErrorBoundary>
+                          }
+                        />
                       <Route
                         path="/applicant/profile/edit-personal"
                         element={<EditPersonal />}
@@ -132,6 +140,28 @@ function App() {
                       <Route
                         path="/applicant/profile/review"
                         element={<ReviewProfile />}
+                      />
+
+                      {/* Company Profile */}
+                      <Route
+                        path="/company/profile"
+                        element={<CompanyProfile />}
+                      />
+                      <Route
+                        path="/company/profile/view"
+                        element={<ProfileView />}
+                      />
+                      <Route
+                        path="/company/profile/about"
+                        element={<AboutCompany />}
+                      />
+                      <Route
+                        path="/company/profile/basic-info"
+                        element={<BasicInfo />}
+                      />
+                      <Route
+                        path="/company/profile/contact-info"
+                        element={<ContactInfo />}
                       />
                     </Routes>
                   </Suspense>

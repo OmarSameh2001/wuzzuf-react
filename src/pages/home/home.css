@@ -1,0 +1,85 @@
+/* home.css */
+
+.home-container {
+    background-color: #901b20; /* firebrick red: a strong red, neither too light nor dark */
+    color: white;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Hero Section */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(to bottom right, #a41a1a, #901b20); /* gradient effect */
+    color: white;
+    padding: 4rem 1rem;
+  }
+  
+  /* Buttons */
+.btn-primary {
+    background-color: #ffffff;
+    color: #901b20;
+    border: none;
+  }
+  
+.btn-outline-primary {
+    color: white;
+    border: 2px solid white;
+  }
+  
+.btn-primary:hover,
+.btn-outline-primary:hover {
+    opacity: 0.8;
+  }
+  
+  /* How It Works Section */
+h2 {
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  
+.card {
+    background-color: white;
+    color: #333;
+    border-radius: 16px;
+    overflow: hidden; /* Important: ensures the image doesn't spill outside */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+.card img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 0; /* No extra rounding — the card already has rounded edges */
+    transition: transform 0.3s ease;
+  }
+  
+.card img:hover {
+    transform: scale(1.05);
+  }
+  
+  
+  /* Responsive padding */
+@media (max-width: 768px) {
+    .home-container {
+      padding: 1rem;
+    }
+  
+    .hero-section {
+      padding: 2rem 1rem;
+    }
+  }
+  

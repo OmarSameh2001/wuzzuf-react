@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { setAuthToken } from "./Api";
+import { setAuthToken } from "./api";
 import { userContext } from "../context/UserContext";
 
 const AxiosProvider = ({ children = null }) => {
