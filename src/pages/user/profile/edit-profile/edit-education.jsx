@@ -1,16 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import {
-  Button,
-  TextField,
-  Grid,
-  Card,
-  CardContent,
-  IconButton,
-  Typography,
-  Box,
-} from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
+import { Button, TextField, Box, Grid } from "@mui/material";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
 
 const EditEducation = () => {
@@ -20,7 +10,7 @@ const EditEducation = () => {
   const handleAdd = () => {
     setEducation([
       ...education,
-      { degree: "", university: "", startDate: "", endDate: "", gpa: "" },
+      { degree: "", school: "", fieldOfStudy: "", startDate: "", endDate: "" },
     ]);
   };
 
@@ -30,41 +20,40 @@ const EditEducation = () => {
     setEducation(newEducation);
   };
 
-  const handleRemove = (index) => {
-    const newEducation = education.filter((_, i) => i !== index);
-    setEducation(newEducation);
-  };
-
   const handleSave = () => {
     updateProfile("education", education);
-    goToNextStep("/applicant/profile/edit-experience");
+    goToNextStep("applicant/profile/edit-experience");
+  };
+  const handleBack = () => {
+    updateProfile("education", education);
+    goToNextStep("/applicant/profile/edit-personal");
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: "800px",
-        margin: "auto",
-        padding: { xs: "20px", sm: "40px" },
-      }}
-    >
-      <ProfileStepper activeStep={1} />
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, mt: 2 }}>
-        Education
-      </Typography>
-
-      {education.map((edu, index) => (
-        <Card
-          key={index}
-          variant="outlined"
-          sx={{
-            mb: 3,
-            boxShadow: 2,
-            borderRadius: 2,
-            borderColor: "#ccc",
-          }}
-        >
-          <CardContent>
+    <div>
+      <ProfileStepper activeStep={1} /> {/* Step 2 */}
+      <h2>Edit Education</h2>
+      <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        {education.map((edu, index) => (
+          <Box
+            key={index}
+            sx={{
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: 3,
+              marginBottom: 2,
+              position: "relative",
+            }}
+          >
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => {
+                const newEducation = education.filter((_, i) => i !== index);
+                setEducation(newEducation);
+              }}
+              sx={{ position: "absolute", top: 0, right: 0, padding: 0 }}
+            >X</Button>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -76,10 +65,18 @@ const EditEducation = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="University"
-                  value={edu.university}
+                  label="School"
+                  value={edu.school}
+                  onChange={(e) => handleChange(index, "school", e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Field of Study"
+                  value={edu.fieldOfStudy}
                   onChange={(e) =>
-                    handleChange(index, "university", e.target.value)
+                    handleChange(index, "fieldOfStudy", e.target.value)
                   }
                   fullWidth
                 />
@@ -88,94 +85,36 @@ const EditEducation = () => {
                 <TextField
                   label="Start Date"
                   type="date"
-                  InputLabelProps={{ shrink: true }}
                   value={edu.startDate}
-                  onChange={(e) =>
-                    handleChange(index, "startDate", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "startDate", e.target.value)}
                   fullWidth
+                  InputLabelProps={{ shrink: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="End Date"
                   type="date"
-                  InputLabelProps={{ shrink: true }}
                   value={edu.endDate}
-                  onChange={(e) =>
-                    handleChange(index, "endDate", e.target.value)
-                  }
+                  onChange={(e) => handleChange(index, "endDate", e.target.value)}
                   fullWidth
+                  InputLabelProps={{ shrink: true }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="GPA"
-                  type="number"
-                  inputProps={{ step: "0.01", min: "0", max: "4" }}
-                  value={edu.gpa}
-                  onChange={(e) => handleChange(index, "gpa", e.target.value)}
-                  fullWidth
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                sx={{ display: "flex", justifyContent: "flex-end" }}
-              >
-                <IconButton
-                  onClick={() => handleRemove(index)}
-                  color="error"
-                  size="large"
-                >
-                  <Delete />
-                </IconButton>
               </Grid>
             </Grid>
-          </CardContent>
-        </Card>
-      ))}
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Button
-            variant="outlined"
-            startIcon={<Add />}
-            onClick={handleAdd}
-            fullWidth
-            sx={{
-              textTransform: "none",
-              borderColor: "#901b20",
-              color: "#901b20",
-              "&:hover": {
-                backgroundColor: "#f8e5e5",
-                borderColor: "#a8242a",
-              },
-            }}
-          >
-            Add More
-          </Button>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <Button
-            variant="contained"
-            onClick={handleSave}
-            fullWidth
-            sx={{
-              textTransform: "none",
-              backgroundColor: "#901b20",
-              "&:hover": {
-                backgroundColor: "#a8242a",
-              },
-            }}
-          >
-            Next: Experience
-          </Button>
-        </Grid>
-      </Grid>
-    </Box>
+          </Box>
+        ))}
+        <Button variant="outlined" onClick={handleAdd}>
+          Add More
+        </Button>
+        <Button variant="outlined" onClick={handleBack}>
+          Back: Personal Info
+        </Button>
+        <Button variant="contained" onClick={handleSave}>
+          Next: Experience
+        </Button>
+      </Box>
+    </div>
   );
 };
 

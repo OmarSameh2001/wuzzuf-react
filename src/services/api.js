@@ -9,6 +9,7 @@ export const AxiosApi = axios.create({
   },
 });
 
+// Function to update Axios headers when the token changes
 export const setAuthToken = (token) => {
   if (token) {
     AxiosApi.defaults.headers.common["Authorization"] = `Token ${token}`;
@@ -16,3 +17,4 @@ export const setAuthToken = (token) => {
     delete AxiosApi.defaults.headers.common["Authorization"];
   }
 };
+
