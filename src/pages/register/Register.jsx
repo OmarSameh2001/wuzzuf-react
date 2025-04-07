@@ -63,6 +63,7 @@ const Register = () => {
         justifyContent: "center",
         alignItems: "center",
         minHeight: "80vh",
+        marginTop: "20px",
       }}
     >
       <Container

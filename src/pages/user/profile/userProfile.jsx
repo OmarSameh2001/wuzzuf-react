@@ -19,6 +19,7 @@ const UserProfile = () => {
     AOS.init({ duration: 1000 });
   }, []);
 
+
   // Handle image upload
   const handleImageUpload = (event) => {
     const file = event.target.files[0];

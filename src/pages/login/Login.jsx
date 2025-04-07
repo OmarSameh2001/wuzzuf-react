@@ -26,6 +26,7 @@ function Login() {
     try {
       const res = await loginUser(email, password);
       localStorage.setItem("token", res.token);
+      console.log(res);
       setUser(res)
       navigate("/"); // Navigate to the home page after successful login
     } catch (error) {
@@ -54,11 +55,11 @@ function Login() {
           boxShadow: 3,
           borderRadius: 2,
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(78, 78, 78, 0.34)",
+          border: "1px solid #901b20",
         }}
       >
-        <h2 align="center" className="b612-bold" style={{ fontWeight: "bold" }}>
-          Welcome back
+        <h2 align="center" className="b612-bold" style={{ fontWeight: "bold", color: "#901b20" }}>
+          Login
         </h2>
         <Divider sx={{ mb: 4 }} />
 
@@ -102,7 +103,7 @@ function Login() {
           />
 
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Link component={RouterLink} to="/forget" underline="hover" color="primary">
+            <Link component={RouterLink} to="/forget" underline="hover" style={{ color: "#901b20" }}>
               Forgot Password?
             </Link>
           </Box>
@@ -114,12 +115,9 @@ function Login() {
             type="submit"
             disabled={!email || password.length < 5}
             sx={{
-              background: "rgba(148,187,233)",
+              background: "#901b20",
               borderRadius: 1,
               mt: 2,
-              "&:hover": {
-                background: "linear-gradient(90deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-              },
               opacity: !email || password.length < 8 ? 0.6 : 1,
             }}
           >
@@ -128,7 +126,7 @@ function Login() {
 
           <Typography variant="body2" sx={{ mt: 2, textAlign: "center" }}>
             New to the website?{" "}
-            <Link component={RouterLink} to="/register" underline="hover" color="primary">
+            <Link component={RouterLink} to="/register" underline="hover" style={{ color: "#901b20" }}>
               Create Account
             </Link>
           </Typography>

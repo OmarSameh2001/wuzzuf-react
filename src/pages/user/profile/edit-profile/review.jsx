@@ -14,9 +14,12 @@ import ProfileStepper from "../../../../components/profile/ProfileStepper";
 import { useNavigate } from "react-router-dom";
 
 const PRIMARY_COLOR = "#901b20"; // Updated primary color
+import { updateUserProfile } from "../../../../services/Auth";
+import { userContext } from "../../../../context/UserContext";
 
 const ReviewProfile = () => {
-  const { profileData } = useContext(ProfileContext);
+  const { profileData, setProfileData } = useContext(ProfileContext);
+  const {setUser} = useContext(userContext)
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -25,6 +28,50 @@ const ReviewProfile = () => {
     setTimeout(() => {
       navigate("/applicant/profile");
     }, 2000);
+  // console.log(profileData);
+  const handleSubmit = async () => {
+    try {
+    const profileFormData = new FormData();
+    profileFormData.append("name", profileData.name);
+    profileFormData.append("email", profileData.email);
+    profileFormData.append("phone", profileData.phone || "");
+    profileFormData.append("location", profileData.location || "");
+    profileFormData.append("dob", profileData.dob || "");
+    profileFormData.append("about", profileData.about || "");
+    profileFormData.append("national_id", profileData.national_id || "");
+    profileFormData.append("national_id_img", profileData.national_id_img || "");
+    profileFormData.append("img", profileData.img || "");
+    profileFormData.append("education", JSON.stringify(profileData.education || []));
+    profileFormData.append("experience", JSON.stringify(profileData.experience || []));
+    profileFormData.append("skills", JSON.stringify(profileData.skills || []));
+    profileFormData.append("cv", profileData.cv || "");
+
+    profileFormData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+    const response = await updateUserProfile(profileData.id,profileFormData);
+    console.log(response);
+    const parsedResponse = {
+      ...response.data,
+      skills: safeParseJSON(response.data.skills, []),
+      education: safeParseJSON(response.data.education, []),
+      experience: safeParseJSON(response.data.experience, []),
+    };
+    setUser(parsedResponse)
+    setProfileData(parsedResponse); // Update the profile data in context
+    navigate("/applicant/profile"); // ✅ Redirect to the user profile page
+    
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
+  };
+  const safeParseJSON = (json, fallback) => {
+    try {
+      return JSON.parse(json);
+    } catch {
+      return fallback;
+    }
   };
 
   return (

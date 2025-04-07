@@ -5,30 +5,59 @@ import { getUser } from "../services/Auth";
 export const userContext = createContext();
 
 export function UserContextProvider({ children }) {
-  let [token, setToken] = useState(localStorage.getItem("token"));
-  let [user, setUser] = useState(null);
-  // let [isOpen,setOpen] = useState(false)
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
     const fetchUser = async () => {
       if (token) {
-        const response = await getUser();
-        console.log(response)
-        response.skills = JSON.parse(response.skills);
-        response.education = JSON.parse(response.education);
-        response.experience = JSON.parse(response.experience);
-        setUser(response);
+        try {
+          const response = await getUser();
+          console.log(response);
+
+          // Safely parse JSON fields
+          const parsedResponse = {
+            ...response,
+            skills: safeParseJSON(response.skills, []),
+            education: safeParseJSON(response.education, []),
+            experience: safeParseJSON(response.experience, []),
+          };
+
+          setUser(parsedResponse);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
       }
     };
+
     fetchUser();
   }, [token]);
+
   useEffect(() => {
-    const tok = localStorage.getItem("token");
-    if (tok) setToken(tok);
-  }, []);
-  
-  useEffect(()=>{
-    console.log(user)
-  }, [user])
+    const handleStorageChange = () => {
+      const tok = localStorage.getItem("token");
+      if (tok !== token) {
+        setToken(tok);
+      }
+    };
+
+    // Listen for changes in localStorage
+    window.addEventListener("storage", handleStorageChange);
+
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [token]);
+
+  const safeParseJSON = (json, fallback) => {
+    try {
+      return JSON.parse(json);
+    } catch {
+      return fallback;
+    }
+  };
+
   return (
     <userContext.Provider value={{ token, setToken, user, setUser }}>
       {children}

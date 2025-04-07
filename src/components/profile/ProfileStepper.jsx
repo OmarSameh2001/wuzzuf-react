@@ -5,7 +5,7 @@ const steps = ["Personal Info", "Education", "Experience", "Skills", "CV & Revie
 
 const ProfileStepper = ({ activeStep }) => {
   return (
-    <Stepper activeStep={activeStep} alternativeLabel>
+    <Stepper activeStep={activeStep} alternativeLabel sx={{ padding: 4 }}>
       {steps.map((label, index) => (
         <Step key={index}>
           <StepLabel>{label}</StepLabel>

@@ -58,6 +58,7 @@ function App() {
                   minHeight: "calc(100vh - 120px)"
                 }}>
                   <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
+
                     <Routes>
                       {/* Public Routes */}
                       <Route path="/" element={<Home />} />

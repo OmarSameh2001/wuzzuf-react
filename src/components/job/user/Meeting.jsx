@@ -84,7 +84,7 @@ const Meeting = ({ phase, clickedColumn, applicationData }) => {
 
  console.log("Application :", appStatus ,clickedColumn);
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
     <h3>{phase === "Technical Assessment" ? "Technical Assessment" : `${phase} Meeting` }</h3>
 
     {appStatus >= clickedColumn ? (
@@ -132,7 +132,7 @@ const Meeting = ({ phase, clickedColumn, applicationData }) => {
         )}
       </>
     ) : (
-      <p className="text-warning">You cannot proceed to this phase yet.</p>
+      <p className="text-warning">You didn't proceed to this phase yet.</p>
     )}
   </div>
   );

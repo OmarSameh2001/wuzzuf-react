@@ -103,7 +103,7 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
       <Typography variant="h4">
         Job Application Quiz
       </Typography>
-      {application?.status == '2' && <Typography color="green" variant="h6" gutterBottom>
+      {parseInt(application?.status) > 1 && <Typography color="green" variant="h6" gutterBottom>
         Your application is submitted
       </Typography>}
       {questions?.map((question) => (

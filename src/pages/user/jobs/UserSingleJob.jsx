@@ -120,6 +120,7 @@ const UserSingleJob = () => {
             column={clickedColumn}
             phases={phases}
           />
+          <div style={{ minHeight: "30vh", display: "flex", justifyContent: "center", flexDirection: "column" }}>
           {clickedColumn === 1 && (
             <ApplicationForm
               questions={userApp?.job_details?.questions}
@@ -135,6 +136,7 @@ const UserSingleJob = () => {
               clickedColumn={clickedColumn}
             />
           )}
+          </div>
         </>
       ) : (
         <>
