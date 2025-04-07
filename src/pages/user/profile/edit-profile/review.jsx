@@ -1,8 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import { Button, Typography, Avatar, List, ListItem, ListItemText, Box } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Alert,
+} from "@mui/material";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
 import { useNavigate } from "react-router-dom";
+
+const PRIMARY_COLOR = "#901b20"; // Updated primary color
 import { updateUserProfile } from "../../../../services/Auth";
 import { userContext } from "../../../../context/UserContext";
 
@@ -10,6 +21,13 @@ const ReviewProfile = () => {
   const { profileData, setProfileData } = useContext(ProfileContext);
   const {setUser} = useContext(userContext)
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleSubmit = () => {
+    setSuccessMessage("Profile updated successfully!");
+    setTimeout(() => {
+      navigate("/applicant/profile");
+    }, 2000);
   // console.log(profileData);
   const handleSubmit = async () => {
     try {
@@ -57,68 +75,144 @@ const ReviewProfile = () => {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "600px", margin: "auto", padding: "20px" }}>
       <ProfileStepper activeStep={5} /> {/* Last Step */}
-      <h2>Review Your Profile</h2>
-      
-      <Avatar src={profileData.img} sx={{ width: 100, height: 100, marginLeft:3 }} />
+      <Typography variant="h4" align="center" gutterBottom sx={{ color: PRIMARY_COLOR }}>
+        Review Your Profile
+      </Typography>
 
-      <h3>Personal Information</h3>
-      <Typography variant="body1">Name: {profileData.name}</Typography>
-      <Typography variant="body1">Email: {profileData.email}</Typography>
-      <Typography variant="body1">Phone: {profileData.phone || "Not provided"}</Typography>
-      <Typography variant="body1">Location: {profileData.location || "Not provided"}</Typography>
-      <Typography variant="body1">Date of Birth: {profileData.dob || "Not provided"}</Typography>
-      <Typography variant="body1">About: {profileData.about || "Not provided"}</Typography>
-      <Typography variant="body1">National ID: {profileData.national_id || "Not provided"}</Typography>
-      {profileData.national_id_img ? (
-        <Typography variant="body1">
-          <Avatar src={profileData.national_id_img} sx={{ width: 100, height: 100, borderRadius: 2, marginLeft:3 }} />
+      {successMessage && (
+        <Alert severity="success" sx={{ marginBottom: 2 }}>
+          {successMessage}
+        </Alert>
+      )}
+
+      {/* Profile Image and Basic Info */}
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 3,
+          textAlign: "center",
+          marginBottom: 2,
+          backgroundColor: "#f5f5ff",
+        }}
+      >
+        <Avatar
+          src={profileData.profileImage}
+          sx={{
+            width: 100,
+            height: 100,
+            margin: "auto",
+            border: `3px solid ${PRIMARY_COLOR}`,
+          }}
+        />
+        <Typography variant="h5" sx={{ marginTop: 1, color: PRIMARY_COLOR }}>
+          {profileData.name || "No Name Provided"}
         </Typography>
-      ) : (
-        <Typography variant="body1">National ID Image: Not provided</Typography>
-      )}
+        <Typography variant="subtitle1" color="textSecondary">
+          {profileData.email || "No Email Provided"}
+        </Typography>
+      </Paper>
 
-      <h3>Education</h3>
-      {profileData.education && profileData.education.length > 0 ? (
-        profileData.education.map((edu, index) => (
-          <Typography key={index} variant="body1">
-            {`${edu.degree} Degree from ${edu.school} majoring ${edu.fieldOfStudy} from ${edu.startDate} to ${edu.endDate}`}
+      {/* Education Section */}
+      <Paper elevation={2} sx={{ padding: 2, marginBottom: 2, backgroundColor: "#f5f5ff" }}>
+        <Typography variant="h6" sx={{ color: PRIMARY_COLOR }}>
+          🎓 Education
+        </Typography>
+        <List>
+          {profileData.education?.length > 0 ? (
+            profileData.education.map((edu, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={`${edu.degree} at ${edu.university}`} />
+              </ListItem>
+            ))
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              No education details added.
+            </Typography>
+          )}
+        </List>
+      </Paper>
+
+      {/* Experience Section */}
+      <Paper elevation={2} sx={{ padding: 2, marginBottom: 2, backgroundColor: "#f5f5ff" }}>
+        <Typography variant="h6" sx={{ color: PRIMARY_COLOR }}>
+          💼 Experience
+        </Typography>
+        <List>
+          {profileData.experience?.length > 0 ? (
+            profileData.experience.map((exp, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={`${exp.title} at ${exp.company}`}
+                  secondary={exp.currentlyWorking ? "Currently Working" : `Years: ${exp.years}`}
+                />
+              </ListItem>
+            ))
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              No experience details added.
+            </Typography>
+          )}
+        </List>
+      </Paper>
+
+      {/* Skills Section */}
+      <Paper elevation={2} sx={{ padding: 2, marginBottom: 2, backgroundColor: "#f5f5ff" }}>
+        <Typography variant="h6" sx={{ color: PRIMARY_COLOR }}>
+          🛠️ Skills
+        </Typography>
+        <List>
+          {profileData.skills?.length > 0 ? (
+            profileData.skills.map((skill, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={skill} />
+              </ListItem>
+            ))
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              No skills added.
+            </Typography>
+          )}
+        </List>
+      </Paper>
+
+      {/* CV Section */}
+      <Paper
+        elevation={2}
+        sx={{ padding: 2, marginBottom: 2, textAlign: "center", backgroundColor: "#f5f5ff" }}
+      >
+        <Typography variant="h6" sx={{ color: PRIMARY_COLOR }}>
+          📄 CV
+        </Typography>
+        {profileData.cv ? (
+          <Typography variant="body1">
+            <a
+              href={profileData.cv}
+              download={profileData.cvName}
+              style={{ color: PRIMARY_COLOR, textDecoration: "underline" }}
+            >
+              Download CV
+            </a>
           </Typography>
-        ))
-      ) : (
-        <Typography variant="body1">No education data available</Typography>
-      )}
-
-      <h3>Experience</h3>
-      {profileData.experience && profileData.experience.length > 0 ? (
-        profileData.experience.map((exp, index) => (
-          <Typography key={index} variant="body1">
-            {`${exp.jobTitle} at ${exp.company}`}
+        ) : (
+          <Typography variant="body2" color="textSecondary">
+            No CV uploaded.
           </Typography>
-        ))
-      ) : (
-        <Typography variant="body1">No experience data available</Typography>
-      )}
+        )}
+      </Paper>
 
-      <h3>Skills</h3>
-      
-      <Box sx={{ display: "flex", gap: 1 }}>
-      {profileData.skills && profileData.skills.length > 0 ? (
-        profileData.skills.map((skill, index) => (
-          <Typography key={index} variant="body1">
-            {skill}
-          </Typography>
-        ))
-      ) : (
-        <Typography variant="body1">No skills data available</Typography>
-      )}
-      </Box>
-
-      <h3>CV</h3>
-      {profileData.cv ? <p>CV Uploaded: {profileData.cv.name || <a href={profileData.cv} target="_blank">view</a>}</p> : <p>No CV uploaded</p>}
-
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
+      {/* Submit Button */}
+      <Button
+        variant="contained"
+        fullWidth
+        sx={{
+          marginTop: 2,
+          backgroundColor: PRIMARY_COLOR,
+          "&:hover": { backgroundColor: "#6e1418" },
+        }}
+        onClick={handleSubmit}
+      >
         Submit Profile
       </Button>
     </div>

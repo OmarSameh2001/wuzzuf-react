@@ -1,153 +1,215 @@
 import React, { useContext, useState } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import { Button, TextField, Box, Grid } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Grid,
+  Card,
+  CardContent,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+  Typography
+} from "@mui/material";
+import { Add, Delete } from "@mui/icons-material";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
+
+const primaryColor = "#901b20"; // Homepage color
+const lightBg = "#fdf1f1"; // Soft matching background tone
 
 const EditExperience = () => {
   const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
   const [experiences, setExperiences] = useState(profileData.experience || []);
 
   const handleAddExperience = () => {
-    setExperiences([
-      ...experiences,
-      {
-        title: "",
-        company: "",
-        location: "",
-        description: "",
-        employmentType: "",
-        startDate: "",
-        endDate: "",
-      },
-    ]);
+    setExperiences([...experiences, {
+      title: "",
+      company: "",
+      startDate: "",
+      endDate: "",
+      responsibilities: "",
+      currentlyWorking: false
+    }]);
   };
 
-  const handleChange = (index, key, value) => {
-    const updatedExperiences = [...experiences];
-    updatedExperiences[index][key] = value;
-    setExperiences(updatedExperiences);
+  const handleChange = (index, field, value) => {
+    const updated = [...experiences];
+    updated[index][field] = value;
+    setExperiences(updated);
+  };
+
+  const handleToggleCurrentlyWorking = (index) => {
+    const updated = [...experiences];
+    updated[index].currentlyWorking = !updated[index].currentlyWorking;
+    if (updated[index].currentlyWorking) {
+      updated[index].endDate = "";
+    }
+    setExperiences(updated);
+  };
+
+  const handleRemove = (index) => {
+    const updated = experiences.filter((_, i) => i !== index);
+    setExperiences(updated);
   };
 
   const handleSave = () => {
     updateProfile("experience", experiences);
     goToNextStep("/applicant/profile/edit-skills");
-  };
-  const handleBack = () => {
     updateProfile("experience", experiences);
-    goToNextStep("/applicant/profile/edit-education");
+    goToNextStep("/applicant/profile/edit-skills");
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "700px", margin: "auto", padding: "30px 20px" }}>
       <ProfileStepper activeStep={2} />
-      <h2>Edit Experience</h2>
-      <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-        {experiences.map((exp, index) => (
-          <Box
-            key={index}
-            sx={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: 3,
-              marginBottom: 2,
-              position: "relative",
-            }}
-          >
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => {
-                const newExperiences = experiences.filter((_, i) => i !== index);
-                setExperiences(newExperiences);
-              }}
-              sx={{ position: "absolute", top: 0, right: 0, padding: 0 }}
-            >
-              X
-            </Button>
+
+      <Typography variant="h4" sx={{ mb: 3, color: primaryColor }}>
+        Edit Experience
+      </Typography>
+
+      {experiences.map((exp, index) => (
+        <Card
+          key={index}
+          variant="outlined"
+          sx={{
+            mb: 3,
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.05)"
+          }}
+        >
+          <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   label="Job Title"
                   value={exp.title}
                   onChange={(e) => handleChange(index, "title", e.target.value)}
                   fullWidth
+                  variant="outlined"
+                  sx={{
+                    "& label.Mui-focused": { color: primaryColor },
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    }
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   label="Company Name"
                   value={exp.company}
                   onChange={(e) => handleChange(index, "company", e.target.value)}
                   fullWidth
+                  variant="outlined"
+                  sx={{
+                    "& label.Mui-focused": { color: primaryColor },
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    }
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Company Location"
-                  value={exp.location}
-                  onChange={(e) => handleChange(index, "location", e.target.value)}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  // label="Employment Type"
-                  select
-                  SelectProps={{ native: true }}
-                  value={exp.employmentType}
-                  onChange={(e) => handleChange(index, "employmentType", e.target.value)}
-                  fullWidth
-                >
-                  {/* <option value="">Select Employment Type</option> */}
-                  <option value="full-time">Full-time</option>
-                  <option value="part-time">Part-time</option>
-                  <option value="freelance">Freelance</option>
-                  <option value="intern">Intern</option>
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Description"
-                  value={exp.description}
-                  onChange={(e) => handleChange(index, "description", e.target.value)}
-                  fullWidth
-                  multiline
-                  rows={3}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={6}>
                 <TextField
                   label="Start Date"
                   type="date"
+                  InputLabelProps={{ shrink: true }}
                   value={exp.startDate}
                   onChange={(e) => handleChange(index, "startDate", e.target.value)}
                   fullWidth
-                  InputLabelProps={{ shrink: true }}
+                  variant="outlined"
+                  sx={{
+                    "& label.Mui-focused": { color: primaryColor },
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    }
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="End Date"
-                  type="date"
-                  value={exp.endDate}
-                  onChange={(e) => handleChange(index, "endDate", e.target.value)}
-                  fullWidth
-                  InputLabelProps={{ shrink: true }}
+              {!exp.currentlyWorking && (
+                <Grid item xs={6}>
+                  <TextField
+                    label="End Date"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    value={exp.endDate}
+                    onChange={(e) => handleChange(index, "endDate", e.target.value)}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      "& label.Mui-focused": { color: primaryColor },
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      }
+                    }}
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={exp.currentlyWorking}
+                      onChange={() => handleToggleCurrentlyWorking(index)}
+                      sx={{ color: primaryColor, "&.Mui-checked": { color: primaryColor } }}
+                    />
+                  }
+                  label="Currently Working Here"
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Responsibilities"
+                  multiline
+                  rows={3}
+                  value={exp.responsibilities}
+                  onChange={(e) => handleChange(index, "responsibilities", e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                  sx={{
+                    "& label.Mui-focused": { color: primaryColor },
+                    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    }
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} style={{ textAlign: "right" }}>
+                <IconButton onClick={() => handleRemove(index)} sx={{ color: "#dc3545" }}>
+                  <Delete />
+                </IconButton>
               </Grid>
             </Grid>
-          </Box>
-        ))}
-        <Button variant="outlined" onClick={handleAddExperience}>
-          Add More
-        </Button>
-        <Button variant="outlined" onClick={handleBack}>
-          Back: Education
-        </Button>
-        <Button variant="contained" onClick={handleSave}>
-          Next: Skills
-        </Button>
-      </Box>
+          </CardContent>
+        </Card>
+      ))}
+
+      <Button
+        variant="outlined"
+        startIcon={<Add />}
+        onClick={handleAddExperience}
+        fullWidth
+        sx={{
+          color: primaryColor,
+          borderColor: primaryColor,
+          mb: 2,
+          "&:hover": {
+            backgroundColor: primaryColor,
+            color: "#fff",
+            borderColor: primaryColor
+          }
+        }}
+      >
+        Add More Experience
+      </Button>
+
+      <Button
+        variant="contained"
+        onClick={handleSave}
+        fullWidth
+        sx={{
+          backgroundColor: primaryColor,
+          "&:hover": {
+            backgroundColor: "#7d161b"
+          }
+        }}
+      >
+        Next: Skills
+      </Button>
     </div>
   );
 };

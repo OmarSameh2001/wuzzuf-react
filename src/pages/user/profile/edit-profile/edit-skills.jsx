@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
-import { Button, TextField, Box, Chip, Grid } from "@mui/material";
+import { Button, TextField, Chip, Stack, Paper, Typography, IconButton, Box } from "@mui/material";
+import { Add, Delete } from "@mui/icons-material";
 
 const EditSkills = () => {
   const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
@@ -10,71 +11,99 @@ const EditSkills = () => {
 
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill.trim())) {
+    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
       setSkills([...skills, newSkill.trim()]);
-      setNewSkill("");
+      setNewSkill(""); // Reset input field
     }
   };
 
-  const handleDeleteSkill = (skillToDelete) => {
-    setSkills(skills.filter((skill) => skill !== skillToDelete));
+  const handleRemoveSkill = (skillToRemove) => {
+    setSkills(skills.filter((skill) => skill !== skillToRemove));
   };
 
   const handleSave = () => {
-    updateProfile("skills", skills); // ✅ Correct function from ProfileContext
-    goToNextStep("/applicant/profile/edit-cv"); // ✅ Correct navigation function
+    updateProfile("skills", skills);
+    goToNextStep("/applicant/profile/edit-cv");
   };
-  const handleBack = () => {
-    updateProfile("skills", skills); // ✅ Correct function from ProfileContext
-    goToNextStep("/applicant/profile/edit-experience"); // ✅ Correct navigation function
-  }
 
   return (
-    <div>
+    <Box sx={{ maxWidth: 600, margin: "auto", padding: 3 }}>
       <ProfileStepper activeStep={3} />
-      <h2>Edit Skills</h2>
-      <Box sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              label="Enter a skill"
-              value={newSkill}
-              onChange={(e) => setNewSkill(e.target.value)}
-              fullWidth
-              color={skills.includes(newSkill) ? "error" : "primary"}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleAddSkill();
-                }
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="outlined" onClick={handleAddSkill} disabled={!newSkill || skills.includes(newSkill) || skills.length > 9}>
-              + Add Skill
-            </Button>
-          </Grid>
-        </Grid>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {skills.map((skill, index) => (
-            <Chip
-              key={index}
-              label={skill}
-              onDelete={() => handleDeleteSkill(skill)}
-              color="primary"
-              variant="outlined"
-            />
-          ))}
-        </Box>
-        <Button variant="outlined" onClick={handleBack}>
-          Back: Experience
+      <Typography variant="h5" gutterBottom>Edit Skills</Typography>
+
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 2 }}>
+        <TextField
+          label="Enter a skill"
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={newSkill}
+          onChange={(e) => setNewSkill(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleAddSkill()}
+        />
+        <Button
+          variant="contained"
+          startIcon={<Add />}
+          onClick={handleAddSkill}
+          sx={{
+            backgroundColor: "#901b20",
+            "&:hover": {
+              backgroundColor: "#7e181c",
+            },
+            whiteSpace: "nowrap",
+            height: "40px",
+            minWidth: "100px",
+          }}
+        >
+          Add
         </Button>
-        <Button variant="contained" onClick={handleSave}>
-          Next: CV
-        </Button>
-      </Box>
-    </div>
+      </Stack>
+
+      {skills.length > 0 && (
+        <Paper elevation={3} sx={{ padding: 2, marginTop: 3 }}>
+          <Typography variant="subtitle1" sx={{ mb: 1 }}>
+            Your Skills:
+          </Typography>
+          <Stack direction="row" spacing={1} flexWrap="wrap">
+            {skills.map((skill, index) => (
+              <Chip
+                key={index}
+                label={skill}
+                onDelete={() => handleRemoveSkill(skill)}
+                deleteIcon={<Delete />}
+                sx={{
+                  backgroundColor: "#901b20",
+                  color: "#fff",
+                  "& .MuiChip-deleteIcon": {
+                    color: "#fff",
+                  },
+                  "&:hover": {
+                    backgroundColor: "#7e181c",
+                  },
+                  mb: 1,
+                }}
+              />
+            ))}
+          </Stack>
+        </Paper>
+      )}
+
+      <Button
+        variant="contained"
+        onClick={handleSave}
+        fullWidth
+        sx={{
+          marginTop: 3,
+          backgroundColor: "#901b20",
+          "&:hover": {
+            backgroundColor: "#7e181c",
+          },
+        }}
+      >
+        Next: CV
+      </Button>
+    </Box>
   );
-};
+}};
 
 export default EditSkills;
