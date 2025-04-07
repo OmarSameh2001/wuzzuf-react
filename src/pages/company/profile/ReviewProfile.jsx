@@ -15,33 +15,33 @@ const ReviewProfile = ({ formData }) => {
     setLogoError(false);
 
     try {
-      // Case 1: Logo is stored as an object with preview/file
       if (formData.logo.preview) {
         setLogoUrl(formData.logo.preview);
-      } 
-      // Case 2: Direct file object
-      else if (formData.logo instanceof Blob || formData.logo instanceof File) {
+      } else if (formData.logo instanceof Blob || formData.logo instanceof File) {
         const url = URL.createObjectURL(formData.logo);
         setLogoUrl(url);
         return () => URL.revokeObjectURL(url);
-      }
-      // Case 3: Base64 string
-      else if (typeof formData.logo === 'string') {
-        // Handle both prefixed and non-prefixed base64
-        if (formData.logo.startsWith('data:image') || 
-            /^[A-Za-z0-9+/]+={0,2}$/.test(formData.logo)) {
-          setLogoUrl(formData.logo.startsWith('data:') ? 
-            formData.logo : `data:image/jpeg;base64,${formData.logo}`);
-        } else {
-          setLogoUrl(formData.logo);
-        }
+      } else if (typeof formData.logo === 'string') {
+        setLogoUrl(formData.logo.startsWith('data:') ? 
+          formData.logo : `data:image/jpeg;base64,${formData.logo}`);
       }
     } catch (error) {
       console.error('Error processing logo:', error);
       setLogoError(true);
       setLogoUrl(null);
     }
-  }, [formData?.logo])
+  }, [formData?.logo]);
+
+  // Safe data access helper
+  const getSafe = (path, defaultValue = 'Not specified') => {
+    const keys = path.split('.');
+    let result = formData;
+    for (const key of keys) {
+      result = result?.[key];
+      if (result === undefined) return defaultValue;
+    }
+    return result ?? defaultValue;
+  };
 
   if (!formData) {
     return (

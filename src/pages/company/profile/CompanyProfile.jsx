@@ -1,20 +1,21 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, ProgressBar, Button, Alert } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Col, ProgressBar, Button, Alert, Spinner } from 'react-bootstrap';
 import BasicInfo from './BasicInfo';
 import ContactInfo from './ContactInfo';
 import AboutCompany from './AboutCompany';
 import ReviewProfile from './ReviewProfile';
-import './Company.css';
 import { CheckCircleFill } from 'react-bootstrap-icons';
-
+import { saveCompanyData, fetchCompanyData } from '../../../services/companyApi';
+import './Company.css'; // Assuming you have some CSS for styling
 const CompanyProfile = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [step, setStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   
-  // Enhanced form data state with additional fields
   const [formData, setFormData] = useState({
     logo: null,
     basicInfo: {
@@ -58,8 +59,35 @@ const CompanyProfile = () => {
     }
   });
 
+  // Load existing data if editing
+  useEffect(() => {
+    if (id) {
+      const loadData = async () => {
+        setIsLoading(true);
+        try {
+          const data = await fetchCompanyData(id);
+          setFormData(data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      loadData();
+    }
+  }, [id]);
+
   const handleChange = (section, field, value) => {
-    // If the field contains a dot, it means we're dealing with a nested object
+    // Special handling for logo
+    if (section === 'logo') {
+      setFormData(prev => ({
+        ...prev,
+        logo: value // value should be { file, preview, name } or null
+      }));
+      return;
+    }
+
+    // Handle nested fields (like socialMedia.linkedin)
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
       setFormData(prev => ({
@@ -82,10 +110,23 @@ const CompanyProfile = () => {
       }));
     }
   };
-  
-  // Update how you pass the handleChange to child components
- // In CompanyProfile.jsx
-const steps = [
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const savedData = await saveCompanyData(formData);
+      setIsSubmitted(true);
+      setTimeout(() => {
+        navigate(`/company/profile/view/${savedData.id}`);
+      }, 2000);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const steps = [
     { 
       title: 'Basic Information', 
       component: <BasicInfo 
@@ -113,16 +154,6 @@ const steps = [
   // ... rest of your component remains the same ...
   const nextStep = () => step < steps.length && setStep(step + 1);
   const prevStep = () => step > 1 && setStep(step - 1);
-
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-    setTimeout(() => {
-      navigate('/company/profile/view', { 
-        state: { companyData: formData } 
-      });
-    }, 2000);
-  };
-
   if (isSubmitted) {
     return (
       <Container className="py-5 text-center">
@@ -133,17 +164,25 @@ const steps = [
     );
   }
 
-  const currentStep = steps[step - 1];
-
+  const currentStep = steps[step - 1];  
   return (
     <Container className="py-5">
+      {isLoading && <Spinner animation="border" />}
+      {error && <Alert variant="danger">{error}</Alert>}
       <h2 className="text-center mb-4" style={{ color: '#901b20' }}>Company Profile Setup</h2>
       
       {/* Progress Bar */}
       <Row className="mb-5">
         <Col>
-          <ProgressBar now={(step / steps.length) * 100} className="custom-progress" />
-          <div className="d-flex justify-content-between mt-2">
+        <ProgressBar 
+              now={(step / steps.length) * 100} 
+              className="custom-progress"
+              style={{ 
+                backgroundColor: '#f8f9fa', // Light background
+                height: '10px' 
+              }}
+            />          
+            <div className="d-flex justify-content-between mt-2">
             {steps.map((item, index) => (
               <div 
                 key={index} 
@@ -193,9 +232,10 @@ const steps = [
             </Button>
           )}
         </Col>
-      </Row>
-    </Container>
+      </Row>    
+      </Container>
   );
 };
 
 export default CompanyProfile;
+

@@ -1,62 +1,26 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Card, ListGroup, Image, Alert, Badge, Row, Col, Container, Spinner } from 'react-bootstrap';
-import { 
-  Envelope, 
-  Telephone, 
-  GeoAlt, 
-  Globe, 
-  Building, 
-  Calendar, 
-  People, 
-  Award,
-  Briefcase
-} from 'react-bootstrap-icons';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import { fetchCompanyData } from '../../../services/companyApi';
 const ProfileView = () => {
   const { id } = useParams();
   const [companyData, setCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [logoUrl, setLogoUrl] = useState(null);
-  const [logoError, setLogoError] = useState(false);
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
-      transition: { 
-        duration: 0.5,
-        when: "beforeChildren",
-        staggerChildren: 0.1
-      } 
-    }
-  };
 
   useEffect(() => {
-    const fetchCompanyData = async () => {
+    const loadData = async () => {
       try {
-        const response = await axios.get(`/user/company/${id}/`);
-        setCompanyData(response.data);
-        
-        // Handle logo if present in response
-        if (response.data.logo) {
-          setLogoError(false);
-          // Assuming the logo is returned as a URL or base64 string from Django
-          setLogoUrl(response.data.logo);
-        }
+        const data = await fetchCompanyData(id);
+        setCompanyData(data);
       } catch (err) {
-        console.error('Error fetching company data:', err);
-        setError(err.message || 'Failed to fetch company data');
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchCompanyData();
+    loadData();
   }, [id]);
 
   if (loading) {
@@ -130,10 +94,12 @@ const ProfileView = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <h1 className="h2 mb-1">{companyData.basicInfo.companyName}</h1>
-                {companyData.basicInfo.industry && (
+                <h1 className="h2 mb-1">
+                  {getSafe('basicInfo.companyName', 'Company Profile')}
+                </h1>
+                {getSafe('basicInfo.industry') && (
                   <Badge bg="light" text="dark">
-                    {companyData.basicInfo.industry}
+                    {getSafe('basicInfo.industry')}
                   </Badge>
                 )}
               </motion.div>
@@ -141,7 +107,7 @@ const ProfileView = () => {
           </Card.Header>
 
           <Card.Body className="p-4">
-            {/* Dedicated Logo Section */}
+            {/* Logo Section */}
             <motion.div 
               className="text-center mb-4"
               variants={logoVariants}
@@ -196,11 +162,11 @@ const ProfileView = () => {
                       
                       <ListGroup variant="flush" className="small">
                         {[
-                          { icon: <Calendar />, label: 'Founded', value: companyData.basicInfo.foundedYear },
-                          { icon: <People />, label: 'Company Size', value: companyData.basicInfo.companySize },
-                          { icon: <Award />, label: 'Company Type', value: companyData.basicInfo.companyType },
-                          { icon: <GeoAlt />, label: 'Headquarters', value: companyData.basicInfo.headquarters },
-                          { icon: <Globe />, label: 'Website', value: companyData.basicInfo.website, isLink: true }
+                          { icon: <Calendar />, label: 'Founded', value: getSafe('basicInfo.foundedYear') },
+                          { icon: <People />, label: 'Company Size', value: getSafe('basicInfo.companySize') },
+                          { icon: <Award />, label: 'Company Type', value: getSafe('basicInfo.companyType') },
+                          { icon: <GeoAlt />, label: 'Headquarters', value: getSafe('basicInfo.headquarters') },
+                          { icon: <Globe />, label: 'Website', value: getSafe('basicInfo.website'), isLink: true }
                         ].map((item, index) => (
                           <ListGroup.Item key={index} className="d-flex align-items-center py-2">
                             <span className="text-muted me-2">{item.icon}</span>
@@ -216,7 +182,7 @@ const ProfileView = () => {
                                   >
                                     {item.value}
                                   </a>
-                                ) : item.value || 'Not specified'}
+                                ) : item.value}
                               </div>
                             </div>
                           </ListGroup.Item>
@@ -237,18 +203,18 @@ const ProfileView = () => {
                       
                       <ListGroup variant="flush" className="small">
                         {[
-                          { icon: <Envelope />, label: 'Email', value: companyData.contactInfo.email },
-                          { icon: <Telephone />, label: 'Phone', value: companyData.contactInfo.phone },
-                          { icon: <Telephone />, label: 'Mobile', value: companyData.contactInfo.mobile },
+                          { icon: <Envelope />, label: 'Email', value: getSafe('contactInfo.email') },
+                          { icon: <Telephone />, label: 'Phone', value: getSafe('contactInfo.phone') },
+                          { icon: <Telephone />, label: 'Mobile', value: getSafe('contactInfo.mobile') },
                           { 
                             icon: <GeoAlt />, 
                             label: 'Address', 
-                            value: companyData.contactInfo.address ? (
+                            value: getSafe('contactInfo.address') ? (
                               <>
-                                {companyData.contactInfo.address}<br />
-                                {companyData.contactInfo.city && `${companyData.contactInfo.city}, `}
-                                {companyData.contactInfo.state} {companyData.contactInfo.zipCode}<br />
-                                {companyData.contactInfo.country}
+                                {getSafe('contactInfo.address')}<br />
+                                {getSafe('contactInfo.city') && `${getSafe('contactInfo.city')}, `}
+                                {getSafe('contactInfo.state')} {getSafe('contactInfo.zipCode')}<br />
+                                {getSafe('contactInfo.country')}
                               </>
                             ) : null
                           }
@@ -274,7 +240,7 @@ const ProfileView = () => {
                     <Card.Body>
                       <h5 className="mb-3" style={{ color: '#901b20' }}>Company Description</h5>
                       <p className="text-muted">
-                        {companyData.about.description || 'No description provided'}
+                        {getSafe('about.description', 'No description provided')}
                       </p>
                     </Card.Body>
                   </Card>
@@ -286,16 +252,16 @@ const ProfileView = () => {
                       <Card className="border-0 shadow-sm mb-4 h-100">
                         <Card.Body>
                           <h5 style={{ color: '#901b20' }}>Mission & Vision</h5>
-                          {companyData.about.mission && (
+                          {getSafe('about.mission') && (
                             <div className="mb-3">
                               <h6 className="text-muted">Mission</h6>
-                              <p>{companyData.about.mission}</p>
+                              <p>{getSafe('about.mission')}</p>
                             </div>
                           )}
-                          {companyData.about.vision && (
+                          {getSafe('about.vision') && (
                             <div>
                               <h6 className="text-muted">Vision</h6>
-                              <p>{companyData.about.vision}</p>
+                              <p>{getSafe('about.vision')}</p>
                             </div>
                           )}
                         </Card.Body>
@@ -308,8 +274,8 @@ const ProfileView = () => {
                       <Card className="border-0 shadow-sm mb-4 h-100">
                         <Card.Body>
                           <h5 style={{ color: '#901b20' }}>Core Values</h5>
-                          {companyData.about.values ? (
-                            <p>{companyData.about.values}</p>
+                          {getSafe('about.values') ? (
+                            <p>{getSafe('about.values')}</p>
                           ) : (
                             <p className="text-muted">No values specified</p>
                           )}
@@ -323,8 +289,8 @@ const ProfileView = () => {
                   <Card className="border-0 shadow-sm mb-4">
                     <Card.Body>
                       <h5 style={{ color: '#901b20' }}>Company Culture</h5>
-                      {companyData.about.culture ? (
-                        <p>{companyData.about.culture}</p>
+                      {getSafe('about.culture') ? (
+                        <p>{getSafe('about.culture')}</p>
                       ) : (
                         <p className="text-muted">No culture description provided</p>
                       )}
@@ -340,31 +306,31 @@ const ProfileView = () => {
                         Achievements & Partnerships
                       </h5>
                       
-                      {companyData.about.achievements && (
+                      {getSafe('about.achievements') && (
                         <div className="mb-3">
                           <h6 className="text-muted">Key Achievements</h6>
-                          <p>{companyData.about.achievements}</p>
+                          <p>{getSafe('about.achievements')}</p>
                         </div>
                       )}
                       
-                      {companyData.about.certifications && (
+                      {getSafe('about.certifications') && (
                         <div className="mb-3">
                           <h6 className="text-muted">Certifications</h6>
-                          <p>{companyData.about.certifications}</p>
+                          <p>{getSafe('about.certifications')}</p>
                         </div>
                       )}
                       
-                      {companyData.about.awards && (
+                      {getSafe('about.awards') && (
                         <div className="mb-3">
                           <h6 className="text-muted">Awards</h6>
-                          <p>{companyData.about.awards}</p>
+                          <p>{getSafe('about.awards')}</p>
                         </div>
                       )}
                       
-                      {companyData.about.partnerships && (
+                      {getSafe('about.partnerships') && (
                         <div>
                           <h6 className="text-muted">Strategic Partnerships</h6>
-                          <p>{companyData.about.partnerships}</p>
+                          <p>{getSafe('about.partnerships')}</p>
                         </div>
                       )}
                     </Card.Body>

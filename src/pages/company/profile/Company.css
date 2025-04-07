@@ -1,68 +1,137 @@
-/* Custom Progress Bar */
+/* Company.css */
+.company-profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin-bottom: 2rem;
+}
+
+.custom-progress {
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
 .custom-progress .progress-bar {
-    background-color: #901b20;
-  }
-  
-  /* Step Indicators */
+  background-color: #901b20;
+  transition: width 0.3s ease;
+}
+
+/* Step Indicators */
+.step-indicators {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.step-indicators::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.step-indicator {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6c757d;
+  padding-top: 1.5rem;
+}
+
+.step-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.step-indicator.active {
+  color: #901b20;
+  font-weight: 600;
+}
+
+.step-indicator.active::before {
+  background-color: #901b20;
+  transform: translateX(-50%) scale(1.2);
+}
+
+.step-indicator.completed {
+  color: #901b20;
+}
+
+.step-indicator.completed::before {
+  content: '✓';
+  color: white;
+  background-color: #901b20;
+  font-size: 0.7rem;
+  line-height: 16px;
+}
+
+/* Form Sections */
+.form-section {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #901b20;
+  border-color: #901b20;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #7a161b;
+  border-color: #7a161b;
+}
+
+.btn-outline-primary {
+  color: #901b20;
+  border-color: #901b20;
+}
+
+.btn-outline-primary:hover {
+  background-color: #901b20;
+  color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
   .step-indicator {
-    font-size: 0.9rem;
-    font-weight: 500;
-    position: relative;
-    padding-bottom: 10px;
+    font-size: 0.75rem;
+    padding-top: 1.2rem;
   }
   
-  .step-indicator.active {
-    font-weight: bold;
+  .step-indicator::before {
+    width: 14px;
+    height: 14px;
   }
   
-  .step-indicator.completed::before {
-    content: '✓';
-    color: white;
-    background-color: #901b20;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    text-align: center;
-    margin-right: 5px;
-    font-size: 0.8rem;
-    line-height: 20px;
-  }
-  
-  /* Form Styling */
   .form-section {
-    background: white;
-    border-radius: 8px;
-    padding: 2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1.5rem;
   }
-  
-  /* Theme Colors */
-  .btn-primary {
-    background-color: #901b20;
-    border-color: #901b20;
-  }
-  
-  .btn-primary:hover {
-    background-color: #a81f25;
-    border-color: #a81f25;
-  }
-  
-  .text-primary {
-    color: #901b20 !important;
-  }
-  .review-profile .card {
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  }
-  
-  .review-profile .card-header {
-    font-weight: bold;
-    background-color: #f8f9fa;
-  }
-  
-  .company-profile-view {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
+}

@@ -1,27 +1,38 @@
 import { Form } from 'react-bootstrap';
 import { useState } from 'react';
 
+
 const BasicInfo = ({ formData, handleChange }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const handleLogoChange = (e) => {
+  const handleLogoChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Create preview URL immediately
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setPreviewUrl(event.target.result);
-      };
-      reader.readAsDataURL(file);
-      
-      // Store both the file and base64 version in formData
-      handleChange('logo', {
-        file: file,          // Original file object
-        preview: reader.result, // Base64 preview
-        name: file.name      // File name
-      });
+      try {
+        const base64String = await convertToBase64(file);
+        setPreviewUrl(base64String);
+        handleChange('logo', {
+          file: file,
+          preview: base64String,
+          name: file.name
+        });
+      } catch (error) {
+        console.error("Error processing logo:", error);
+      }
+    } else {
+      setPreviewUrl(null);
+      handleChange('logo', null);
     }
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
   };
 
   return (
