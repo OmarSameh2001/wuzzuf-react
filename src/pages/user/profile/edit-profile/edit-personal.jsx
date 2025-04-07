@@ -1,20 +1,14 @@
-import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState, useRef } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import { Container, Row, Col, Card, Form, Button, Image } from "react-bootstrap";
+import { Button, TextField, Avatar, Box, Typography } from "@mui/material";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import "./EditPersonal.css"; // Custom CSS for additional styling
 
 const EditPersonal = () => {
-  const navigate = useNavigate();
-  const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
+  const { profileData, updateProfile, goToNextStep } =
+    useContext(ProfileContext);
   const [localData, setLocalData] = useState(profileData);
-
-  useEffect(() => {
-    AOS.init({ duration: 1000 });
-  }, []);
+  const personalImageRef = useRef(null); // Separate ref for personal image
+  const nationalIdImageRef = useRef(null); // Separate ref for national ID image
 
   const handleChange = (e) => {
     setLocalData({ ...localData, [e.target.name]: e.target.value });
@@ -41,142 +35,128 @@ const EditPersonal = () => {
   };
 
   const handleSave = () => {
-    Object.keys(localData).forEach((key) => updateProfile(key, localData[key]));
-    goToNextStep("/applicant/profile/edit-education");
+    updateProfile("name", localData.name);
+    updateProfile("email", localData.email);
+    updateProfile("dob", localData.dob);
+    updateProfile("location", localData.location);
+    updateProfile("about", localData.about);
+    updateProfile("phone", localData.phone);
+    updateProfile("national_id", localData.national_id);
+    updateProfile("national_id_img", localData.nationalIdImg);
+    updateProfile("img", localData.img);
+    goToNextStep("applicant/profile/edit-education");
   };
 
   return (
-    <Container fluid className="edit-personal-container">
-      {/* Stepper Navigation */}
-      <ProfileStepper activeStep={0} />
-
-      {/* Profile Section */}
-      <Row className="justify-content-center text-center" data-aos="fade-down">
-        <Col xs={12}>
-          <Image src={localData.profileImage} roundedCircle className="profile-img" />
-          <h2 className="mt-2">{localData.name || "Your Name"}</h2>
-          <p className="text-muted">{localData.email || "your.email@example.com"}</p>
-        </Col>
-      </Row>
-
-      {/* Edit Form Section */}
-      <Row className="justify-content-center mt-4">
-        <Col md={6} data-aos="fade-up">
-          <Card className="edit-card">
-            <Card.Body>
-              <h4 className="text-center mb-3">Edit Personal Details</h4>
-              <Form>
-                {/* Name */}
-                <Form.Group controlId="name">
-                  <Form.Label>Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    value={localData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your full name"
-                  />
-                </Form.Group>
-
-                {/* Email */}
-                <Form.Group controlId="email" className="mt-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    name="email"
-                    value={localData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                  />
-                </Form.Group>
-
-                {/* Birthday */}
-                <Form.Group controlId="birthday" className="mt-3">
-                  <Form.Label>Birthday</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="birthday"
-                    value={localData.birthday || ""}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-
-                {/* Location */}
-                <Row className="mt-3">
-                  <Col>
-                    <Form.Group controlId="city">
-                      <Form.Label>City</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="city"
-                        value={localData.city || ""}
-                        onChange={handleChange}
-                        placeholder="Enter your city"
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group controlId="country">
-                      <Form.Label>Country</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="country"
-                        value={localData.country || ""}
-                        onChange={handleChange}
-                        placeholder="Enter your country"
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-
-                {/* Phone Number */}
-                <Form.Group controlId="phone" className="mt-3">
-                  <Form.Label>Phone Number</Form.Label>
-                  <Form.Control
-                    type="tel"
-                    name="phone"
-                    value={localData.phone || ""}
-                    onChange={handleChange}
-                    placeholder="Enter your phone number"
-                  />
-                </Form.Group>
-
-                {/* LinkedIn Profile */}
-                <Form.Group controlId="linkedin" className="mt-3">
-                  <Form.Label>LinkedIn Profile</Form.Label>
-                  <Form.Control
-                    type="url"
-                    name="linkedin"
-                    value={localData.linkedin || ""}
-                    onChange={handleChange}
-                    placeholder="Enter your LinkedIn profile link"
-                  />
-                </Form.Group>
-
-                {/* Bio */}
-                <Form.Group controlId="bio" className="mt-3">
-                  <Form.Label>Short Bio</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="bio"
-                    value={localData.bio || ""}
-                    onChange={handleChange}
-                    placeholder="Write a short bio about yourself"
-                  />
-                </Form.Group>
-
-                <div className="text-center mt-4">
-                  <Button variant="primary" onClick={handleSave}>
-                    Next: Education
-                  </Button>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <div>
+      <ProfileStepper activeStep={0} /> {/* Step 1 */}
+      <Box
+        sx={{ padding: 2, display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <h2>Edit Personal Details</h2>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <Avatar
+            src={localData.img}
+            sx={{ width: 80, height: 80, cursor: "pointer" }}
+            onClick={handleAvatarClick}
+          />
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            sx={{ margin: 0, cursor: "pointer" }}
+            onClick={handleAvatarClick}
+          >
+            Click to upload Personal image
+          </Typography>
+          <input
+            type="file"
+            accept="image/*"
+            ref={personalImageRef}
+            style={{ display: "none" }}
+            onChange={(e) => handleImageUpload(e, "img")}
+          />
+        </Box>
+        <TextField
+          label="Name"
+          name="name"
+          value={localData.name}
+          onChange={handleChange}
+          fullWidth
+        />
+        <TextField
+          label="Email"
+          name="email"
+          value={localData.email}
+          onChange={handleChange}
+          fullWidth
+          disabled
+        />
+        <TextField
+          label="Date of Birth"
+          name="dob"
+          type="date"
+          value={localData.dob}
+          onChange={handleChange}
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          label="Location"
+          name="location"
+          value={localData.location}
+          onChange={handleChange}
+          fullWidth
+        />
+        <TextField
+          label="About"
+          name="about"
+          value={localData.about}
+          onChange={handleChange}
+          fullWidth
+          multiline
+          rows={4}
+        />
+        <TextField
+          label="Phone Number"
+          name="phone"
+          value={localData.phone}
+          onChange={handleChange}
+          fullWidth
+        />
+        <TextField
+          label="National ID"
+          name="nationalId"
+          value={localData.nationalId}
+          onChange={handleChange}
+          fullWidth
+        />
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+          <Avatar
+            src={localData.nationalIdImg}
+            sx={{ width: 160, height: 100, cursor: "pointer", borderRadius: 2 }}
+            onClick={handleNationalIdClick}
+          />
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            sx={{ margin: 0, cursor: "pointer" }}
+            onClick={handleNationalIdClick}
+          >
+            Click to upload National ID image
+          </Typography>
+          <input
+            type="file"
+            accept="image/*"
+            ref={nationalIdImageRef}
+            style={{ display: "none" }}
+            onChange={(e) => handleImageUpload(e, "nationalIdImg")}
+          />
+        </Box>
+        <Button variant="contained" onClick={handleSave}>
+          Next: Education
+        </Button>
+      </Box>
+    </div>
   );
 };
 

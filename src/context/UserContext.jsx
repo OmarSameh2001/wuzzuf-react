@@ -1,5 +1,4 @@
-import { createContext, useEffect, useLayoutEffect, useState } from "react";
-import { AxiosApi } from "../services/api";
+import { createContext, useEffect, useState } from "react";
 import { getUser } from "../services/Auth";
 
 export const userContext = createContext();

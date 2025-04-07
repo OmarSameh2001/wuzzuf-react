@@ -13,6 +13,32 @@ function Navbar() {
     setIsCollapsed(!isCollapsed);
   };
 
+  return (
+    <nav
+      className="navbar navbar-expand-lg navbar-light"
+      style={{ backgroundColor: "#dedede", color: "#901b20" }}
+    >
+      <div className="container-fluid">
+        <Link className="navbar-brand" to={"/"} style={{ color: "#901b20" }}>
+          Recruitment Platform
+        </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          onClick={toggleNavbar}
+          aria-controls="navbarSupportedContent"
+          aria-expanded={!isCollapsed}
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div
+          className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}
+          id="navbarSupportedContent"
+        >
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0 gap-2">
+            {user?.user_type?.toLowerCase() === "jobseeker" && (
+              <>
                 <li className="nav-item">
                   <Link
                     style={{ textDecoration: "none", color: "#901b20" }}

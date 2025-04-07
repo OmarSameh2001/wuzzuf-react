@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AxiosApi, setAuthToken } from "./api";  // Make sure this path is correct
+import { AxiosApi } from "./Api";
 
 // Login Function
 export const loginUser = async (email, password) => {

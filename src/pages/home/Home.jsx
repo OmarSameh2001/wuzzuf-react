@@ -4,12 +4,12 @@ import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import './home.css';
-import intern from '../../assets/image/intern.jpg';
-import entry from '../../assets/image/entry.jpg';
-import senior from '../../assets/image/senior.jpg';
-import manager from '../../assets/image/manger.jpg';
-import expert from '../../assets/image/expert.jpg';
+// import './home.css';
+// import intern from '../../assets/image/intern.jpg';
+// import entry from '../../assets/image/entry.jpg';
+// import senior from '../../assets/image/senior.jpg';
+// import manager from '../../assets/image/manger.jpg';
+// import expert from '../../assets/image/expert.jpg';
 
 const Home = () => {
   const settings = {
@@ -174,16 +174,6 @@ const Home = () => {
           </Button>
         </Col>
       </Row>
-      <Row className="justify-content-center px-5 mb-5">
-        {[
-          { name: "Internship", image: intern },
-          { name: "Entry Level", image: entry },
-          { name: "Mid Level", image: senior },
-          { name: "Senior Level", image: manager },
-          { name: "Executive", image: expert },
-        ].map((career, index) => (
-          <Col key={index} xs={6} sm={4} md={2} className="mb-4">
-            <Card className="text-center border-0 shadow-sm">
       {/* Job Types Section */}
       <Row
         className="job-types-section mx-auto"
