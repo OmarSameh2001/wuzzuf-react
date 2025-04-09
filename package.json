@@ -25,6 +25,7 @@
     "dotenv": "^16.4.7",
     "framer-motion": "^12.6.2",
     "i": "^0.3.7",
+    "lottie-react": "^2.4.1",
     "react": "^19.0.0",
     "react-big-calendar": "^1.18.0",
     "react-bootstrap": "^2.10.9",
