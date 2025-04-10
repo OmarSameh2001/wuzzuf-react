@@ -1,4 +1,4 @@
-import { AxiosApi } from "./Api";
+import { AxiosApi } from "./api";
 
 // Create Answer
 export const createAnswer = async (answerData) => {

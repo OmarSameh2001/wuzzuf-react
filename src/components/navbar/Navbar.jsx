@@ -1,176 +1,248 @@
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../../context/UserContext";
 import { logoutUser } from "../../services/Auth";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Typography, AppBar, Toolbar, IconButton, Menu, MenuItem, Box, Button } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 function Navbar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isProfile, setIsProfile] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileAnchorEl, setMobileAnchorEl] = useState(null);
   const { user, setUser } = useContext(userContext);
   const navigate = useNavigate();
-  const toggleNavbar = () => {
-    setIsCollapsed(!isCollapsed);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setMobileAnchorEl(null);
   };
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light"
-      style={{ backgroundColor: "#dedede", color: "#901b20" }}
-    >
-      <div className="container-fluid">
-        <Link className="navbar-brand" to={"/"} style={{ color: "#901b20" }}>
-          Recruitment Platform
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          onClick={toggleNavbar}
-          aria-controls="navbarSupportedContent"
-          aria-expanded={!isCollapsed}
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div
-          className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}
-          id="navbarSupportedContent"
-        >
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0 gap-2">
+    <AppBar position="static" sx={{ backgroundColor: "#f8f9fa", color: "#901b20", boxShadow: "none" }}>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        {/* Left side - Brand and Navigation */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{
+              textDecoration: "none",
+              color: "#901b20",
+              fontWeight: "bold",
+              mr: 4
+            }}
+          >
+            Recruitment Platform
+          </Typography>
+
+          {/* Desktop Navigation */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
             {user?.user_type?.toLowerCase() === "jobseeker" && (
               <>
-                <li className="nav-item">
-                  <Link
-                    style={{ textDecoration: "none", color: "#901b20" }}
-                    to="/applicant/jobs"
-                  >
-                    Jobs
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    style={{ textDecoration: "none", color: "#901b20" }}
-                    to="/applicant/saved"
-                  >
-                    Saved
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    style={{ textDecoration: "none", color: "#901b20" }}
-                    to="/applicant/applications"
-                  >
-                    Applications
-                  </Link>
-                </li>
+                <Button
+                  component={Link}
+                  to="/applicant/jobs"
+                  sx={{ color: "#901b20", textTransform: "none" }}
+                >
+                  Jobs
+                </Button>
+                <Button
+                  component={Link}
+                  to="/applicant/saved"
+                  sx={{ color: "#901b20", textTransform: "none" }}
+                >
+                  Saved
+                </Button>
+                <Button
+                  component={Link}
+                  to="/applicant/applications"
+                  sx={{ color: "#901b20", textTransform: "none" }}
+                >
+                  Applications
+                </Button>
               </>
             )}
             {user?.user_type?.toLowerCase() === "company" && (
               <>
-                <li className="nav-item">
-                  <Link
-                    style={{ textDecoration: "none", color: "#901b20" }}
-                    to="/company/talents"
-                  >
-                    Talents
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link style={{ textDecoration: "none" }} to="/company/jobs">
-                    My Jobs
-                  </Link>
-                </li>
-                {/* <li className="nav-item">
-                <Link style={{ textDecoration: 'none' }} to="jobCreate">Create Job</Link>
-            </li> */}
+                <Button
+                  component={Link}
+                  to="/company/talents"
+                  sx={{ color: "#901b20", textTransform: "none" }}
+                >
+                  Talents
+                </Button>
+                <Button
+                  component={Link}
+                  to="/company/jobs"
+                  sx={{ color: "#901b20", textTransform: "none" }}
+                >
+                  My Jobs
+                </Button>
               </>
             )}
+          </Box>
+        </Box>
 
-<div
-  className="ms-auto d-flex align-items-center gap-2"
-  style={{
-    position: "absolute",
-    right: "10px",
-    top: "10px",
-    cursor: "pointer",
-  }}
-  onClick={() => setIsProfile(!isProfile)}
->
-  {user && Object.keys(user).length !== 0 ? (
-    <>
-      {/* Dropdown menu */}
-      {isProfile && (
-        <div
-          style={{
-            position: "absolute",
-            top: "40px",
-            right: "10px",
-            backgroundColor: "white",
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-            borderRadius: "8px",
-            padding: "10px",
-            zIndex: 1000,
-          }}
-        >
-          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            <li style={{ padding: "8px 0", cursor: "pointer" }}>
-              <Link
-                to="/applicant/profile"
-                style={{ textDecoration: "none", color: "#901b20" }}
+        {/* Right side - User profile/Login */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {user && Object.keys(user).length !== 0 ? (
+            <>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography sx={{ display: { xs: "none", sm: "block" } }}>
+                  {user?.name}
+                </Typography>
+                <IconButton
+                  onClick={handleProfileMenuOpen}
+                  sx={{ p: 0 }}
+                >
+                  <Avatar
+                    src={user?.img}
+                    alt="Profile"
+                    sx={{ width: 40, height: 40, bgcolor: "#901b20" }}
+                  />
+                </IconButton>
+              </Box>
+
+              {/* Profile Menu */}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                PaperProps={{
+                  sx: {
+                    mt: 1.5,
+                    "& .MuiMenuItem-root": {
+                      color: "#901b20",
+                      "&:hover": {
+                        backgroundColor: "rgba(144, 27, 32, 0.1)"
+                      }
+                    }
+                  }
+                }}
               >
-                Profile
-              </Link>
-            </li>
-            <li
-              style={{ padding: "8px 0", cursor: "pointer", color: "red" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (window.confirm("Are you sure you want to logout?")) {
-                  logoutUser();
-                  setUser({});
-                  navigate("/");
+                <MenuItem
+                  component={Link}
+                  to="/applicant/profile"
+                  onClick={handleMenuClose}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    if (window.confirm("Are you sure you want to logout?")) {
+                      logoutUser();
+                      setUser({});
+                      navigate("/");
+                    }
+                  }}
+                  sx={{ color: "#901b20" }}
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              to="/register"
+              variant="contained"
+              sx={{
+                backgroundColor: "#901b20",
+                "&:hover": {
+                  backgroundColor: "#7a161b"
                 }
               }}
             >
-              Logout
-            </li>
-          </ul>
-        </div>
-      )}
+              Get Started
+            </Button>
+          )}
 
-      {/* Avatar and Username */}
-      <div className="d-flex align-items-center gap-2">
-        <Typography>{user?.name}</Typography>
-        <Avatar
-          src={user?.img}
-          alt="Profile"
-          sx={{ width: 40, height: 40, backgroundColor: "#901b20" }}
-        />
-      </div>
-    </>
-  ) : (
-    // When no user is logged in
-    <li className="nav-item" style={{ marginTop: "10px" }}>
-      <Link
-        to="/register"
-        style={{
-          textDecoration: "none",
-          padding: "10px 20px",
-          background: "#007bff",
-          color: "white",
-          borderRadius: "5px",
-        }}
-      >
-        Get Started
-      </Link>
-    </li>
-  )}
-</div>
+          {/* Mobile menu button */}
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleMobileMenuOpen}
+            sx={{ display: { md: "none" }, ml: 2 }}
+          >
+            <MenuIcon sx={{ color: "#901b20" }} />
+          </IconButton>
 
-          </ul>
-        </div>
-      </div>
-    </nav>
+          {/* Mobile menu */}
+          <Menu
+            anchorEl={mobileAnchorEl}
+            open={Boolean(mobileAnchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              sx: {
+                "& .MuiMenuItem-root": {
+                  color: "#901b20",
+                  "&:hover": {
+                    backgroundColor: "rgba(144, 27, 32, 0.1)"
+                  }
+                }
+              }
+            }}
+          >
+            {user?.user_type?.toLowerCase() === "jobseeker" && (
+              <>
+                <MenuItem
+                  component={Link}
+                  to="/applicant/jobs"
+                  onClick={handleMenuClose}
+                >
+                  Jobs
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/applicant/saved"
+                  onClick={handleMenuClose}
+                >
+                  Saved
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/applicant/applications"
+                  onClick={handleMenuClose}
+                >
+                  Applications
+                </MenuItem>
+              </>
+            )}
+            {user?.user_type?.toLowerCase() === "company" && (
+              <>
+                <MenuItem
+                  component={Link}
+                  to="/company/talents"
+                  onClick={handleMenuClose}
+                >
+                  Talents
+                </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/company/jobs"
+                  onClick={handleMenuClose}
+                >
+                  My Jobs
+                </MenuItem>
+              </>
+            )}
+          </Menu>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 

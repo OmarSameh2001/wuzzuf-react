@@ -9,11 +9,41 @@ import {
   Calendar, 
   People, 
   Award,
-  Briefcase
+  Briefcase,
+  PatchCheck,
+  Trophy,
+  Handshake
 } from 'react-bootstrap-icons';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1, 
+    transition: { 
+      duration: 0.5,
+      when: "beforeChildren",
+      staggerChildren: 0.1
+    } 
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const logoVariants = {
+  hidden: { scale: 0, opacity: 0 },
+  visible: { 
+    scale: 1, 
+    opacity: 1,
+    transition: { type: 'spring', stiffness: 260, damping: 20 }
+  }
+};
 
 const ProfileView = () => {
   const { id } = useParams();
@@ -22,19 +52,6 @@ const ProfileView = () => {
   const [error, setError] = useState(null);
   const [logoUrl, setLogoUrl] = useState(null);
   const [logoError, setLogoError] = useState(false);
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
-      transition: { 
-        duration: 0.5,
-        when: "beforeChildren",
-        staggerChildren: 0.1
-      } 
-    }
-  };
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -45,8 +62,21 @@ const ProfileView = () => {
         // Handle logo if present in response
         if (response.data.logo) {
           setLogoError(false);
-          // Assuming the logo is returned as a URL or base64 string from Django
-          setLogoUrl(response.data.logo);
+          // Handle different logo formats
+          if (response.data.logo instanceof Blob || response.data.logo instanceof File) {
+            const url = URL.createObjectURL(response.data.logo);
+            setLogoUrl(url);
+            return () => URL.revokeObjectURL(url);
+          } else if (typeof response.data.logo === 'string') {
+            // Handle both URL and base64 strings
+            if (response.data.logo.startsWith('data:image') || 
+                /^[A-Za-z0-9+/]+={0,2}$/.test(response.data.logo)) {
+              setLogoUrl(response.data.logo.startsWith('data:') ? 
+                response.data.logo : `data:image/jpeg;base64,${response.data.logo}`);
+            } else {
+              setLogoUrl(response.data.logo);
+            }
+          }
         }
       } catch (err) {
         console.error('Error fetching company data:', err);
@@ -62,7 +92,7 @@ const ProfileView = () => {
   if (loading) {
     return (
       <Container className="py-5 text-center">
-        <Spinner animation="border" role="status" variant="primary">
+        <Spinner animation="border" role="status" style={{ color: '#901b20' }}>
           <span className="visually-hidden">Loading...</span>
         </Spinner>
         <p className="mt-3">Loading company profile...</p>
@@ -161,7 +191,10 @@ const ProfileView = () => {
                       boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
                     }}
                     alt="Company logo"
-                    onError={() => setLogoError(true)}
+                    onError={() => {
+                      console.log('Failed to load logo:', logoUrl);
+                      setLogoError(true);
+                    }}
                   />
                   <h4 className="mt-3" style={{ color: '#901b20' }}>Company Logo</h4>
                 </div>
@@ -342,28 +375,40 @@ const ProfileView = () => {
                       
                       {companyData.about.achievements && (
                         <div className="mb-3">
-                          <h6 className="text-muted">Key Achievements</h6>
+                          <h6 className="text-muted">
+                            <Trophy className="me-1" />
+                            Key Achievements
+                          </h6>
                           <p>{companyData.about.achievements}</p>
                         </div>
                       )}
                       
                       {companyData.about.certifications && (
                         <div className="mb-3">
-                          <h6 className="text-muted">Certifications</h6>
+                          <h6 className="text-muted">
+                            <PatchCheck className="me-1" />
+                            Certifications
+                          </h6>
                           <p>{companyData.about.certifications}</p>
                         </div>
                       )}
                       
                       {companyData.about.awards && (
                         <div className="mb-3">
-                          <h6 className="text-muted">Awards</h6>
+                          <h6 className="text-muted">
+                            <Award className="me-1" />
+                            Awards
+                          </h6>
                           <p>{companyData.about.awards}</p>
                         </div>
                       )}
                       
                       {companyData.about.partnerships && (
                         <div>
-                          <h6 className="text-muted">Strategic Partnerships</h6>
+                          <h6 className="text-muted">
+                            <Handshake className="me-1" />
+                            Strategic Partnerships
+                          </h6>
                           <p>{companyData.about.partnerships}</p>
                         </div>
                       )}

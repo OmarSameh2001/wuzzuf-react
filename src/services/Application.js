@@ -1,4 +1,4 @@
-import { AxiosApi } from "./Api";
+import { AxiosApi } from "./api";
 
 // Create Application
 export const createApplication = async (applicationData) => {

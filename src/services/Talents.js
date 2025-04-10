@@ -1,4 +1,4 @@
-import { AxiosApi } from "./Api";
+import { AxiosApi } from "./api";
 
 export const getTalents = async ({ filters = {}, page = 1, pageSize = 10 }) => {
   const params = new URLSearchParams({

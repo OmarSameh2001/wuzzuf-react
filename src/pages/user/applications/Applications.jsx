@@ -28,7 +28,7 @@ const JobApplication = () => {
   });
 
   const [searchFilters, setSearchFilters] = useState({
-    user: `${user.id}`,
+    user: `${user?.id}`,
     job: "",
     status: "2,3,4,5,6",
   });
@@ -54,7 +54,7 @@ const JobApplication = () => {
 
   return (
     <div className="d-flex flex-column align-items-center w-100">
-      <h2>Your Jobs Applications</h2>
+      <h2 style={{ color: "#901b20" }}>Your Jobs Applications</h2>
       {application?.length > 0 ? (
         application.map((application) => (
           <JobCard
@@ -73,10 +73,20 @@ const JobApplication = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h4">No applications found</Typography>
+          <Typography variant="h4" style={{ color: "#901b20" }}>
+            No applications found
+          </Typography>
           <button
-            className="btn btn-primary"
+            className="btn"
             onClick={() => navigate("/applicant/jobs")}
+            style={{ 
+              backgroundColor: "#901b20", 
+              color: "white",
+              padding: "8px 16px",
+              borderRadius: "4px",
+              border: "none",
+              cursor: "pointer"
+            }}
           >
             Browse Jobs
           </button>

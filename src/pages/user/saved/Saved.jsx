@@ -22,7 +22,7 @@ function UserSaved() {
   });
 
   const [searchFilters, setSearchFilters] = useState({
-    user: `${user.id}`,
+    user: `${user?.id}`,
     job: "",
     status: "1",
   });
@@ -65,7 +65,7 @@ function UserSaved() {
 
   return (
     <div className="d-flex flex-column align-items-center justify-content-center w-100">
-      <h2>Your Saved Jobs</h2>
+      <h2 style={{ color: "#901b20" }}>Your Saved Jobs</h2>
       {/* <div className="filters mb-3 d-flex flex-column align-items-center gap-2">
         <div className="d-flex gap-2">
           <input
@@ -75,6 +75,7 @@ function UserSaved() {
             name="user"
             value={filters.user}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
           <input
             type="text"
@@ -83,6 +84,7 @@ function UserSaved() {
             name="job"
             value={filters.job}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
           <input
             type="text"
@@ -91,6 +93,7 @@ function UserSaved() {
             name="status"
             value={filters.status}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
         </div>
         <div className="d-flex gap-2">
@@ -103,7 +106,8 @@ function UserSaved() {
               )
             }
             onClick={handleReset}
-            className="btn btn-danger"
+            className="btn"
+            style={{ backgroundColor: "#901b20", color: "white" }}
           >
             Reset
           </button>
@@ -116,7 +120,8 @@ function UserSaved() {
               )
             }
             onClick={handleSearch}
-            className="btn btn-primary"
+            className="btn"
+            style={{ backgroundColor: "#901b20", color: "white" }}
           >
             Search
           </button>
@@ -141,10 +146,13 @@ function UserSaved() {
             alignItems: "center",
           }}
         >
-          <Typography variant="h4">No applications found</Typography>
+          <Typography variant="h4" style={{ color: "#901b20" }}>
+            No applications found
+          </Typography>
           <button
-            className="btn btn-primary"
+            className="btn"
             onClick={() => navigate("/applicant/jobs")}
+            style={{ backgroundColor: "#901b20", color: "white" }}
           >
             Browse Jobs
           </button>

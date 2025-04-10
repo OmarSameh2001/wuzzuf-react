@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-// import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import ProcessColumn from "../../../components/companyProcess/ProcessColumn";
 import JobDetails from "../../../components/job/JobDetails";
 import { Box, Button } from "@mui/material";
 import ApplicationForm from "./ApplicationForm";
-// import PhasesSwitcher from '../../../components/job/PhasesSwitcher';
 import Meeting from "../../../components/job/user/Meeting";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -16,6 +14,7 @@ import {
 } from "../../../services/Application";
 import { userContext } from "../../../context/UserContext";
 import { getJobById } from "../../../services/Job";
+
 const UserSingleJob = () => {
   const { jobId } = useParams();
   const { user } = useContext(userContext);
@@ -24,7 +23,6 @@ const UserSingleJob = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [clickedColumn, setClickedColumn] = useState(1);
-  // const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
@@ -34,7 +32,6 @@ const UserSingleJob = () => {
     user: `${user?.id}`,
     job: `${jobId}` || null,
   });
-
 
   const formRef = useRef(null);
 
@@ -65,18 +62,16 @@ const UserSingleJob = () => {
   } = useQuery({
     queryKey: ["userApp", page, pageSize, searchFilters],
     queryFn: async () => {
-      // console.log({ filters: searchFilters, page, pageSize })
       const res = await getApplicationsByUser({
         filters: searchFilters,
         page,
         pageSize,
       });
-      // console.log(res)
       setTotal(res.count);
       return res.results[0] || {};
     },
   });
-  // console.log(userApp)
+
   const {
     data: jobsData,
     error: jobsError,
@@ -85,26 +80,9 @@ const UserSingleJob = () => {
     queryKey: ["jobs", page, pageSize, searchFilters],
     queryFn: async () => {
       const res = await getJobById(jobId);
-      // console.log(res);
       return res;
     },
   });
-
-  // useEffect(() => {
-  //   const fetchUserJob = async () => {
-  //     try {
-  //       // Fetch user-job details (Replace with actual API endpoint)
-  //       const response = await axios.get(`/api/user-jobs/${jobId}`);
-  //       setUserJob(response.data);
-  //     } catch (err) {
-  //       setError("Failed to fetch job application details.");
-  //     } finally {
-  //       setLoading(false); // Ensure loading is false after fetching
-  //     }
-  //   };
-
-  //   fetchUserJob();
-  // }, [jobId]);
 
   if (jobsLoading || userAppLoading)
     return <p className="text-center">Loading...</p>;
@@ -119,35 +97,65 @@ const UserSingleJob = () => {
             setter={setClickedColumn}
             column={clickedColumn}
             phases={phases}
+            style={{
+              backgroundColor: "#901b20",
+              color: "white",
+              padding: "10px",
+              borderRadius: "5px",
+              margin: "10px 0"
+            }}
           />
-          <div style={{ minHeight: "30vh", display: "flex", justifyContent: "center", flexDirection: "column" }}>
-          {clickedColumn === 1 && (
-            <ApplicationForm
-              questions={userApp?.job_details?.questions}
-              answers={userApp?.answers}
-              application={userApp}
-              refetch={userAppRefetch}
-            />
-          )}
-          {clickedColumn > 1 && (
-            <Meeting
-              phase={phases[clickedColumn - 1]}
-              applicationData={userApp}
-              clickedColumn={clickedColumn}
-            />
-          )}
+          <div style={{ 
+            minHeight: "30vh", 
+            display: "flex", 
+            justifyContent: "center", 
+            flexDirection: "column",
+            width: "100%",
+            backgroundColor: "#f8f9fa",
+            padding: "20px",
+            borderRadius: "8px",
+            border: "1px solid #901b20"
+          }}>
+            {clickedColumn === 1 && (
+              <ApplicationForm
+                questions={userApp?.job_details?.questions}
+                answers={userApp?.answers}
+                application={userApp}
+                refetch={userAppRefetch}
+              />
+            )}
+            {clickedColumn > 1 && (
+              <Meeting
+                phase={phases[clickedColumn - 1]}
+                applicationData={userApp}
+                clickedColumn={clickedColumn}
+                style={{
+                  border: "1px solid #901b20",
+                  borderRadius: "5px",
+                  padding: "15px"
+                }}
+              />
+            )}
           </div>
         </>
       ) : (
-        <>
-          <button
-            className="btn btn-primary mt-2"
-            style={{ width: "fit-content" }}
-            onClick={() => handleClick()}
-          >
-            Apply for this job!
-          </button>
-        </>
+        <Button
+          variant="contained"
+          onClick={() => handleClick()}
+          style={{
+            backgroundColor: "#901b20",
+            color: "white",
+            marginTop: "20px",
+            padding: "10px 20px",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            '&:hover': {
+              backgroundColor: "#7a161b"
+            }
+          }}
+        >
+          Apply for this job!
+        </Button>
       )}
     </div>
   );

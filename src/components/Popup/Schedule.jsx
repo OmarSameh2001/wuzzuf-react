@@ -10,7 +10,7 @@ const CompanySchedule = ({ applicant, phase, handleClose }) => {
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [meetingLink, setMeetingLink] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(phase)
+
   // Populate state with applicant's existing interview details
   useEffect(() => {
     if (phase === 3) {
@@ -43,18 +43,7 @@ const CompanySchedule = ({ applicant, phase, handleClose }) => {
         interview_link: meetingLink,
         phase,
       };
-      // if (phase === 3) {
-      //   updateData.interview_link = meetingLink;
-      //   updateData.interview_time =
-      //     dayjs(selectedDateTime).format("YYYY-MM-DD HH:mm");
-      // } else if (phase === 4) {
-      //   updateData.hr_link = meetingLink;
-      //   updateData.hr_time = dayjs(selectedDateTime).format("YYYY-MM-DD HH:mm");
-      // } else if (phase === 5) {
-      //   updateData.offer_link = meetingLink;
-      //   updateData.offer_time = dayjs(selectedDateTime).format("YYYY-MM-DD HH:mm");
-      // }
-      console.log(updateData)
+
       const response = await axios.patch(
         `http://127.0.0.1:8000/applications/${applicant.id}/schedule_interview/`,
         updateData,
@@ -78,6 +67,7 @@ const CompanySchedule = ({ applicant, phase, handleClose }) => {
       setLoading(false);
     }
   };
+
   const handleAssessment = async () => {
     if (!meetingLink) {
       alert("Assessment link is required.");
@@ -115,11 +105,10 @@ const CompanySchedule = ({ applicant, phase, handleClose }) => {
           maxWidth: 600,
           margin: "auto",
           textAlign: "left",
-          // display: phase != 3 && phase != 4 ? "none" : "initial",
         }}
       >
         {/* Applicant Name Input */}
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ color: "#901b20" }}>
           <strong>
             {phase != 2 ? "Schedule Interview" : "Assign Assessment"} for:
           </strong>{" "}
@@ -127,23 +116,40 @@ const CompanySchedule = ({ applicant, phase, handleClose }) => {
         </Typography>
 
         {/* Date & Time Picker */}
-        {/* {console.log(phase === 2)} */}
         {phase != 2 && (
           <>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ color: "#901b20" }}>
               Select Date & Time:
             </Typography>
             <DateTimePicker
               label="Pick a Date & Time"
               value={selectedDateTime}
               onChange={setSelectedDateTime}
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              renderInput={(params) => (
+                <TextField 
+                  {...params} 
+                  fullWidth 
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#901b20",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#901b20",
+                      },
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "#901b20",
+                    },
+                  }}
+                />
+              )}
             />
           </>
         )}
 
         {/* Meeting Link Input */}
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ color: "#901b20" }}>
           {phase != 2 ? "Meeting Link:" : "Assessment Link:"}
         </Typography>
         <TextField
@@ -151,12 +157,31 @@ const CompanySchedule = ({ applicant, phase, handleClose }) => {
           value={meetingLink}
           onChange={(e) => setMeetingLink(e.target.value)}
           placeholder={phase === 2 ? "Enter assessment link" : "Enter meeting link (e.g., Zoom, Google Meet)"}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#901b20",
+              },
+              "&:hover fieldset": {
+                borderColor: "#901b20",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              color: "#901b20",
+            },
+          }}
         />
 
         {/* Submit Button */}
         <Button
           variant="contained"
-          color="primary"
+          sx={{
+            backgroundColor: "#901b20",
+            "&:hover": {
+              backgroundColor: "#7a161b",
+            },
+            marginTop: 2,
+          }}
           fullWidth
           onClick={(event) => {
             if (phase === 2) {

@@ -62,7 +62,7 @@ function UserJobs() {
 
   return (
     <div className="d-flex flex-column align-items-center justify-content-center w-100">
-      <h2>Available Jobs</h2>
+      <h2 style={{ color: "#901b20" }}>Available Jobs</h2>
       <div className="filters mb-3 d-flex flex-column align-items-center gap-2">
         <div className="d-flex gap-2">
           <input
@@ -72,6 +72,7 @@ function UserJobs() {
             name="title"
             value={filters.title}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
           <input
             type="text"
@@ -80,6 +81,7 @@ function UserJobs() {
             name="location"
             value={filters.location}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
           <input
             type="text"
@@ -88,6 +90,7 @@ function UserJobs() {
             name="experince"
             value={filters.experince}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
           <input
             type="text"
@@ -96,6 +99,7 @@ function UserJobs() {
             name="type_of_job"
             value={filters.type_of_job}
             onChange={handleChange}
+            style={{ borderColor: "#901b20" }}
           />
         </div>
         <div className="d-flex gap-2">
@@ -109,7 +113,8 @@ function UserJobs() {
               )
             }
             onClick={handleReset}
-            className="btn btn-danger"
+            className="btn"
+            style={{ backgroundColor: "#901b20", color: "white" }}
           >
             Reset
           </button>
@@ -123,7 +128,8 @@ function UserJobs() {
               )
             }
             onClick={handleSearch}
-            className="btn btn-primary"
+            className="btn"
+            style={{ backgroundColor: "#901b20", color: "white" }}
           >
             Search
           </button>

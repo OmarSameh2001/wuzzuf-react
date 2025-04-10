@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AxiosApi } from "./Api";
+import { AxiosApi } from "./api";
 
 // Create Job
 export const createJob = async (jobData) => {

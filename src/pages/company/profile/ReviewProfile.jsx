@@ -23,16 +23,21 @@ const ReviewProfile = ({ formData }) => {
       else if (formData.logo instanceof Blob || formData.logo instanceof File) {
         const url = URL.createObjectURL(formData.logo);
         setLogoUrl(url);
+        // Cleanup function to revoke the object URL
         return () => URL.revokeObjectURL(url);
       }
-      // Case 3: Base64 string
+      // Case 3: Base64 string or URL string
       else if (typeof formData.logo === 'string') {
-        // Handle both prefixed and non-prefixed base64
-        if (formData.logo.startsWith('data:image') || 
-            /^[A-Za-z0-9+/]+={0,2}$/.test(formData.logo)) {
-          setLogoUrl(formData.logo.startsWith('data:') ? 
-            formData.logo : `data:image/jpeg;base64,${formData.logo}`);
-        } else {
+        // Check if it's already a data URL
+        if (formData.logo.startsWith('data:image')) {
+          setLogoUrl(formData.logo);
+        } 
+        // Check if it's a base64 string without prefix
+        else if (/^[A-Za-z0-9+/]+={0,2}$/.test(formData.logo)) {
+          setLogoUrl(`data:image/jpeg;base64,${formData.logo}`);
+        }
+        // Assume it's a regular URL
+        else {
           setLogoUrl(formData.logo);
         }
       }
@@ -41,7 +46,7 @@ const ReviewProfile = ({ formData }) => {
       setLogoError(true);
       setLogoUrl(null);
     }
-  }, [formData?.logo])
+  }, [formData?.logo]);
 
   if (!formData) {
     return (
@@ -74,46 +79,49 @@ const ReviewProfile = ({ formData }) => {
         <Card.Body>
           {/* Enhanced Logo Display */}
           <motion.div
-      className="text-center mb-4"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-    >
-      {logoUrl && !logoError ? (
-        <div>
-          <Image 
-            src={logoUrl}
-            rounded
-            style={{ 
-              maxWidth: '200px',
-              maxHeight: '200px',
-              border: '3px solid #901b20',
-              objectFit: 'contain'
-            }}
-            alt="Company logo"
-            onError={() => setLogoError(true)}
-          />
-          <h5 className="mt-2" style={{ color: '#901b20' }}>Company Logo</h5>
-        </div>
-      ) : (
-        <div className="d-flex flex-column align-items-center">
-          <div 
-            className="d-flex align-items-center justify-content-center"
-            style={{
-              width: '200px',
-              height: '200px',
-              border: '2px dashed #ccc',
-              borderRadius: '4px',
-              backgroundColor: '#f8f9fa'
-            }}
+            className="text-center mb-4"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
           >
-            <span className="text-muted">No Logo Available</span>
-          </div>
-          <h5 className="mt-2 text-muted">Company Logo</h5>
-        </div>
-      )}
-    </motion.div>
-          {/* Basic Info */}
+            {logoUrl && !logoError ? (
+              <div>
+                <Image 
+                  src={logoUrl}
+                  rounded
+                  style={{ 
+                    maxWidth: '200px',
+                    maxHeight: '200px',
+                    border: '3px solid #901b20',
+                    objectFit: 'contain'
+                  }}
+                  alt="Company logo"
+                  onError={() => {
+                    console.log('Image load error for URL:', logoUrl);
+                    setLogoError(true);
+                  }}
+                />
+                <h5 className="mt-2" style={{ color: '#901b20' }}>Company Logo</h5>
+              </div>
+            ) : (
+              <div className="d-flex flex-column align-items-center">
+                <div 
+                  className="d-flex align-items-center justify-content-center"
+                  style={{
+                    width: '200px',
+                    height: '200px',
+                    border: '2px dashed #ccc',
+                    borderRadius: '4px',
+                    backgroundColor: '#f8f9fa'
+                  }}
+                >
+                  <span className="text-muted">No Logo Available</span>
+                </div>
+                <h5 className="mt-2 text-muted">Company Logo</h5>
+              </div>
+            )}
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -229,7 +237,7 @@ const ReviewProfile = ({ formData }) => {
                 ))}
               </Card.Body>
             </Card>
-          </motion.div>
+          </motion.div> 
         </Card.Body>
       </Card>
     </motion.div>
@@ -237,3 +245,4 @@ const ReviewProfile = ({ formData }) => {
 };
 
 export default ReviewProfile;
+         
