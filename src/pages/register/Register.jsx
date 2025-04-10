@@ -15,7 +15,7 @@ import {
 import { Email, Lock, Person } from "@mui/icons-material";
 import { Link as RouterLink } from "react-router-dom";
 import Lottie from "lottie-react";
-import animationData from '../../assets/Animation - 1744205628088.json';
+import animationData from '../../assets/LoginRegister.json'; 
 
 const Register = () => {
   const [isEmployer, setIsEmployer] = useState(false);
@@ -53,7 +53,10 @@ const Register = () => {
         user_type: formData.user_type.toUpperCase(),
       };
       await axios.post("http://localhost:8000/user/register/", formattedData);
-      navigate("/login");
+      localStorage.setItem("email", formData.email);
+      console.log(localStorage.getItem("email"))
+      // Navigate to OTP verification page
+      navigate("/verify-otp");
     } catch (error) {
       alert("Registration failed. Please check your details.");
       console.error("Registration failed", error);
@@ -68,7 +71,7 @@ const Register = () => {
         alignItems: "center",
         width: "90%",
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #f8f1f1 0%, #e6d6d6 100%)", // Lighter gradient with burgundy tones
+        // background: "", // Lighter gradient with burgundy tones
       }}
     >
       <Container maxWidth="lg">

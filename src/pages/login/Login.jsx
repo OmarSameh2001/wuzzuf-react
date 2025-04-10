@@ -17,7 +17,7 @@ import { Email, Lock } from "@mui/icons-material";
 import { loginUser } from "../../services/Auth";
 import { userContext } from "../../context/UserContext";
 import Lottie from "lottie-react";
-import animationData from '../../assets/Animation - 1744205628088.json'; // Make sure to have this file
+import animationData from '../../assets/LoginRegister.json'; 
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -48,8 +48,9 @@ function Login() {
         justifyContent: "center",
         alignItems: "center",
         width: "90%",
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #f8f1f1 0%, #e6d6d6 100%)",
+        hight: "90%",
+        minHeight: "80vh",
+        // background: "",
       }}
     >
       <Container maxWidth="lg">
@@ -61,7 +62,7 @@ function Login() {
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100%",
-                backgroundColor: "#f8f1f1",
+                backgroundColor: "rgba(247, 237, 237, 0.95)",
                 borderRadius: 2,
               }}
             >

@@ -10,7 +10,7 @@ import { UserContextProvider } from "./context/UserContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AxiosProvider from "./services/AxiosProvider";
 import Login from './pages/login/Login';
-
+import VerifyOTP from "./pages/otp/VerifyOTP"; 
 
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
@@ -83,6 +83,7 @@ function App() {
                       <Route path="/applicant" element={<UserHome />} />
                       <Route path="/applicant/jobs" element={<UserJobs />} />
                       <Route path="/applicant/saved" element={<UserSaved />} />
+                      <Route path="/verify-otp" element={<VerifyOTP />} />
                       <Route
                         path="/applicant/applications"
                         element={<UserApplications />}

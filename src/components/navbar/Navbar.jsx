@@ -16,7 +16,7 @@ function Navbar() {
   return (
     <nav
       className="navbar navbar-expand-lg navbar-light"
-      style={{ backgroundColor: "#dedede", color: "#901b20" }}
+      style={{ backgroundColor: "#f7f7f7", color: "#901b20" }}
     >
       <div className="container-fluid">
         <Link className="navbar-brand" to={"/"} style={{ color: "#901b20" }}>
