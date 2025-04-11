@@ -26,9 +26,13 @@ export const ProfileProvider = ({ children }) => {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const goToNextStep = (nextPath) => {
-    navigate(nextPath);
+  // const goToNextStep = (nextPath) => {
+  //   navigate(nextPath);
+  // };
+  const goToNextStep = (path, state = {}) => {
+    navigate(path, { state });
   };
+  
 
   return (
     <ProfileContext.Provider value={{ profileData, setProfileData, updateProfile, goToNextStep }}>

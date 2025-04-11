@@ -10,6 +10,8 @@ import { UserContextProvider } from "./context/UserContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AxiosProvider from "./services/AxiosProvider";
 import Login from './pages/login/Login';
+import VerifyOTP from "./pages/otp/VerifyOTP"; 
+
 
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
@@ -52,18 +54,20 @@ function App() {
   const Register = React.lazy(() => import("./pages/register/Register"));
   const CompanyTalents = React.lazy(() =>
     import("./pages/company/talents/Talents")
+  
   );
   const SingleJob = React.lazy(() => import("./pages/company/jobs/SingleJob"));
   const UserSingleJob = React.lazy(() => import("./pages/user/jobs/UserSingleJob"));
   const ApplicationForm = React.lazy(() => import("./pages/user/jobs/ApplicationForm"));
-  
-  // Add company profile components with correct path
-  const CompanyProfile = React.lazy(() => import("./pages/company/profile/CompanyProfile"));
-  const ProfileView = React.lazy(() => import("./pages/company/profile/ProfileView"));
-  const AboutCompany = React.lazy(() => import("./pages/company/profile/AboutCompany"));
-  const BasicInfo = React.lazy(() => import("./pages/company/profile/BasicInfo"));
-  const ContactInfo = React.lazy(() => import("./pages/company/profile/ContactInfo"));
-  const ErrorBoundary = React.lazy(() => import("./pages/company/profile/ErrorBoundary"));
+  // // const RegisterCompany = React.lazy(() => import("./pages/register/RegisterCompany"));
+// Add company profile components with correct path
+const CompanyProfile = React.lazy(() => import("./pages/company/profile/CompanyProfile"));
+const ProfileView = React.lazy(() => import("./pages/company/profile/ProfileView"));
+const AboutCompany = React.lazy(() => import("./pages/company/profile/AboutCompany"));
+const BasicInfo = React.lazy(() => import("./pages/company/profile/BasicInfo"));
+const ContactInfo = React.lazy(() => import("./pages/company/profile/ContactInfo"));
+const ErrorBoundary = React.lazy(() => import("./pages/company/profile/ErrorBoundary"));
+const RecommendedJobs = React.lazy(() => import("./pages/user/jobs/RecomJobs"));
 
   return (
     <>
@@ -86,6 +90,7 @@ function App() {
                       <Route path="/" element={<Home />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
+                      <Route path="/verify-otp" element={<VerifyOTP />} />
                       <Route path="/applicant" element={<UserHome />} />
                       <Route path="/applicant/jobs" element={<UserJobs />} />
                       <Route path="/applicant/saved" element={<UserSaved />} />
@@ -105,6 +110,7 @@ function App() {
                         element={<CompanyTalents />}
                       />
                       <Route path="/company/jobCreate" element={<JobCreate />} />
+                      <Route path="/company/jobEdit/:jobId" element={<JobCreate />} />
                       <Route path="/applicant/jobs/:jobId" element={<UserSingleJob />} />
                       <Route path="/application-form" element={<ApplicationForm />} />
 
@@ -141,8 +147,10 @@ function App() {
                         path="/applicant/profile/review"
                         element={<ReviewProfile />}
                       />
-
-                      {/* Company Profile */}
+                      <Route 
+                        path="/applicant/profile/recom" 
+                        element={<RecommendedJobs />} 
+                      />
                       <Route
                         path="/company/profile"
                         element={<CompanyProfile />}
@@ -164,6 +172,7 @@ function App() {
                         element={<ContactInfo />}
                       />
                     </Routes>
+                    
                   </Suspense>
                 </div>
                 <Footer />

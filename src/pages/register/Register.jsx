@@ -49,12 +49,21 @@ const Register = () => {
         ...formData,
         user_type: formData.user_type.toUpperCase(),
       };
+      
+      // Send registration request
       await axios.post("http://localhost:8000/user/register/", formattedData);
-      navigate("/login");
+      
+      // Save email in localStorage to use in OTP verification
+      localStorage.setItem("email", formData.email);
+      console.log(localStorage.getItem("email"))
+      // Navigate to OTP verification page
+      navigate("/verify-otp");
     } catch (error) {
+      alert("Registration failed. Please check your details.");
       console.error("Registration failed", error);
     }
   };
+  
 
   return (
     <Box

@@ -15,6 +15,8 @@ function UserJobs() {
     location: "",
     experince: "",
     type_of_job: "",
+    attend: "",
+    status: "1",
   });
 
   const [searchFilters, setSearchFilters] = useState({
@@ -22,6 +24,8 @@ function UserJobs() {
     location: "",
     experince: "",
     type_of_job: "",
+    attend: "",
+    status: "1",
   });
 
   const {
@@ -55,6 +59,8 @@ function UserJobs() {
       location: "",
       experince: "",
       type_of_job: "",
+      attend: "",
+      status: "1",
     });
     setPage(1); // Reset page
     refetch(); // Fetch without filters
@@ -64,7 +70,7 @@ function UserJobs() {
     <div className="d-flex flex-column align-items-center justify-content-center w-100">
       <h2 style={{ color: "#901b20" }}>Available Jobs</h2>
       <div className="filters mb-3 d-flex flex-column align-items-center gap-2">
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-2 flex-wrap justify-content-center" style={{maxWidth: '70vw'}}>
           <input
             type="text"
             className="form-control"
@@ -92,12 +98,20 @@ function UserJobs() {
             onChange={handleChange}
             style={{ borderColor: "#901b20" }}
           />
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Type"
-            name="type_of_job"
-            value={filters.type_of_job}
+          <select
+            name={"attend"}
+            value={filters.attend || ""}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option value="">Select Attendance</option>
+            <option value="Onsite">Onsite</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Remote">Remote</option>
+          </select>
+          <select
+            name={"type_of_job"}
+            value={filters.type_of_job || ""}
             onChange={handleChange}
             style={{ borderColor: "#901b20" }}
           />
@@ -109,7 +123,8 @@ function UserJobs() {
                 filters.title ||
                 filters.location ||
                 filters.experince ||
-                filters.type_of_job
+                filters.type_of_job ||
+                filters.attend
               )
             }
             onClick={handleReset}
@@ -124,7 +139,8 @@ function UserJobs() {
                 filters.title ||
                 filters.location ||
                 filters.experince ||
-                filters.type_of_job
+                filters.type_of_job ||
+                filters.attend
               )
             }
             onClick={handleSearch}
@@ -138,6 +154,14 @@ function UserJobs() {
       {jobs?.map((job) => (
         <JobCard key={job.id} job={job} user={"user"} />
       ))}
+      {jobLoading && (
+        <div className="d-flex justify-content-center align-items-center w-100">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}  
+      
       <CustomPagination
         page={page}
         setPage={setPage}

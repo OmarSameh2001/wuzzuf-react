@@ -16,9 +16,19 @@ export const signupUser = async (userData) => {
 };
 
 // Get Authenticated User Data
-export const getUser = async () => {
-  const response = await AxiosApi.get("user/profile/");
-  return response.data;
+export const getUser = async (token) => {
+  console.log("Token:", token);  // Check if the token is valid and exists
+
+  try {
+    const response = await AxiosApi.get('user/profile/');
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      // Handle 401 error: maybe logout or redirect to login page
+      console.error("Unauthorized request. Please login again.");
+    }
+    throw error; // Re-throw error for further handling
+  }
 };
 
 // Logout Function

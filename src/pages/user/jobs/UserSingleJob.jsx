@@ -44,14 +44,19 @@ const UserSingleJob = () => {
   ];
 
   async function handleClick() {
-    const application = {
-      user: `${user.id}`,
-      job: `${jobId}`,
-      status: `1`,
-    };
-    const res = await createApplication(application);
-    console.log(res);
-    userAppRefetch();
+    try {
+      const application = {
+        user: `${user.id}`,
+        job: `${jobId}`,
+        status: `1`,
+      };
+      const res = await createApplication(application);
+      console.log(res);
+      userAppRefetch();
+    } catch (error) {
+      alert('Complete your profile before applying!')
+      console.error("Error creating application:", error);
+    }
   }
 
   const {
@@ -60,7 +65,7 @@ const UserSingleJob = () => {
     isLoading: userAppLoading,
     refetch: userAppRefetch,
   } = useQuery({
-    queryKey: ["userApp", page, pageSize, searchFilters],
+    queryKey: ["userApp"],
     queryFn: async () => {
       const res = await getApplicationsByUser({
         filters: searchFilters,
@@ -77,7 +82,7 @@ const UserSingleJob = () => {
     error: jobsError,
     isLoading: jobsLoading,
   } = useQuery({
-    queryKey: ["jobs", page, pageSize, searchFilters],
+    queryKey: ["jobs"],
     queryFn: async () => {
       const res = await getJobById(jobId);
       return res;

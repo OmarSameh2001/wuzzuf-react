@@ -28,6 +28,7 @@ import {
 import CompanySchedule from "../Popup/Schedule";
 import axios from "axios";
 import { userContext } from "../../context/UserContext";
+import { useLocation, useParams } from "react-router";
 
 function ApplicantsTable({ phase }) {
   const [page, setPage] = useState(1);
@@ -35,6 +36,7 @@ function ApplicantsTable({ phase }) {
   const [total, setTotal] = useState(1);
   const [update, setUpdate] = useState({});
   const { user } = useContext(userContext);
+  const { id } = useParams();
 
   const queryKey = ["applicants", page, rowsPerPage, phase];
   const queryFn = async () => {
@@ -74,6 +76,13 @@ function ApplicantsTable({ phase }) {
   };
 
   const handleNext = async (applicant, phase) => {
+    if (
+      !confirm(
+        "Are you sure you want to move this applicant to the next phase?"
+      )
+    ) {
+      return;
+    }
     if (phase < 5) {
       try {
         await axios.patch(
@@ -99,6 +108,9 @@ function ApplicantsTable({ phase }) {
   };
 
   const handleFail = async (applicant, phase) => {
+    if (!confirm("Are you sure you want to make this applicant fail?")) {
+      return;
+    }
     try {
       await axios.patch(
         `http://localhost:8000/applications/${applicant}/update_status/`,

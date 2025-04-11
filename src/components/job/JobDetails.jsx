@@ -1,23 +1,7 @@
 function JobDetails({ job }) {
-  // const dummyJob = {
-  //   id: "1",
-  //   title: "Backend Developer",
-  //   description:
-  //     "We are looking for a highly skilled and experienced backend developer to join our team. The ideal candidate should have experience in developing scalable and secure backend applications",
-  //   location: "New York, NY",
-  //   keywords: ["Node.js", "Express", "MongoDB", "JavaScript"],
-  //   experience: "3-5 years",
-  //   status: "Available",
-  //   type_of_job: "Full-time",
-  //   created_at: "2022-11-16T14:30:00.000Z",
-
-  //   workStyle: "Onsite",
-  //   companyName: "Vois",
-  //   companyLogo:
-  //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhO-fRJWu5psjEYHnr8-cuBso-97hktHGIRwBXmSiDHN8w8-FX8G4eemvPvt6kgan2kTc&usqp=CAU",
-  // };
+  console.log(job);
   if(job) return (
-      <div className="mt-4" style={{maxWidth:'100vw'}}>
+      <div className="mt-4" style={{maxWidth:'100vw', minWidth:'50vw'}}>
         <div className="card p-4 shadow-sm">
           <h2 className="text-primary">{job.title}</h2>
           <div className="d-flex align-items-center mt-1">
@@ -46,14 +30,14 @@ function JobDetails({ job }) {
               </p>
             </div>
             <div className="col-md-6">
-              <p>
+              <p style={{ color: job.status === "1" ? "black" : "red" }}>
                 <strong>Status:</strong> {job.status === "1" ? "Open" : "Closed"}
               </p>
               <p>
                 <strong>Type of Job:</strong> {job.type_of_job}
               </p>
               <p>
-                <strong>Work Style:</strong> {job.workStyle}
+                <strong>Attendance Style:</strong> {job.attend}
               </p>
             </div>
           </div>

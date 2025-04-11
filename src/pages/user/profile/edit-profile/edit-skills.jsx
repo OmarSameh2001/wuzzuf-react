@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
 import { 
@@ -11,7 +11,9 @@ import {
   Paper,
   Divider,
   IconButton,
-  Tooltip
+  Tooltip,
+  CircularProgress,
+  Alert
 } from "@mui/material";
 import { 
   ArrowBack, 
@@ -19,14 +21,48 @@ import {
   AddCircleOutline,
   HelpOutline
 } from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AxiosApi } from "../../../../services/Api";
 
 const MAX_SKILLS = 15;
 
 const EditSkills = () => {
   const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
-  const [skills, setSkills] = useState(profileData?.skills || []);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const locationUserId = location.state?.userId;
+  const userId = locationUserId || profileData?.id;
+
+  const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState(null);
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/applicant/profile", { replace: true });
+      return;
+    }
+
+    const fetchSkills = async () => {
+      try {
+        const res = await AxiosApi.get(`user/jobseekers/${userId}/`, {
+          headers: { Authorization: `Token ${localStorage.getItem("token")}` }
+        });
+        
+        const skillsData = res.data?.skills || [];
+        setSkills(Array.isArray(skillsData) ? skillsData : []);
+      } catch (err) {
+        console.error("Error fetching skills:", err);
+        setApiError("Failed to load skills data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSkills();
+  }, [userId, navigate]);
 
   const handleAddSkill = () => {
     const trimmedSkill = newSkill.trim();
@@ -63,16 +99,40 @@ const EditSkills = () => {
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    updateProfile("skills", skills);
-    goToNextStep("/applicant/profile/edit-cv");
+    try {
+      const formData = new FormData();
+      formData.append("skills", JSON.stringify(skills));
+
+      await AxiosApi.patch(`user/jobseekers/${userId}/`, formData, {
+        headers: { 
+          'Authorization': `Token ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data' 
+        }
+      });
+
+      updateProfile("skills", skills);
+      goToNextStep("/applicant/profile/edit-cv", { userId });
+    } catch (err) {
+      console.error("Error saving skills:", err);
+      setApiError("Failed to save skills. Please try again.");
+    }
   };
 
   const handleBack = () => {
     updateProfile("skills", skills);
-    goToNextStep("/applicant/profile/edit-experience");
+    goToNextStep("/applicant/profile/edit-experience", { userId });
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+        <span style={{ marginLeft: "10px" }}>Loading skills data...</span>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ 
@@ -110,6 +170,12 @@ const EditSkills = () => {
           onSubmit={handleSave}
           sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
         >
+          {apiError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {apiError}
+            </Alert>
+          )}
+
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={9}>
               <TextField
@@ -122,10 +188,10 @@ const EditSkills = () => {
                 onKeyPress={handleKeyPress}
                 fullWidth
                 error={!!error}
-                helperText={error}
+                helperText={error || "Press Enter to add skill"}
                 InputProps={{
                   endAdornment: (
-                    <Tooltip title="Press Enter to add skill">
+                    <Tooltip title="Separate multiple skills with commas">
                       <HelpOutline color="action" sx={{ ml: 1 }} />
                     </Tooltip>
                   ),
@@ -154,21 +220,17 @@ const EditSkills = () => {
             </Grid>
           </Grid>
 
-          {skills.length > 0 ? (
-            <Paper elevation={0} sx={{ 
-              padding: 3,
-              backgroundColor: '#f5f5f5',
-              borderRadius: 2
-            }}>
-              <Typography variant="subtitle1" sx={{ mb: 2, color: '#901b20' }}>
-                Your Skills ({skills.length}/{MAX_SKILLS})
-              </Typography>
-              <Box sx={{ 
-                display: "flex", 
-                flexWrap: "wrap", 
-                gap: 1,
-                minHeight: 60
-              }}>
+          <Paper elevation={0} sx={{ 
+            padding: 3,
+            backgroundColor: '#f5f5f5',
+            borderRadius: 2,
+            minHeight: 150
+          }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, color: '#901b20' }}>
+              Your Skills ({skills.length}/{MAX_SKILLS})
+            </Typography>
+            {skills.length > 0 ? (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                 {skills.map((skill, index) => (
                   <Chip
                     key={index}
@@ -180,29 +242,27 @@ const EditSkills = () => {
                       color: '#901b20',
                       '& .MuiChip-deleteIcon': {
                         color: '#901b20',
-                        '&:hover': {
-                          color: '#7a161b'
-                        }
+                        '&:hover': { color: '#7a161b' }
                       }
                     }}
                     variant="outlined"
                   />
                 ))}
               </Box>
-            </Paper>
-          ) : (
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                textAlign: 'center', 
-                color: 'text.secondary',
-                fontStyle: 'italic',
-                py: 4
-              }}
-            >
-              No skills added yet. Start adding your skills above.
-            </Typography>
-          )}
+            ) : (
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  textAlign: 'center', 
+                  color: 'text.secondary',
+                  fontStyle: 'italic',
+                  py: 4
+                }}
+              >
+                No skills added yet. Start adding your skills above.
+              </Typography>
+            )}
+          </Paper>
 
           <Divider sx={{ my: 2 }} />
 

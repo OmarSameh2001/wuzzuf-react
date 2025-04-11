@@ -6,11 +6,29 @@ export const userContext = createContext();
 export function UserContextProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  const refetchUser = async () => {
+    try {
+      const response = await getUser();
+      console.log(response);
+      // Safely parse JSON fields
+      const parsedResponse = {
+        ...response,
+        skills: safeParseJSON(response.skills, []),
+        education: safeParseJSON(response.education, []),
+        experience: safeParseJSON(response.experience, []),
+      };
+      setUser(parsedResponse);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
   useEffect(() => {
     const fetchUser = async () => {
       if (token) {
         try {
+          setLoading(true);
           const response = await getUser();
           console.log(response);
 
@@ -25,7 +43,11 @@ export function UserContextProvider({ children }) {
           setUser(parsedResponse);
         } catch (error) {
           console.error("Error fetching user data:", error);
+        } finally {
+          setLoading(false); // Set loading to false when done
         }
+      } else {
+        setLoading(false); // Also set loading false if no token
       }
     };
 
@@ -58,7 +80,7 @@ export function UserContextProvider({ children }) {
   };
 
   return (
-    <userContext.Provider value={{ token, setToken, user, setUser }}>
+    <userContext.Provider value={{ token, setToken, user, setUser, refetchUser }}>
       {children}
     </userContext.Provider>
   );

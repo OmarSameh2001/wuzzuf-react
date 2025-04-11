@@ -46,3 +46,17 @@ export const patchApplication = async (id, patchData) => {
   return response.data;
 };
 
+
+export const updateApplicationAts = async (atsData) => {
+  const response = await AxiosApi.post(`applications/update_status_by_ats/`, atsData);
+  return response.data;
+}
+
+export const updateApplicationCsv = async (csvData) => {
+  const response = await AxiosApi.post(`applications/update_status_by_csv/`, csvData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+}

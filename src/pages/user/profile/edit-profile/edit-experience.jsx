@@ -1,25 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import { 
-  Button, 
-  TextField, 
-  Box, 
-  Grid, 
-  Typography, 
+import { AxiosApi } from "../../../../services/Api";
+import {
+  Button,
+  TextField,
+  Box,
+  Grid,
+  Typography,
   Paper,
   IconButton,
   Divider,
   MenuItem,
   InputLabel,
   Select,
-  FormControl
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  CircularProgress,
+  Alert
 } from "@mui/material";
-import { 
-  AddCircleOutline, 
-  ArrowBack, 
-  ArrowForward, 
+import {
+  AddCircleOutline,
+  ArrowBack,
+  ArrowForward,
   Delete,
-  WorkOutline 
+  WorkOutline
 } from "@mui/icons-material";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
 
@@ -33,9 +39,56 @@ const employmentTypes = [
 ];
 
 const EditExperience = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const locationUserId = location.state?.userId;
   const { profileData, updateProfile, goToNextStep } = useContext(ProfileContext);
-  const [experiences, setExperiences] = useState(profileData.experience || []);
+  const userId = locationUserId || profileData?.id;
+
+  const [experiences, setExperiences] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [errors, setErrors] = useState([]);
+
+  // Fetch experience data
+  useEffect(() => {
+    if (!userId) {
+      navigate("/applicant/profile", { replace: true });
+      return;
+    }
+
+    const fetchExperience = async () => {
+      try {
+        const res = await AxiosApi.get(`user/jobseekers/${userId}/`, {
+          headers: { Authorization: `Token ${localStorage.getItem("token")}` }
+        });
+
+        const expData = res.data?.experience;
+        let parsedExperiences = [];
+
+        if (expData) {
+          try {
+            parsedExperiences = typeof expData === "string" 
+              ? JSON.parse(expData) 
+              : expData;
+          } catch (err) {
+            console.error("Error parsing experience data:", err);
+          }
+        }
+
+        setExperiences(Array.isArray(parsedExperiences) ? parsedExperiences : []);
+        setErrors(new Array(parsedExperiences.length).fill({}));
+
+      } catch (err) {
+        console.error("Error fetching experience:", err);
+        setError("Failed to load experience data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExperience();
+  }, [userId, navigate]);
 
   const handleAddExperience = () => {
     setExperiences([
@@ -49,7 +102,7 @@ const EditExperience = () => {
         startDate: "",
         endDate: "",
         currentlyWorking: false
-      },
+      }
     ]);
     setErrors([...errors, {}]);
   };
@@ -57,9 +110,15 @@ const EditExperience = () => {
   const handleChange = (index, key, value) => {
     const updatedExperiences = [...experiences];
     updatedExperiences[index][key] = value;
+    
+    // Clear current position end date if marked as current
+    if (key === "currentlyWorking" && value) {
+      updatedExperiences[index].endDate = "";
+    }
+
     setExperiences(updatedExperiences);
 
-    // Clear error when user types
+    // Clear validation error
     if (errors[index]?.[key]) {
       const newErrors = [...errors];
       delete newErrors[index][key];
@@ -77,28 +136,48 @@ const EditExperience = () => {
     });
 
     setErrors(newErrors);
-    return !newErrors.some(errorObj => Object.keys(errorObj).length > 0);
+    return newErrors.every(err => Object.keys(err).length === 0);
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    updateProfile("experience", experiences);
-    goToNextStep("/applicant/profile/edit-skills");
+    try {
+      const formData = new FormData();
+      formData.append("experience", JSON.stringify(experiences));
+
+      await AxiosApi.patch(`user/jobseekers/${userId}/`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      updateProfile("experience", experiences);
+      goToNextStep("/applicant/profile/edit-skills", { userId });
+    } catch (err) {
+      console.error("Error saving experience:", err);
+      setError("Failed to save experience. Please try again.");
+    }
   };
 
   const handleBack = () => {
     updateProfile("experience", experiences);
-    goToNextStep("/applicant/profile/edit-education");
+    goToNextStep("/applicant/profile/edit-education", { userId });
   };
 
   const removeExperience = (index) => {
     const newExperiences = experiences.filter((_, i) => i !== index);
     setExperiences(newExperiences);
-    const newErrors = errors.filter((_, i) => i !== index);
-    setErrors(newErrors);
+    setErrors(errors.filter((_, i) => i !== index));
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress />
+        <span style={{ marginLeft: "10px" }}>Loading experience data...</span>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ 
@@ -132,11 +211,7 @@ const EditExperience = () => {
           Edit Work Experience
         </Typography>
 
-        <Box 
-          component="form" 
-          onSubmit={handleSave}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
-        >
+        <Box component="form" onSubmit={handleSave} sx={{ gap: 3 }}>
           {experiences.map((exp, index) => (
             <Paper
               key={index}
@@ -151,12 +226,7 @@ const EditExperience = () => {
             >
               <IconButton
                 onClick={() => removeExperience(index)}
-                sx={{ 
-                  position: 'absolute', 
-                  top: 8, 
-                  right: 8,
-                  color: '#901b20'
-                }}
+                sx={{ position: 'absolute', top: 8, right: 8, color: '#901b20' }}
               >
                 <Delete />
               </IconButton>
@@ -266,10 +336,7 @@ const EditExperience = () => {
             sx={{
               color: '#901b20',
               borderColor: '#901b20',
-              '&:hover': {
-                borderColor: '#7a161b',
-                backgroundColor: 'rgba(144, 27, 32, 0.04)'
-              },
+              '&:hover': { borderColor: '#7a161b', backgroundColor: 'rgba(144, 27, 32, 0.04)' },
               alignSelf: 'flex-start'
             }}
           >
@@ -277,6 +344,12 @@ const EditExperience = () => {
           </Button>
 
           <Divider sx={{ my: 2 }} />
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
             <Button 
@@ -286,10 +359,7 @@ const EditExperience = () => {
               sx={{
                 color: '#901b20',
                 borderColor: '#901b20',
-                '&:hover': {
-                  borderColor: '#7a161b',
-                  backgroundColor: 'rgba(144, 27, 32, 0.04)'
-                }
+                '&:hover': { borderColor: '#7a161b', backgroundColor: 'rgba(144, 27, 32, 0.04)' }
               }}
             >
               Back to Education

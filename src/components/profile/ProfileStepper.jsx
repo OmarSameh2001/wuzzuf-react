@@ -1,7 +1,7 @@
 import React from "react";
 import { Stepper, Step, StepLabel } from "@mui/material";
 
-const steps = ["Personal Info", "Education", "Experience", "Skills", "CV & Review"];
+const steps = ["Personal Info", "Education", "Experience", "Skills", "CV ","Review"];
 
 const ProfileStepper = ({ activeStep }) => {
   return (

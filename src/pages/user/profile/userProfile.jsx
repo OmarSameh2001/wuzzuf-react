@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { use,useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -20,7 +20,7 @@ import { Edit, School, Work, Code, Description } from "@mui/icons-material";
 const UserProfile = () => {
   const navigate = useNavigate();
   const { profileData, setProfileData } = useContext(ProfileContext);
-  const { user } = useContext(userContext);
+  const { user, refetchUser } = useContext(userContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

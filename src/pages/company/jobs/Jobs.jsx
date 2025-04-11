@@ -17,11 +17,11 @@ function CompanyJobs() {
   const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState({
     title: "",
-    company: user?.id 
+    company: user?.id,
   });
   const [searchFilters, setSearchFilters] = useState({
     title: "",
-    company: user?.id 
+    company: user?.id,
   });
 
   const {

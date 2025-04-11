@@ -158,7 +158,7 @@ function UserSaved() {
           </button>
         </div>
       )}
-      {saved && saved.length === 0 && (
+      {saved && saved.length > 0 && (
         <CustomPagination
           page={page}
           setPage={setPage}

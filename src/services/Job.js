@@ -37,6 +37,10 @@ export const updateJob = async (id, updatedData) => {
   const response = await AxiosApi.put(`jobs/${id}/`, updatedData);
   return response.data;
 };
+export const patchJob = async (id, job) => {
+  const response = await AxiosApi.patch(`jobs/${id}/`, job);
+  return response.data;
+}
 
 // Delete Job by ID
 export const deleteJob = async (id) => {

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { userContext } from "../../context/UserContext";
+import { useNavigate } from "react-router";
 // import './home.css';
 // import intern from '../../assets/image/intern.jpg';
 // import entry from '../../assets/image/entry.jpg';
@@ -12,42 +14,20 @@ import "slick-carousel/slick/slick-theme.css";
 // import expert from '../../assets/image/expert.jpg';
 
 const Home = () => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 1000,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: false,
-  };
-  const steps = [
-    {
-      title: "Create an Account",
-      description:
-        "Sign up easily with your email and start exploring job opportunities.",
-      icon: "assets/images/step1.png", // Replace with actual icons
-    },
-    {
-      title: "Build Your Profile",
-      description:
-        "Add your experience, skills, and preferences to help us match you better.",
-      icon: "/images/step2.png",
-    },
-    {
-      title: "Search for Jobs",
-      description: "Browse thousands of job listings tailored to your profile.",
-      icon: "/images/step3.png",
-    },
-    {
-      title: "Apply in One Click",
-      description:
-        "Submit applications easily using your pre-filled resume and cover letter.",
-      icon: "/images/step4.png",
-    },
-  ];
+  const { user } = useContext(userContext);
+  const navigate = useNavigate();
 
+  const handleClick = () => {
+    if (!user) {
+      // If no user is logged in, redirect to login page
+      navigate("/login");
+    } else if (user.user_type === "JOBSEEKER") {
+      navigate("/applicant/jobs");
+    } else if (user.user_type === "COMPANY") {
+      navigate("/company/jobs");
+    }
+  };
+  
   return (
     <Container fluid className="p-0">
       {/* Hero Section */}
@@ -68,7 +48,14 @@ const Home = () => {
           maxWidth: "100vw",
         }}
       >
-        <Col style={{backgroundColor: "#ffffff73", padding: "20px", maxWidth: "fit-content", borderRadius: "10px"}}>
+        <Col
+          style={{
+            backgroundColor: "#ffffff73",
+            padding: "20px",
+            maxWidth: "fit-content",
+            borderRadius: "10px",
+          }}
+        >
           <motion.h1
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -99,6 +86,7 @@ const Home = () => {
                 backgroundColor: "#901b20",
                 border: "none",
               }}
+              onClick={()=>handleClick()}
             >
               Get Started
             </Button>
@@ -109,6 +97,7 @@ const Home = () => {
                 backgroundColor: "#901b20",
                 border: "none",
               }}
+              onClick={()=>handleClick()}
             >
               Post a Job
             </Button>
@@ -143,6 +132,7 @@ const Home = () => {
               backgroundColor: "#901b20",
               border: "none",
             }}
+            onClick={()=>handleClick()}
           >
             Join Itians
           </Button>
@@ -169,6 +159,7 @@ const Home = () => {
               backgroundColor: "#901b20",
               border: "none",
             }}
+            onClick={()=>handleClick()}
           >
             Become Recruiter
           </Button>

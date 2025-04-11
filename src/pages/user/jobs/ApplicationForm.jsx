@@ -24,12 +24,18 @@ import { patchApplication } from "../../../services/Application";
 
 const ApplicationForm = ({ questions, answers: savedAnswers, application, refetch }) => {
   const location = useLocation();
-  const { user } = useContext(userContext);
-  const [answers, setAnswers] = useState(savedAnswers ? { ...savedAnswers } : {});
-  const [cv, setCv] = useState(user?.cv || null);
+  const { user , setUser} = useContext(userContext);
+  const [answers, setAnswers] = useState(
+    savedAnswers ? { ...savedAnswers } : {}
+  );
+  const [cv, setCv] = useState(user.cv || null);
   const [cvNew, setCvNew] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+
+  console.log("Questions data received:", questions);
+  // const savedQuestionIds = Object.keys(savedAnswers).map(questionId => Number(questionId));
+  // console.log("Saved Question IDs:", savedQuestionIds);
 
   const handleChange = (questionId, value) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -92,7 +98,6 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
       setIsSubmitting(false);
     }
   };
-
   return (
     <Container
       sx={{
@@ -311,7 +316,7 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
           questions?.some(
             (question) =>
               question.required && typeof answers[question.id] === "undefined"
-          ) || !cv || application.status === '2' || isSubmitting
+          ) || !cv || application.status == '2'|| isSubmitting
         }
         onClick={handleSubmit}
         sx={{ 

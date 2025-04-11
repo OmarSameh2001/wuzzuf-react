@@ -1,29 +1,34 @@
-import React, { useContext, useState } from "react";  // Added useState here
+import React, { useContext, useState } from "react";
 import { ProfileContext } from "../../../../context/ProfileContext";
-import { 
-  Button, 
-  Typography, 
-  Avatar, 
-  List, 
-  ListItem, 
-  ListItemText, 
+import { userContext } from "../../../../context/UserContext";
+import {
+  Button,
+  Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemText,
   Box,
   Paper,
   Chip,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Alert
 } from "@mui/material";
 import ProfileStepper from "../../../../components/profile/ProfileStepper";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { updateUserProfile } from "../../../../services/Auth";
-import { userContext } from "../../../../context/UserContext";
 import { ArrowBack, CheckCircle, Description, School, Work, Person } from "@mui/icons-material";
 
 const ReviewProfile = () => {
   const { profileData, setProfileData } = useContext(ProfileContext);
-  const { setUser } = useContext(userContext);
+  const { user, setUser } = useContext(userContext);
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);  // Now this will work
+  const location = useLocation();
+  const locationUserId = location.state?.userId;
+  const userId = locationUserId || user?.id;
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -33,35 +38,28 @@ const ReviewProfile = () => {
 
     try {
       const profileFormData = new FormData();
-      profileFormData.append("name", profileData.name);
-      profileFormData.append("email", profileData.email);
-      profileFormData.append("phone", profileData.phone || "");
-      profileFormData.append("location", profileData.location || "");
-      profileFormData.append("dob", profileData.dob || "");
-      profileFormData.append("about", profileData.about || "");
-      profileFormData.append("national_id", profileData.national_id || "");
-      profileFormData.append("national_id_img", profileData.national_id_img || "");
-      profileFormData.append("img", profileData.img || "");
-      profileFormData.append("education", JSON.stringify(profileData.education || []));
-      profileFormData.append("experience", JSON.stringify(profileData.experience || []));
-      profileFormData.append("skills", JSON.stringify(profileData.skills || []));
-      profileFormData.append("cv", profileData.cv || "");
+      // Add all profile fields to formData
+      Object.entries(profileData).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          profileFormData.append(key, value);
+        }
+      });
 
-      const response = await updateUserProfile(profileData.id, profileFormData);
-      const parsedResponse = {
+      const response = await updateUserProfile(userId, profileFormData);
+      const updatedUser = {
         ...response.data,
         skills: safeParseJSON(response.data.skills, []),
         education: safeParseJSON(response.data.education, []),
         experience: safeParseJSON(response.data.experience, []),
       };
-      
-      setUser(parsedResponse);
-      setProfileData(parsedResponse);
-      navigate("/applicant/profile");
-      
+
+      setUser(updatedUser);
+      setProfileData(updatedUser);
+      navigate("/applicant/profile", { state: { userId } });
+
     } catch (error) {
-      console.error("Error updating profile:", error);
-      setError("Failed to update profile. Please try again.");
+      console.error("Profile update failed:", error);
+      setError(error.response?.data?.message || "Failed to update profile. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -76,8 +74,11 @@ const ReviewProfile = () => {
   };
 
   const handleBack = () => {
-    navigate("/applicant/profile/edit-cv");
+    navigate("/applicant/profile/edit-cv", { state: { userId } });
   };
+
+  // Unified data source - prioritize profileData but fallback to user context
+  const displayData = { ...user, ...profileData };
 
   return (
     <Box sx={{ 
@@ -111,9 +112,9 @@ const ReviewProfile = () => {
         </Typography>
 
         {error && (
-          <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
+          <Alert severity="error" sx={{ mb: 3 }}>
             {error}
-          </Typography>
+          </Alert>
         )}
 
         <Box component="form" onSubmit={handleSubmit}>
@@ -128,7 +129,7 @@ const ReviewProfile = () => {
             
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
               <Avatar 
-                src={profileData.img} 
+                src={displayData.img} 
                 sx={{ 
                   width: 120, 
                   height: 120, 
@@ -142,53 +143,53 @@ const ReviewProfile = () => {
                   <ListItem>
                     <ListItemText 
                       primary="Name" 
-                      secondary={profileData.name || "Not provided"} 
+                      secondary={displayData.name || "Not provided"} 
                       secondaryTypographyProps={{ color: 'text.primary' }}
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="Email" 
-                      secondary={profileData.email || "Not provided"} 
+                      secondary={displayData.email || "Not provided"} 
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="Phone" 
-                      secondary={profileData.phone || "Not provided"} 
+                      secondary={displayData.phone || "Not provided"} 
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="Location" 
-                      secondary={profileData.location || "Not provided"} 
+                      secondary={displayData.location || "Not provided"} 
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="Date of Birth" 
-                      secondary={profileData.dob || "Not provided"} 
+                      secondary={displayData.dob || "Not provided"} 
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="About" 
-                      secondary={profileData.about || "Not provided"} 
+                      secondary={displayData.about || "Not provided"} 
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="National ID" 
-                      secondary={profileData.national_id || "Not provided"} 
+                      secondary={displayData.national_id || "Not provided"} 
                     />
                   </ListItem>
                   <ListItem>
                     <ListItemText 
                       primary="National ID Image" 
                       secondary={
-                        profileData.national_id_img ? (
+                        displayData.national_id_img ? (
                           <Avatar 
-                            src={profileData.national_id_img} 
+                            src={displayData.national_id_img} 
                             sx={{ width: 100, height: 60, borderRadius: 1, mt: 1 }}
                             variant="square"
                           />
@@ -210,9 +211,9 @@ const ReviewProfile = () => {
               </Typography>
             </Box>
             
-            {profileData.education?.length > 0 ? (
+            {displayData.education?.length > 0 ? (
               <List dense>
-                {profileData.education.map((edu, index) => (
+                {displayData.education.map((edu, index) => (
                   <ListItem key={index} sx={{ mb: 2 }}>
                     <ListItemText
                       primary={
@@ -253,9 +254,9 @@ const ReviewProfile = () => {
               </Typography>
             </Box>
             
-            {profileData.experience?.length > 0 ? (
+            {displayData.experience?.length > 0 ? (
               <List dense>
-                {profileData.experience.map((exp, index) => (
+                {displayData.experience.map((exp, index) => (
                   <ListItem key={index} sx={{ mb: 2 }}>
                     <ListItemText
                       primary={
@@ -301,9 +302,9 @@ const ReviewProfile = () => {
               </Typography>
             </Box>
             
-            {profileData.skills?.length > 0 ? (
+            {displayData.skills?.length > 0 ? (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {profileData.skills.map((skill, index) => (
+                {displayData.skills.map((skill, index) => (
                   <Chip
                     key={index}
                     label={skill}
@@ -332,10 +333,10 @@ const ReviewProfile = () => {
               </Typography>
             </Box>
             
-            {profileData.cv ? (
+            {displayData.cv ? (
               <Button
                 variant="outlined"
-                href={profileData.cv}
+                href={`https://res.cloudinary.com/dkvyfbtdl/raw/upload/${displayData.cv}.pdf`}
                 target="_blank"
                 startIcon={<Description />}
                 sx={{

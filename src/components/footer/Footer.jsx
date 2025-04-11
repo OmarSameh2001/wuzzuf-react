@@ -25,7 +25,7 @@ function Footer() {
             alignItems: "center",
             }}
       >
-        <img src="https://iti.gov.eg/assets/images/ColoredLogo.svg" width={300}></img>
+        <img src="https://iti.gov.eg/assets/images/ColoredLogo.svg" width={300} style={{objectFit:'contain', maxWidth:'40vw'}}></img>
         <p>Official Website</p>
       </a>
       <a
@@ -40,7 +40,7 @@ function Footer() {
             alignItems: "center",
             }}
       >
-        <img  src="https://maharatech.gov.eg/theme/edumy/pix/home/maharaAR.png" width={300}></img>
+        <img  src="https://maharatech.gov.eg/theme/edumy/pix/home/maharaAR.png" width={300} style={{objectFit:'contain', maxWidth:'40vw'}}></img>
         <p>Courses Platform</p>
       </a>
       </div>
