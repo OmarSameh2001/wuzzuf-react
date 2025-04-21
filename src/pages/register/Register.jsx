@@ -167,7 +167,6 @@ const Register = () => {
       alert("Password must be at least 8 characters long.");
       return;
     }
-
     // Ensure username and name meet their criteria
     if (NatIdError || nameError || passwordError || emailError) {
       alert("Please fix the errors before submitting.");
@@ -179,6 +178,8 @@ const Register = () => {
         ...formData,
         user_type: formData.user_type.toUpperCase(),
         username: formData.email.split("@")[0], // Use email prefix as username
+        national_id: formData.user_type.toUpperCase() === "COMPANY" ? null : formData.national_id,
+ 
       };
       await signupUser(formattedData);
       localStorage.setItem("email", formData.email);
@@ -193,16 +194,17 @@ const Register = () => {
   // Check if the submit button should be disabled
   const isSubmitDisabled =
   !formData.email ||
-  !formData.national_id ||
   !formData.name ||
   !formData.password ||
   !formData.confirmPassword ||
-  !!NatIdError || // Convert to boolean
+  (formData.user_type === "JOBSEEKER" && (!formData.national_id || !!NatIdError)) ||
   !!nameError ||
   !!passwordError || 
   !!emailError || 
   passwordHelpText;
 
+
+  console.log ("disaple",isSubmitDisabled)
 
     const handleEmailCheck = async () => {
       try {
@@ -310,7 +312,7 @@ const Register = () => {
                 }}
                 onClick={handleUserTypeToggle}
               >
-                {isEmployer ? "Switch to Jobseeker" : "Switch to Employer"}
+                {isEmployer ? "Switch to Jobseeker" : "Switch to Employe"}
               </Button>
 
               <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>

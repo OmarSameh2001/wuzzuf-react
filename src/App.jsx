@@ -17,7 +17,7 @@ import ResetPassword from "./pages/login/ResetPassword";
 import TalentProfile from "./pages/company/talents/TalentProfile";
 import ComProfile from "./pages/company/profile/ComProfile";
 import EditPersonalCom from "./pages/company/profile/edit-profile/edit-personal";
-
+import AudioInterview from "./pages/user/Screening/AudioInterview";
 
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
@@ -70,6 +70,9 @@ function App() {
   const JobsDashboard  = React.lazy(() =>
     import("./pages/company/jobs/JobsDashboard")
   );
+  const AudioInterview = React.lazy(() =>
+    import("./pages/user/Screening/AudioInterview")
+  );
 
   return (
     <>
@@ -108,6 +111,12 @@ function App() {
                         path="/applicant/applications/:id"
                         element={<JobApplication />}
                       />
+
+                      <Route
+                        path="/interview/"
+                        element={<AudioInterview />}
+                      />
+                      
                       <Route path="/company" element={<CompanyHome />} />
                       <Route path="/company/jobs" element={<CompanyJobs />} />
                       <Route path="/company/jobs/jobsDashboard" element={<JobsDashboard />} />

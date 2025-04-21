@@ -239,7 +239,7 @@ function JobCard({ job, type }) {
     </motion.div>
   );
 }
-}
+
 
 export default JobCard;
 

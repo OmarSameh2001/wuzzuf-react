@@ -63,7 +63,16 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
 
   // submit multi value
   const handleSubmit = async () => {
-    try{
+    if (Object.keys(answers).length > 0) {
+      const output = Object.entries(answers).map(([key, value]) => ({
+        answer_text: Array.isArray(value) ? JSON.stringify(value) : value,
+        application: application.id,
+        question: parseInt(key),
+      }));
+      const formData = { answers: output };
+      const res = await createAnswer(formData);
+      console.log("Submitted Answers:", res);
+    }
 
     if (cvNew) {
       const cvForm = new FormData();
@@ -74,10 +83,6 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
     cvForm.append("cv", cv, cv.name); 
     try {
         const cvRes = await patchUser(user.id, cvForm);
-        if(!cvRes) {
-          console.error("CV upload failed:", cvRes);
-          return;
-        }
         setUser(cvRes)
         console.log("CV Upload Response:", cvRes);
         await patchApplication(application.id,{'status': '2'})
@@ -88,18 +93,6 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
     }else if (user.cv) {
       await patchApplication(application.id,{'status': '2'})
       refetch()
-    }
-    if (Object.keys(answers).length > 0) {
-      const output = Object.entries(answers).map(([key, value]) => ({
-        answer_text: Array.isArray(value) ? JSON.stringify(value) : value,
-        application: application.id,
-        question: parseInt(key),
-      }));
-      const formData = { answers: output };
-      const res = await createAnswer(formData);
-      console.log("Submitted Answers:", res);
-    }} catch (error) {
-      console.error("Error submitting answers:", error.response?.data || error);
     }
   };
 
@@ -115,11 +108,9 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
       <Typography variant="h4">
         Job Application Quiz
       </Typography>
-      {application.fail ? <Typography color="red" variant="h6" gutterBottom>
-        Unfortunately you have failed this phase
-      </Typography> : parseInt(application?.status) > 1 ? <Typography color="green" variant="h6" gutterBottom>
+      {parseInt(application?.status) > 1 && <Typography color="green" variant="h6" gutterBottom>
         Your application is submitted
-      </Typography> : null}
+      </Typography>}
       {questions?.map((question) => (
         <FormControl
           key={question.id}
@@ -173,7 +164,7 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
           CV{" "}
           {user?.cv && (
             <a
-              href={user.cv.endsWith("pdf") ? user.cv : user.cv + ".pdf"}
+              href={user.cv}
               target="_blank"
               style={{
                 textDecoration: "underline",
@@ -205,7 +196,7 @@ const ApplicationForm = ({ questions, answers: savedAnswers, application, refetc
           questions?.some(
             (question) =>
               question.required && typeof answers[question.id] === "undefined"
-          ) || !cv || parseInt(application.status) > 1 || application.job_details.status == '0'
+          ) || !cv || application.status == '2' || application.job_details.status == '0'
         }
       >
         Submit
