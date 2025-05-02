@@ -12,7 +12,6 @@ export function UserContextProvider({ children }) {
   const [update, setUpdate] = useState({ user: {}, settings: {} });
 
   const refetchUser = async (tok) => {
-    console.log(tok);
     if (!token && !tok) return; // Exit if no token
     try {
       const response = await getUser(tok || token);
@@ -25,7 +24,6 @@ export function UserContextProvider({ children }) {
       //   experience: safeParseJSON(response.experience, []),
       // };
       setUser(response);
-      console.log(response);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
