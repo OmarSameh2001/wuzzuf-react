@@ -24,6 +24,29 @@
     align-items: center;
     justify-content: center;
   }
+
+  
+.company-jobs__pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding: 16px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.light-mode .company-jobs__pagination {
+  background-color: #ffffff;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .company-jobs__pagination {
+  background-color: #1e1e1e;
+  border: 1px solid #2d3748;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
   
   .company-logo {
     width: 100%;

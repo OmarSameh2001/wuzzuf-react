@@ -32,6 +32,7 @@ import {
   GitHub,
   Twitter,
   InsertLink,
+  Summarize,
 } from "@mui/icons-material";
 import { userContext } from "../../../context/UserContext";
 import { ThemeProvider, createTheme, keyframes } from "@mui/material/styles";
@@ -454,6 +455,43 @@ const UserProfile = () => {
           <Grid container spacing={isMobile ? 2 : 3}>
             {/* Left Column */}
             <Grid item xs={12} md={8}>
+               {/* Summary Section - NEW */}
+               <Grow in={true} timeout={700} style={{backgroundColor: lightBackgroundColor}}>
+                <ProfileCard
+                  elevation={3}
+                  sx={{ p: isMobile ? 2 : 3, mb: isMobile ? 2 : 3 }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 2,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Summarize sx={{ mr: 1, color: secondaryColor }} />
+                      Professional Summary
+                    </Typography>
+                  </Box>
+                  <Typography variant="body1" color="text.secondary">
+                    {user.summary || 
+                      "Experienced professional with a proven track record in developing innovative solutions. Skilled in problem-solving and team collaboration with a focus on delivering high-quality results."}
+                  </Typography>
+                  {!user.summary && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="caption" color="primary">
+                        This summary will be Ai Generated when you upload your CV
+                        so please upload your CV first
+                      </Typography>
+                    </Box>
+                  )}
+                </ProfileCard>
+              </Grow>
+
               {/* About Section */}
               <Grow in={true} timeout={800} style={{backgroundColor: lightBackgroundColor}}>
                 <ProfileCard
