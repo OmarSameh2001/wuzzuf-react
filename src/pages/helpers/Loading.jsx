@@ -2,13 +2,13 @@ import { CircularProgress, LinearProgress, Typography } from "@mui/material";
 import { userContext } from "../../context/UserContext";
 import { useContext } from "react";
 
-const Loading = () => {
+const Loading = ({minHeight, minWidth}) => {
   const { isLight } = useContext(userContext);
   return (
     <div
       style={{
-        minHeight: "70vh",
-        minWidth:'100vw',
+        minHeight: minHeight || "70vh",
+        minWidth: minWidth || '100vw',
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

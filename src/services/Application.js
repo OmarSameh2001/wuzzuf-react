@@ -98,3 +98,8 @@ export const getMeetingsByJob = async (params) => {
   const response = await AxiosApi.get(`applications/meetings/?${params.toString()}`);
   return response.data;
 }
+
+export const setContract = async (id, data) => {
+  const response = await AxiosApi.post(`applications/set_contract/?application=${id}`, data);
+  return response.data;
+}

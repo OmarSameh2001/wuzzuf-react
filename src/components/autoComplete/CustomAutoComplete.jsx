@@ -172,10 +172,10 @@ const CustomAutoComplete = ({
       )}
       value={currentValue}
       onChange={(event, newInputValue) => {
-        setter((prev) => ({
+        {value ? setter((prev) => ({
           ...prev,
-          [value || "specialization"]: newInputValue,
-        }));
+          [value]: newInputValue,
+        })) : setter(newInputValue)}
       }}
     />
   );

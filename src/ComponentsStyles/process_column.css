@@ -9,7 +9,7 @@
 .process-tabs {
   min-height: 48px;
   padding-bottom: 0.25rem;
-  border-bottom: 1px solid var(--gray-300);
+  /* border-bottom: 1px solid var(--gray-300); */
 }
 
 .process-tab {

@@ -652,6 +652,9 @@ const EditPersonal = () => {
                     <CustomAutoComplete
                       setter={setLocalData}
                       getter={localData.specialization}
+                      value={"specialization"}
+                      label={"Specialization"}
+                      type={"specialization"}
                     />
                   </Grid>
                 </Grid>

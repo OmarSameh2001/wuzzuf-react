@@ -13,7 +13,7 @@ function ProcessColumn({setter, column, phases, application}) {
         }
     }, [application, setter]);
     return (
-    <div className="process-column-container">
+    <div className="process-column-container" style={{borderBottom: '1px solid var(--gray-300)'}}>
         <Tabs
           orientation="horizontal"
           value={column}

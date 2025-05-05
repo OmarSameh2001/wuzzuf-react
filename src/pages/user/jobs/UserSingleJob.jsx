@@ -24,6 +24,7 @@ import { id, se } from "date-fns/locale";
 import CompanyBox from "../../../components/accounts/CompanyBox";
 import CompanyJobsBox from "../../../components/job/CompanyJobsBox";
 import { showErrorToast,showInfoToast,showSuccessToast } from "../../../confirmAlert/toastConfirm";
+import Contract from "../../../components/job/user/Contract";
 const UserSingleJob = () => {
   const { jobId } = useParams();
   const { user, isLight } = useContext(userContext);
@@ -49,6 +50,7 @@ const UserSingleJob = () => {
     "Technical Interview",
     "Hr Interview",
     "Offer",
+    "Contract",
   ];
 
   async function handleClick() {
@@ -192,11 +194,17 @@ const UserSingleJob = () => {
                     refetch={userAppRefetch}
                   />
                 )}
-                {clickedColumn > 1 && (
+                {clickedColumn > 1 && clickedColumn < 6 && (
                   <Meeting
                     phase={phases[clickedColumn - 1]}
                     applicationData={userApp}
                     clickedColumn={clickedColumn}
+                  />
+                )}
+                {clickedColumn === 6 && (
+                  <Contract
+                    applicationData={userApp}
+                    company={company}
                   />
                 )}
               </div>

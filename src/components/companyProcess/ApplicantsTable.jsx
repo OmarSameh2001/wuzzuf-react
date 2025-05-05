@@ -39,6 +39,7 @@ import {
 import "../../ComponentsStyles/CompanyProcess/application_table.css";
 import { preconnect } from "react-dom";
 import { set } from "date-fns";
+import { TbContract } from "react-icons/tb";
 // import {FaUserSlash, FaUserCheck} from 'react-icons/fa';
 // import { RiQuestionAnswerFill } from 'react-icons/ri';
 // import { FaCalendarPlus } from 'react-icons/fa';
@@ -214,18 +215,11 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
   };
 
   const handleNext = async (applicant, phase) => {
-    // if (
-    //   !confirm(
-    //     "Are you sure you want to move this applicant to the next phase?"
-    //   )
-    // ) {
-    //   return;
-    // }
     showConfirmToast({
       message:
         "Are you sure you want to move this applicant to the next phase?",
       onConfirm: async () => {
-        if (phase < 5) {
+        if (phase < 6) {
           try {
             const response = await axios.patch(
               `${import.meta.env.VITE_BACKEND}applications/${applicant}/update_status/`,
@@ -428,7 +422,7 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
                       {applicant?.ats_res > 0 && (
                         <Chip
                           label={`${applicant.ats_res}%`}
-                          className="status-chip status-chip-info"
+                          className="status-chip "
                           size="small"
                         />
                       )}
@@ -443,7 +437,7 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
                             onClick={() => handleFail(applicant.id, phase)}
                             size={25}
                           />
-                          {phase !== 5 && (
+                          {phase !== 6 && (
                             <UserCheck
                               className="action-icon action-icon-success"
                               onClick={() => handleNext(applicant.id, phase)}
@@ -482,6 +476,25 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
                               user: applicant,
                               settings: {
                                 answer,
+                                phase,
+                                handleClose,
+                                handleNext,
+                                handleFail,
+                              },
+                            });
+                          }}
+                          size={35}
+                        />
+                      )}
+                      {!applicant.fail && phase === 6 && (
+                        <TbContract
+                          className="action-icon action-icon-secondary"
+                          color={applicant?.salary ? "green" : "gray"}
+                          onClick={() => {
+                            setUpdate({
+                              user: applicant,
+                              settings: {
+                                contract: true,
                                 phase,
                                 handleClose,
                                 handleNext,

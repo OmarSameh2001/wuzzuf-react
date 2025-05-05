@@ -4,7 +4,7 @@ import { patchJob } from "../../services/Job";
 import { useNavigate } from "react-router";
 // import { Button } from "@mui/material";
 import { TbCancel } from "react-icons/tb";
-import { FaEdit, FaMapMarkerAlt, FaRegClock, FaBriefcase, FaRegBuilding } from "react-icons/fa";
+import { FaEdit, FaMapMarkerAlt, FaRegClock, FaBriefcase, FaRegBuilding, FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { IoIosCloudDone } from "react-icons/io";
 import { 
 // MdOutlineWork,
@@ -17,6 +17,7 @@ import { BsCalendarDate, BsLightningCharge } from "react-icons/bs";
 // import { BsTools } from "react-icons/bs";
 import "../../ComponentsStyles/job/job_details.css";
 import { showConfirmToast, showErrorToast } from "../../confirmAlert/toastConfirm";
+import { Button } from "@mui/material";
 
 function JobDetails({ job, refetch }) {
   if (!job) return null;
@@ -24,6 +25,7 @@ function JobDetails({ job, refetch }) {
   const navigate = useNavigate();
   const id = job.id;
   const [loading, setLoading] = useState(false);
+  const [expand, setExpand] = useState(false);
 
   const handleActivation = async (state) => {
     setLoading(true);
@@ -145,8 +147,10 @@ function JobDetails({ job, refetch }) {
                   <FaRegClock className="section-icon" />
                 </span>
                 Job Description
+                <Button className="btn btn-primary" onClick={() => setExpand(!expand)}>{expand ? "Collapse" : "Expand"}{expand ? <FaArrowUp /> : <FaArrowDown />}</Button>
               </h2>
-              <div className="description-content">{job.description}</div>
+              
+              <div className="description-content" style={{height: expand ? "auto" : "100px", overflow: "hidden"}}>{job.description}</div>
             </div>
             
             {/* Skills Section */}

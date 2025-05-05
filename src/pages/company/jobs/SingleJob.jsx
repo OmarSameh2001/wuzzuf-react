@@ -10,7 +10,11 @@ import { Button, Box, Typography, Paper, useMediaQuery, Tabs, Tab, CircularProgr
 import { userContext } from "../../../context/UserContext";
 import MeetingsTable from "../../../components/companyProcess/MeetingsTable";
 import '../../../styles/company/job/single_job.css';
+import '../../../ComponentsStyles/process_column.css';
 import DynamicSwitcher from "../../../components/companyProcess/DynamicSwitcher";
+import { is } from "date-fns/locale";
+import TopTalents from "../../../components/companyProcess/TopTalents";
+import Loading from "../../helpers/Loading";
 function SingleJob() {
   const phases = [
     "Applied",
@@ -18,10 +22,12 @@ function SingleJob() {
     "Technical Interview",
     "Hr Interview",
     "Offer",
+    "Contract",
   ];
   const { id } = useParams();
   const [clickedColumn, setClickedColumn] = useState(1);
   const [calender, setCalender] = useState(false);
+  const [isTalents, setIsTalents] = useState(false);
   const { user,isLight } = useContext(userContext);
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:768px)")
@@ -87,12 +93,7 @@ function SingleJob() {
 
   if (jobLoading)
     return (
-      <Box
-        className={`single-job-container ${isLight ? "light-mode" : "dark-mode"}`}
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}
-      >
-        <CircularProgress size={60} sx={{ color: primaryColor }} />
-      </Box>
+      <Loading />
     )
 
     if (jobError)
@@ -157,7 +158,7 @@ function SingleJob() {
       )
 
   return (
-    <div className={`single-job-container ${isLight ? "light-mode" : "dark-mode"}`}>
+    <div className={`single-job-container ${isLight ? "light-mode" : "dark-mode"}`} style={{minWidth:"100%"}}>
     <Box
       sx={{
         width: { xs: "100%", sm: "95%", md: "90%", lg: "80%" },
@@ -202,11 +203,44 @@ function SingleJob() {
               borderBottom: `1px solid ${borderColor}`,
             }}
           >
-            <Typography variant="h5" sx={{ fontWeight: 600, color: textColor }}>
+            {/* <Typography variant="h5" sx={{ fontWeight: 600, color: textColor }}>
               Recruitment Process
-            </Typography>
+            </Typography> */}
+            <Tabs
+              value={isTalents ? 1 : 0}
+              orientation="horizontal"
+              variant="scrollable"
+              className="process-tabs"
+              TabIndicatorProps={{
+                style: {
+                  backgroundColor: "#722732",
+                  // borderBottom: `2px solid ${primaryColor}`,
+                },
+              }}
+              sx={{
+                '.process-tab':{
+                  color: isLight ?'var(--gray-700)' :'red',
+                  padding:'0'
+                },
+                '.process-tabs':{
+                  borderBottom: `0px solid ${borderColor}`,
+                }
+              }}
+            >
+                <Tab
+                  label={<Typography variant="h6">Recruitment Process</Typography>}
+                  onClick={() => setIsTalents(false)}
+                  className={`process-tab ${!isTalents ? "active" : ""}`}
+                  sx={{marginRight:3}}
+                />
+                <Tab
+                  label={<Typography variant="h6">Top Talents</Typography>}
+                  onClick={() => setIsTalents(true)}
+                  className={`process-tab ${isTalents ? "active" : ""}`}
+                />
+            </Tabs>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {!isTalents && <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Box
                 onClick={() => setCalender(false)}
                 className={`toggle-option ${!calender ? "active" : ""}`}
@@ -252,11 +286,11 @@ function SingleJob() {
                 <CalendarMonth fontSize="small" />
                 <Typography sx={{ fontWeight: 500, display: { xs: "none", sm: "block" } }}>Meetings</Typography>
               </Box>
-            </Box>
+            </Box>}
           </Box>
         </Box>
 
-        <Box className="process-content">
+        {!isTalents ? <Box className="process-content">
           {!calender ? (
             <>
               <ProcessColumn setter={setClickedColumn} column={clickedColumn} phases={phases} />
@@ -268,7 +302,7 @@ function SingleJob() {
               <MeetingsTable column={clickedColumn} phases={phases.slice(2, 5)} />
             </>
           )}
-        </Box>
+        </Box> : <TopTalents job={jobData.id} />}
       </Paper>
     </Box>
   </div>

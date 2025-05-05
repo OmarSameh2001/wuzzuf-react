@@ -586,6 +586,8 @@ function UserJobs() {
               getter={filters.specialization}
               border={"#901b20"}
               background={isLight ? "#fff" : "#121212"}
+              value={"specialization"}
+              label={"Specialization"}
               multiple={true}
             />
           </Box>
