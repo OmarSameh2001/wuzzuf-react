@@ -10,6 +10,70 @@ export const AxiosApi = axios.create({
   },
 });
 
+export const getTracks = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/user/tracks/`, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    throw new Error('Unable to fetch tracks. Please try again later.');
+  }
+};
+
+export const createTrack = async (name) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/user/tracks/`,
+      { name },
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error('Unable to add new track. Please try again later.');
+  }
+};
+
+export const createBranch = async (name, address) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/user/branches/`,
+      { name, address },
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error('Unable to add new branch. Please try again later.');
+  }
+};
+
+
+export const getBranches = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/user/branches/`, {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    throw new Error('Unable to fetch branches. Please try again later.');
+  }
+};
+
+
 // Function to get the reset token by email
 export const getResetToken = async (email) => {
   try {

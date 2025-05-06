@@ -212,7 +212,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useState, useEffect, useContext } from "react"
 import { userContext } from "../../../context/UserContext"
 import { FaCalendarAlt, FaLink } from "react-icons/fa"
-import Lottie from "react-lottie"
+import Lottie from "lottie-react";
 import { useTheme } from "@mui/material/styles"
 import { CalendarMonth, VideoCall, People, Handshake } from "@mui/icons-material"
 import successAnimation from "../../../assets/animations/success-animation.json"

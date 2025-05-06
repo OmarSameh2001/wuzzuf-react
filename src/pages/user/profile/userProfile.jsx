@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
@@ -18,6 +18,10 @@ import {
   Slide,
   useMediaQuery,
   useTheme,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import {
   Edit,
@@ -39,6 +43,8 @@ import { ThemeProvider, createTheme, keyframes } from "@mui/material/styles";
 import { styled } from "@mui/system";
 import { SiLeetcode } from "react-icons/si";
 import { light } from "@mui/material/styles/createPalette";
+import { getTracks, getBranches } from '../../../services/Api';
+
 
 const UserProfile = () => {
   const navigate = useNavigate();
@@ -53,6 +59,44 @@ const UserProfile = () => {
   const cardsBackgroundColor = isLight ? "#fff" : '#242424';
   const darkTextColor = isLight ? "#3a3a3a" : '#fff'; // Dark gray for text
   const lightTextColor = isLight ? "#121212" : '#fff'; // Lighter gray for secondary text
+  const [tracks, setTracks] = useState([]);
+  const [branches, setBranches] = useState([]);
+  const [selectedTrackId, setSelectedTrackId] = useState('');
+  const [selectedBranchId, setSelectedBranchId] = useState('');
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tracksData = await getTracks();
+        setTracks(tracksData.results);
+  
+        const branchesData = await getBranches();
+        setBranches(branchesData.results);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchData();
+  }, []); 
+
+  const updateProfile = async () => {
+    const formData = new FormData();
+    formData.append("track_id", selectedTrackId);
+    formData.append("branch_id", selectedBranchId);
+  
+    try {
+      await axios.patch(`/user/jobseeker/${user.id}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Profile updated!");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Animations
   const pulse = keyframes`
@@ -177,6 +221,7 @@ const UserProfile = () => {
 
   // Navigation functions
   const goToEditEducation = () => navigate("/applicant/profile/edit-education");
+  const goToEditITI = () => navigate("/applicant/profile/edit-iti");
   const goToEditExperience = () =>
     navigate("/applicant/profile/edit-experience");
   const goToEditSkills = () => navigate("/applicant/profile/edit-skills");
@@ -659,6 +704,49 @@ const UserProfile = () => {
                   )}
                 </ProfileCard>
               </Grow>
+
+              {/* ITI Section */}
+              <Grow in={true} timeout={1200} style={{ backgroundColor: lightBackgroundColor }}>
+                <ProfileCard elevation={3} sx={{ p: isMobile ? 2 : 3, mb: isMobile ? 2 : 3, color: isLight ? "gray" : "white", }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+                    <Typography variant="h6" sx={{ display: "flex", alignItems: "center" }}>
+                      <School sx={{ mr: 1, color: secondaryColor }} />
+                      ITI Info
+                    </Typography>
+                    <SecondaryButton
+                      size="small"
+                      startIcon={<Edit />}
+                      onClick={goToEditITI}
+                    >
+                      {user.track || user.branch ? "Edit" : "Add"}
+                    </SecondaryButton>
+                  </Box>
+
+                  {/* ITI Track and Branch Selection */}
+                  {user.track && user.branch ? (
+                  <Container sx={{ mt: 2, p: 3, borderRadius: 2,  backgroundColor: isLight ? "white" : "transparent", border: isLight ? "1px solid #ccc" : "none"}}>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <strong>Track:</strong> {user.track.name}
+                    </Typography>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <strong>Graduation Year:</strong> {user.iti_grad_year}
+                    </Typography>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <strong>Branch:</strong> {user.branch.name}
+                    </Typography>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <strong>Address:</strong> {user.branch.address}
+                    </Typography>
+                  </Container>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No ITI info added yet.
+                  </Typography>
+                )}
+
+                </ProfileCard>
+              </Grow>
+
             </Grid>
 
             {/* Right Column */}

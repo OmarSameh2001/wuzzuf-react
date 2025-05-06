@@ -16,3 +16,14 @@ export const getTalentById = async (id) => {
 
   return response.data;
 };
+
+export const getBranches = async () => {
+  const { data } = await AxiosApi.get("/user/branches"); // update endpoint as needed
+  return data.results;
+};
+
+export const getTracks = async () => {
+  const { data } = await AxiosApi.get("/user/tracks"); // update endpoint as needed
+  return data.results;
+};
+
