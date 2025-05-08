@@ -29,7 +29,7 @@ import '../../../../styles/company/profile/edit_profile_Personal.css';
 import CustomAutoComplete from "../../../../components/autoComplete/CustomAutoComplete";
 
 const EditPersonalCom = () => {
-  const { user, setUser ,isLight} = useContext(userContext);
+  const { user, setUser ,isLight, refetchUser} = useContext(userContext);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [uploadStatus, setUploadStatus] = useState({ img: null });
@@ -115,6 +115,7 @@ const EditPersonalCom = () => {
       }));
       showSuccessToast("Image uploaded successfully!", 2000, isLight)
       setUploadStatus({ img: "success" });
+      refetchUser()
     } catch (error) {
       console.error("Error uploading img:", error);
       setUploadStatus({ img: "error" });

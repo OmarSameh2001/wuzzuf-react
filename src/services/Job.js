@@ -45,7 +45,12 @@ export const deleteJob = async (id) => {
   await AxiosApi.delete(`jobs/${id}/`);
 };
 
-export const jobTalents = async (id) => {
-  const response = await AxiosApi.get(`jobs/top_talents/${id}/`);
+export const jobTalents = async (id, { page = 1, pageSize = 5, seniority = "" } = {}) => {
+  const params = new URLSearchParams({
+    page,
+    page_size: pageSize,
+    seniority,
+  });
+  const response = await AxiosApi.get(`jobs/top_talents/${id}/?${params.toString()}`);
   return response.data;
 }

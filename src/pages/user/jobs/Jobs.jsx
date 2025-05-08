@@ -309,6 +309,7 @@ function UserJobs() {
             borderRadius: 3,
             boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
             mb: 3,
+            borderBottom: `3px solid ${primaryColor}`,
           }}
         >
           <Typography
