@@ -479,7 +479,7 @@ const UserProfile = () => {
                   </Box>
                   <Typography variant="body1" color="text.secondary">
                     {user.summary || 
-                      "Experienced professional with a proven track record in developing innovative solutions. Skilled in problem-solving and team collaboration with a focus on delivering high-quality results."}
+                      "Experienced professional with a proven track record in developing innovative solutions."}
                   </Typography>
                   {!user.summary && (
                     <Box sx={{ mt: 2 }}>

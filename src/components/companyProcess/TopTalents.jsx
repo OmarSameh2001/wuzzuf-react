@@ -36,7 +36,7 @@ const TopTalents = ({ job }) => {
   } = useQuery({
     queryKey: ["jobTalent", job, page, rowsPerPage],
     queryFn: async () => {
-      const res = await jobTalents(job);
+      const res = await jobTalents(job, page, rowsPerPage);
       setTotal(res.count || 0);
       return res.results;
     },

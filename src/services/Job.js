@@ -45,7 +45,7 @@ export const deleteJob = async (id) => {
   await AxiosApi.delete(`jobs/${id}/`);
 };
 
-export const jobTalents = async (id) => {
-  const response = await AxiosApi.get(`jobs/top_talents/${id}/`);
+export const jobTalents = async (id, page = 1, rowsPerPage = 10) => {
+  const response = await AxiosApi.get(`jobs/top_talents/${id}/?page_size=${rowsPerPage}&page=${page}`);
   return response.data;
 }

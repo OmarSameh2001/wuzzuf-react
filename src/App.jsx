@@ -18,6 +18,9 @@ import CompanyProtected from "./ProtectedRoute/CompanyProtected.jsx";
 import UserProtected from "./ProtectedRoute/UserProtected.jsx";
 import AdminProtected from "./ProtectedRoute/AdminProtected.jsx";
 import AccountProtected from "./ProtectedRoute/AccountProtected.jsx";
+import VideoInterview from "./pages/interview/VideoInterview.jsx";
+
+
 
 function App() {
   const Home = React.lazy(() => import("./pages/home/Home"));
@@ -152,6 +155,10 @@ function App() {
                         <Route
                           path="/applicant/applications/:id"
                           element={<UserProtected><JobApplication /></UserProtected>}
+                        />
+                          <Route
+                          path="/applicant/applications/video/" //mahtage id wala la2 shofy kda  :id
+                          element={<UserProtected><VideoInterview /></UserProtected>}
                         />
                         <Route
                           path="/applicant/profile/edit-accounts"
