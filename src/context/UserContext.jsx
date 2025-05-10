@@ -71,6 +71,9 @@ export function UserContextProvider({ children }) {
           skills: safeParseJSON(response.skills, []),
           education: safeParseJSON(response.education, []),
           experience: safeParseJSON(response.experience, []),
+          track: safeParseJSON(response.track, []),
+          branch: safeParseJSON(response.branch, []),
+          grad_year: safeParseJSON(response.iti_grad_year, []),
         };
         setUser(parsedResponse);
       } catch (error) {

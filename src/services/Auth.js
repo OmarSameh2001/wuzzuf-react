@@ -29,7 +29,6 @@ export const signupUser = async (userData) => {
 
 // Get Authenticated User Data
 export const getUser = async (token) => {
-
   try {
     const response = await AxiosApi.get('user/profile/', {
       headers: {

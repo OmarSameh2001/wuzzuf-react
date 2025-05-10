@@ -54,9 +54,10 @@ function Login() {
       setToken(null);
       localStorage.removeItem("token");
 
+      console.log(error)
+
       // Extract message from backend if available
       const backendMessage = error.response.data.error;
-
       showErrorToast(backendMessage || "Login failed. Please check your email and password!", 2000, isLight);
       setError("");
       

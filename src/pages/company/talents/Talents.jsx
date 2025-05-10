@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTalents } from "../../../services/Talents";
+import { getTalents, getBranches, getTracks } from "../../../services/Talents";
 import { useContext, useState } from "react";
 import { userContext } from "../../../context/UserContext";
 import { useNavigate } from "react-router";
@@ -16,6 +16,11 @@ import {
   Box,
   Paper,
   Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid
 } from "@mui/material"
 import {
   Search,
@@ -34,8 +39,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import '../../../styles/company/talents/talents.css';
 import '../../../styles/company/companyteme.css';
 import CustomAutoComplete from "../../../components/autoComplete/CustomAutoComplete";
+import dayjs from 'dayjs'; // or use new Date().getFullYear() if you prefer
+
 
 function Talents() {
+  const currentYear = dayjs().year(); 
+  const years = Array.from({ length: currentYear - 1993 + 1 }, (_, i) => 1993 + i).reverse();
   const { user, isLight } = useContext(userContext);
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
@@ -59,6 +68,9 @@ function Talents() {
     location: "",
     skills: "",
     specialization: "",
+    iti_grad_year: "",
+    track: "",
+    branch: "",
   });
   const [searchFilters, setSearchFilters] = useState({
     name: "",
@@ -66,6 +78,9 @@ function Talents() {
     location: "",
     skills: "",
     specialization: "",
+    iti_grad_year: "",
+    track: "",
+    branch: "",
   });
 
   const handleReset = () => {
@@ -74,12 +89,19 @@ function Talents() {
       seniority: "",
       location: "",
       skills: "",
+      iti_grad_year: "",
+      track: "",
+      branch: "",  
     });
     setSearchFilters({
       name: "",
       seniority: "",
       location: "",
       skills: "",
+      iti_grad_year: "",
+      track: "",
+      branch: "",
+  
     });
     setPage(1);
     talentsRefetch();
@@ -93,6 +115,16 @@ function Talents() {
       return res.results;
     },
     keepPreviousData: true,
+  });
+
+  const { data: branches = [], isLoading: loadingBranches } = useQuery({
+    queryKey: ["branches"],
+    queryFn: getBranches,
+  });
+  
+  const { data: tracks = [], isLoading: loadingTracks } = useQuery({
+    queryKey: ["tracks"],
+    queryFn: getTracks,
   });
 
   const getSkillsArray = (skills) => {
@@ -152,22 +184,24 @@ function Talents() {
         </div>
 
         <Paper className="search-container">
-            <Box className="search-row">
-              <Box className="search-field-wrapper">
-                <Search className="search-icon" />
-                <TextField
-                  placeholder="Search applicants by name..."
-                  value={filters.name}
-                  onChange={(e) => setFilters((prev) => ({ ...prev, name: e.target.value }))}
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                  className="search-input"
-                />
-              </Box>
+          <Box className="search-row">
+            <Box className="search-field-wrapper">
+              <Search className="search-icon" />
+              <TextField
+                placeholder="Search applicants by name..."
+                value={filters.name}
+                onChange={(e) => setFilters((prev) => ({ ...prev, name: e.target.value }))}
+                fullWidth
+                variant="outlined"
+                size="small"
+                className="search-input"
+              />
             </Box>
+          </Box>
 
-            <Box className="filter-row">
+          {/* Use Grid to divide the fields into two lines */}
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
               <Box className="filter-field-wrapper">
                 <TextField
                   label="Skills"
@@ -179,7 +213,9 @@ function Talents() {
                   className="filter-input"
                 />
               </Box>
+            </Grid>
 
+            <Grid item xs={12} sm={6}>
               <Box className="filter-field-wrapper">
                 <CustomAutoComplete
                   setter={setFilters}
@@ -188,7 +224,9 @@ function Talents() {
                   value="specialization"
                 />
               </Box>
+            </Grid>
 
+            <Grid item xs={12} sm={6}>
               <Box className="filter-field-wrapper">
                 <CustomAutoComplete
                   setter={setFilters}
@@ -199,7 +237,9 @@ function Talents() {
                   multiple={true}
                 />
               </Box>
+            </Grid>
 
+            <Grid item xs={12} sm={6}>
               <Box className="filter-field-wrapper">
                 <CustomAutoComplete
                   getter={filters.location}
@@ -210,31 +250,92 @@ function Talents() {
                   multiple={true}
                 />
               </Box>
-            </Box>
+            </Grid>
 
-            <Box className="filter-actions">
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setSearchFilters(filters)
-                  setPage(1)
-                  talentsRefetch()
-                }}
-                startIcon={<Search />}
-                className="filter-button filter-button--primary"
-              >
-                Search
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={handleReset}
-                startIcon={<Refresh />}
-                className="filter-button filter-button--secondary"
-              >
-                Reset
-              </Button>
-            </Box>
-          </Paper>
+            <Grid item xs={12} sm={6}>
+              <Box className="filter-field-wrapper">
+                <FormControl fullWidth size="small">
+                  <InputLabel>Graduation Year</InputLabel>
+                  <Select
+                    label="Graduation Year"
+                    value={filters.iti_grad_year}
+                    onChange={(e) =>
+                      setFilters((prev) => ({ ...prev, iti_grad_year: e.target.value }))
+                    }
+                  >
+                    {years.map((year) => (
+                      <MenuItem key={year} value={year}>
+                        {year}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Box className="filter-field-wrapper">
+                <FormControl fullWidth size="small">
+                  <InputLabel>Track</InputLabel>
+                  <Select
+                    value={filters.track}
+                    onChange={(e) => setFilters((prev) => ({ ...prev, track: e.target.value }))}
+                    label="Track"
+                  >
+                    {tracks.map((track) => (
+                      <MenuItem key={track.id} value={track.id}>
+                        {track.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <Box className="filter-field-wrapper">
+                <FormControl fullWidth size="small">
+                  <InputLabel>Branch</InputLabel>
+                  <Select
+                    value={filters.branch}
+                    onChange={(e) => setFilters((prev) => ({ ...prev, branch: e.target.value }))}
+                    label="Branch"
+                  >
+                    {branches.map((branch) => (
+                      <MenuItem key={branch.id} value={branch.id}>
+                        {branch.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </Grid>
+          </Grid>
+
+          <Box className="filter-actions">
+            <Button
+              variant="contained"
+              onClick={() => {
+                setSearchFilters(filters)
+                setPage(1)
+                talentsRefetch()
+              }}
+              startIcon={<Search />}
+              className="filter-button filter-button--primary"
+            >
+              Search
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleReset}
+              startIcon={<Refresh />}
+              className="filter-button filter-button--secondary"
+            >
+              Reset
+            </Button>
+          </Box>
+        </Paper>
+
         </div>
 
         {talentsLoading ? (

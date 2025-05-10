@@ -364,7 +364,9 @@ function Navbar() {
                     {/* <NavLink to="/admin/users" text="Manage Users" /> */}
                     <NavLink to="/admin/itians" text="Manage Itians" />
                     <NavLink to="/admin/companies" text="Manage Companies" />
-                    <NavLink to="/admin/rag" text="Manage Rag files" />
+                    <NavLink to="/admin/rag" text="Manage Rag Files" />
+                    <NavLink to="/admin/iti-info" text="Manage ITI Info" />
+
                   </>
                 )}
               </Box>
