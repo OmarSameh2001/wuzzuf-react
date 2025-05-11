@@ -115,7 +115,7 @@ export default function CustomPagination({
                 },
               }}
             >
-              {[3, 6, 9, 12, 15].map((size) => (
+              {[3, 6, 12, 18].map((size) => (
                 <MenuItem key={size} value={size}>
                   {size}
                 </MenuItem>

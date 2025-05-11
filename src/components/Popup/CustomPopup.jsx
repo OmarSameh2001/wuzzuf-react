@@ -4,10 +4,11 @@ import { GiCancel } from "react-icons/gi";
 import { userContext } from "../../context/UserContext";
 import { useContext } from "react";
 import ContractBox from "./ContractBox";
+import VideoInterview from "./VideoInterview";
 
 export default function CustomPopup() {
-  const { isLight, update } = useContext(userContext);
-  const { answer, contract, phase, handleClose, handleNext, handleFail } = update.settings;
+  const { isLight, update, setUpdate } = useContext(userContext);
+  const { answer, contract, video, phase, handleClose, handleNext, handleFail, setDisabled } = update.settings;
 
   const PopupPicker = () => {
     if (!update.user?.id) return null;
@@ -28,6 +29,15 @@ export default function CustomPopup() {
         />
       );
 
+    if (video) return (
+      <VideoInterview
+        applicationId={update.id}
+        handleClose={handleClose}
+        question={update?.user?.job_details?.questions?.find((q) => q.type === "video")?.text || null}
+        setDisabled={setDisabled}
+      />
+    );
+
     return (
       <CompanySchedule
         applicant={update.user}
@@ -47,23 +57,23 @@ export default function CustomPopup() {
         <div
           className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"
           style={{ backdropFilter: "blur(10px)" }}
-          onClick={handleClose}
+          onClick={video ? null : handleClose}
         ></div>
         <div
           className="position-relative p-4 rounded-4 shadow-lg"
           style={{
-            width: "400px",
-            maxHeight: "80vh",
+            width: video ? "90vw" : "400px",
+            maxHeight: video ? "100vh" : "80vh",
             overflowY: "auto",
             backdropFilter: "blur(5px)",
             backgroundColor: isLight ? "#fff" : "#121212",
             height: "fit-content",
           }}
         >
-          <h2 className="text-center mb-3" style={{ color: isLight ? "#121212" : "#fff" }}>
+          <h2 className="text-center mb-3" style={{ color: isLight ? "#121212" : "#fff", display: video ? "none" : "block" }}>
             {answer
               ? `${update.user_name} Answers`
-              : Number(phase) === 2
+              : video ? "Video Interview" : Number(phase) === 2
               ? "Assessment Link"
               : Number(phase) === 6 ? "Offer Letter" : "Set Schedule"}
           </h2>
@@ -75,6 +85,7 @@ export default function CustomPopup() {
               scale: 2,
               cursor: "pointer",
               color: "red",
+              display: video ? "none" : "block",
             }}
             onClick={handleClose}
           />

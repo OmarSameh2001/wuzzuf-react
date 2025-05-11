@@ -263,7 +263,7 @@ function SingleJob() {
                 <Typography sx={{ fontWeight: 500, display: { xs: "none", sm: "block" } }}>Applicants</Typography>
               </Box>
 
-              <DynamicSwitcher setter={setCalender} getter={calender} />
+              <DynamicSwitcher setter={setCalender} getter={calender}/>
 
               <Box
                 onClick={() => setCalender(true)}

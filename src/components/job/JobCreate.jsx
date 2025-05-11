@@ -40,6 +40,7 @@ import { useQuery } from "@tanstack/react-query"
 import {showSuccessToast,showWarningToast,showConfirmToast,showErrorToast} from "../../confirmAlert/toastConfirm";
 import '../../ComponentsStyles/job/jobCreate.css';
 import CustomAutoComplete from "../autoComplete/CustomAutoComplete";
+
 const JobCreate = () => {
    const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
@@ -61,13 +62,20 @@ const JobCreate = () => {
       "Manager",
     
   ]
+  const screeningQuestions = [
+    "What makes you a strong candidate for this position?",
+    "Why do you believe you're a good fit for this role?",
+    "Please briefly explain how your skills and experience align with the requirements of this position.",
+    "In what ways do your qualifications make you an ideal candidate for this opportunity?",
+    "Tell us how your background supports your application?",
+  ]
 
   const [jobData, setJobData] = useState({
     title: "",
     description: "",
     experince: "",
     type_of_job: "Full-time",
-    location: "",
+    location: "Cairo",
     // keywords: "",
     status: "1",
     attend: "Onsite",
@@ -132,6 +140,7 @@ const JobCreate = () => {
   const handleQuestionChange = (index, key, value) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index][key] = value;
+    updatedQuestions[index].text = key === "type" && value === "video" ? screeningQuestions[Math.floor(Math.random() * screeningQuestions.length)] : ''
     setQuestions(updatedQuestions);
   };
 
@@ -150,6 +159,14 @@ const JobCreate = () => {
   const handleChoiceChange = (qIndex, cIndex, value) => {
     const updatedQuestions = [...questions];
     updatedQuestions[qIndex].choices[cIndex] = value;
+    setQuestions(updatedQuestions);
+  };
+
+  const handleRandomQuestion = (qIndex, qtype) => {
+    if(qtype != "video") return
+    const text = screeningQuestions[Math.floor(Math.random() * 5)]
+    const updatedQuestions = [...questions];
+    updatedQuestions[qIndex].text = text;
     setQuestions(updatedQuestions);
   };
 
@@ -184,7 +201,6 @@ const JobCreate = () => {
           company: `${user?.id}`,
         });
         setQuestions([]);
-        showSuccessToast("Job created successfully!", 2000, isLight);
         navigate("/company/jobs");
       } else {
         showErrorToast("Failed to create job", 2000, isLight);
@@ -197,10 +213,14 @@ const JobCreate = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(questions)
     if (questions.length === 0) {
       showConfirmToast(
         {message:"Are you sure no questions will be added ?", onConfirm: uploadJob, isLight: isLight},
       )
+    }else{
+      console.log("uploading job")
+      uploadJob()
     }
     
   };
@@ -460,7 +480,9 @@ const JobCreate = () => {
                           onChange={(e) => handleQuestionChange(qIndex, "text", e.target.value)}
                           className="form-input question-input"
                           required
-                        />
+                        >
+                          
+                        </input>
                         <select
                           value={question.type}
                           onChange={(e) => handleQuestionChange(qIndex, "type", e.target.value)}
@@ -468,12 +490,14 @@ const JobCreate = () => {
                         >
                           <option value="multichoice">Multiple Choice</option>
                           <option value="boolean">Yes/No</option>
+                          <option value="video" disabled={questions.filter((q) => q.type === "video").length === 1}>Screening Video</option>
+                          
                         </select>
                         <div className="required-checkbox">
                           <input
                             type="checkbox"
                             id={`required-${qIndex}`}
-                            checked={question.required || false}
+                            checked={question.required || question.type === "video" || false}
                             onChange={(e) => handleQuestionChange(qIndex, "required", e.target.checked)}
                           />
                           <label htmlFor={`required-${qIndex}`} className="required-label">

@@ -18,7 +18,7 @@ import CompanyProtected from "./ProtectedRoute/CompanyProtected.jsx";
 import UserProtected from "./ProtectedRoute/UserProtected.jsx";
 import AdminProtected from "./ProtectedRoute/AdminProtected.jsx";
 import AccountProtected from "./ProtectedRoute/AccountProtected.jsx";
-import VideoInterview from "./pages/interview/VideoInterview.jsx";
+import VideoInterview from "./components/Popup/VideoInterview.jsx";
 
 
 

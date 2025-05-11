@@ -103,12 +103,13 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  border-radius: var(--border-radius-md);
+  /* border-radius: 50%; */
   font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
   transition: var(--transition);
   border: none;
+  min-width: max-content;
 }
 
 .light .action-button {

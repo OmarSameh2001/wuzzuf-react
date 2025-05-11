@@ -16,7 +16,7 @@ function CompanyJobs() {
   const { user, isLight } = useContext(userContext);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(6);
   const [total, setTotal] = useState(0);
   const [active, setActive] = useState(false);
   const [filters, setFilters] = useState({

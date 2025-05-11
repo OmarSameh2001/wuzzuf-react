@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { AxiosApi } from '../../services/Api';
 import '../../styles/user/interview.css';
 import { 
@@ -11,16 +11,18 @@ import {
     FaCheckCircle,
     FaTrophy
   } from "react-icons/fa"
-const VideoInterview = () => {
-    const applicationId = 3; 
+import { Camera } from 'lucide-react';
+import { Button } from '@mui/material';
+import { showConfirmToast, showSuccessToast } from '../../confirmAlert/toastConfirm';
+import { userContext } from '../../context/UserContext';
+const VideoInterview = ({ applicationId, handleClose, question, setDisabled }) => {
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const [recording, setRecording] = useState(false);
     const [recordedChunks, setRecordedChunks] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questions] = useState([
-        "what is database , and what is the difference between SQL and No SQl databases?",
-        "What have you learned in your IT career that makes you feel you are a very well candidate to join our company?",
+        question || "What have you learned in your IT career that makes you feel you are a very well candidate to join our company?",
     ]);
     const [interviewFinished, setInterviewFinished] = useState(false);
     const [interviewScore, setInterviewScore] = useState(null);
@@ -32,6 +34,7 @@ const VideoInterview = () => {
     const [videoPreviewUrl, setVideoPreviewUrl] = useState(null)
     const [animateQuestion, setAnimateQuestion] = useState(false)
     const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+    const { isLight } = useContext(userContext)
     // Camera setup
     useEffect(() => {
         async function startCamera() {
@@ -58,10 +61,8 @@ const VideoInterview = () => {
         startCamera();
 
         return () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-        };
+    turnOffCamera(); // Use the same function here for cleanup
+  };
     }, []);
 
     useEffect(() => {
@@ -141,6 +142,9 @@ const VideoInterview = () => {
             } else {
                 setInterviewFinished(true);
             }
+            showSuccessToast("Successfully submitted video!", 2000, isLight);
+            setDisabled(true)
+            handleClose();
     
         } catch (error) {
             setError(error.response?.data?.error || error.message);
@@ -148,6 +152,29 @@ const VideoInterview = () => {
             setProcessing(false);
         }
     };
+    const turnOffCamera = () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        setStream(null);
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    };
+
+
+    const handleExit = () => {
+        showConfirmToast({
+          message: "Are you sure you want to exit ?",
+          onConfirm: () => {
+            retryRecording();
+            turnOffCamera();
+            handleClose();
+          },
+          isLight,
+        });
+        
+    }
 
     const retryRecording = () => {
         setRecordedChunks([]);
@@ -223,6 +250,10 @@ const VideoInterview = () => {
                   Question {currentQuestionIndex + 1} of {questions.length}
                 </h3>
                 <p className="question-text">{questions[currentQuestionIndex]}</p>
+                <p className="question-instructions">1- Your english level will be considered in the final score</p>
+                <p className="question-instructions">2- Please wear a formal attire</p>
+                <p className="question-instructions">3- Tip: stay in queit place and test your microphone.</p>
+                <p className="question-instructions">Good luck! 🙂</p>
               </div>
     
               <div className="video-container">
@@ -298,6 +329,14 @@ const VideoInterview = () => {
                     </button>
                   </div>
                 )}
+                <button
+                    className="button animate-bounce-in"
+                    onClick={handleExit}
+                    disabled={processing}
+                  >
+                    <FaCamera className="button-icon" />
+                    <span>Exit Interview</span>
+                  </button>
               </div>
             </div>
     

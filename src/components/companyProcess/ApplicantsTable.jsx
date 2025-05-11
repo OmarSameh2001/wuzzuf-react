@@ -18,7 +18,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import CompanySchedule from "../Popup/Schedule.jsx";
 import { userContext } from "../../context/UserContext";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import CustomPopup from "../Popup/CustomPopup";
 import {
   UserCheck,
@@ -44,7 +44,7 @@ import { TbContract } from "react-icons/tb";
 // import { RiQuestionAnswerFill } from 'react-icons/ri';
 // import { FaCalendarPlus } from 'react-icons/fa';
 
-function ApplicantsTable({ phase, setFilters, fetch }) {
+function ApplicantsTable({ phase, setFilters, fetch, job }) {
   const { isLight } = useContext(userContext);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -54,6 +54,8 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
   const [answer, setAnswer] = useState(false);
   const { user, update, setUpdate } = useContext(userContext);
   const { id } = useParams();
+  const navigate = useNavigate();
+  const isScreening = job?.questions?.find((q) => q.type === "video")
 
   const queryKey = ["applicants", page, rowsPerPage, phase, fetch];
   const queryFn = async () => {
@@ -377,7 +379,7 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
                 <TableCell>Name</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Status & ATS</TableCell>
+                <TableCell>ATS{isScreening && 'and Screening'}</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -403,14 +405,14 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
                       disabled={applicant.fail}
                     />
                   </TableCell>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{applicant.user_name}</TableCell>
+                  <TableCell style={{cursor: "pointer"}} onClick={() => navigate(`/company/talents/${applicant.id}`)}>{index + 1}</TableCell>
+                  <TableCell style={{cursor: "pointer"}} onClick={() => navigate(`/company/talents/${applicant.id}`)}>{applicant.user_name}</TableCell>
                   <TableCell>{applicant.user_phone}</TableCell>
                   <TableCell>{applicant.user_email}</TableCell>
 
                   <TableCell>
                     <div className="status-chips">
-                      <Chip
+                      {applicant?.fail && <Chip
                         label={applicant.fail ? "Failed" : "Pending"}
                         className={`status-chip ${
                           applicant.fail
@@ -418,10 +420,17 @@ function ApplicantsTable({ phase, setFilters, fetch }) {
                             : "status-chip-success"
                         }`}
                         size="small"
-                      />
+                      />}
                       {applicant?.ats_res > 0 && (
                         <Chip
                           label={`${applicant.ats_res}%`}
+                          className="status-chip "
+                          size="small"
+                        />
+                      )}
+                      {isScreening && applicant?.screening_res > 0 && (
+                        <Chip
+                          label={`${applicant.screening_res}%`}
                           className="status-chip "
                           size="small"
                         />

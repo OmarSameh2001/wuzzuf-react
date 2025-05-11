@@ -138,6 +138,13 @@
     font-weight: 600;
     color: var(--text-primary);
   }
+
+  .question-instructions {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+    padding: 0;
+  }
   
   /* Video */
   .video-container {
