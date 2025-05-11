@@ -71,6 +71,7 @@ const JobCreate = () => {
     // keywords: "",
     status: "1",
     attend: "Onsite",
+    specialization: "",
     company: `${user?.id}`,
   });
 
@@ -363,6 +364,20 @@ const JobCreate = () => {
                   setter={setJobData}
                   value={"experince"}
                   label={"Experince"}
+                  background={isLight ? '#fff' : '#1a202c'}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="experince" className="form-label">
+                  Specialization
+                </label>
+                <CustomAutoComplete
+                  // options={experienceOptions}
+                  getter={jobData.specialization}
+                  setter={setJobData}
+                  value={"specialization"}
+                  label={"Specialization"}
                   background={isLight ? '#fff' : '#1a202c'}
                   required
                 />

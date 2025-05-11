@@ -329,7 +329,14 @@ const UserProfile = () => {
                       color="text.secondary"
                       sx={{ mt: 1 }}
                     >
-                      {user.specialization || "No Specialization Added"}
+                      {user.seniority || ""}
+                    </Typography>
+                    <Typography
+                      variant="subtitle1"
+                      color="text.secondary"
+                      sx={{ mt: 1 }}
+                    >
+                      {user.specialization || ""}
                     </Typography>
                     </Box>
                     <PrimaryButton
