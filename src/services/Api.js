@@ -4,10 +4,10 @@ const API_BASE_URL = `${import.meta.env.VITE_BACKEND}`;
 
 export const AxiosApi = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-    // 'Authorization': `Token ${localStorage.getItem("token")}`
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  //   // 'Authorization': `Token ${localStorage.getItem("token")}`
+  // },
 });
 
 export const getTracks = async () => {

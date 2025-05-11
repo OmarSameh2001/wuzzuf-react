@@ -4,12 +4,13 @@ import {
   CalendarDays,
   Clock,
   FileSignature,
+  Handshake,
   Shield,
 } from "lucide-react";
 import { userContext } from "../../../context/UserContext";
 import { useContext } from "react";
 import Lottie from "react-lottie";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Chip, Paper, Typography } from "@mui/material";
 import "../../../ComponentsStyles/CompanyProcess/meetings_user.css";
 import successAnimation from "../../../assets/animations/success-animation.json";
 import successPersonAnimation from "../../../assets/animations/success-person.json";
@@ -72,6 +73,22 @@ const Contract = ({ applicationData, company, clickedColumn }) => {
         } ${salary?.split(" ")[1]})`;
 
   return (
+    <div
+          className={`meeting-container ${isLight ? "light-mode" : "dark-mode"}`}
+        >
+          <Paper elevation={3} className="meeting-paper">
+            <div className="meeting-header">
+              <Handshake className="phase-icon" />
+              <Typography variant="h4" className="meeting-title">
+                Contract Phase
+              </Typography>
+              <Chip
+                label={`Phase 6`}
+                className="meeting-phase-chip"
+              />
+            </div>
+    
+            <div className="meeting-content">
     <div
       style={{
         display: "flex",
@@ -236,6 +253,9 @@ const Contract = ({ applicationData, company, clickedColumn }) => {
           </div>
         </div>
       )}
+    </div>
+    </div>
+    </Paper>
     </div>
   );
 };

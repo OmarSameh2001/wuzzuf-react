@@ -184,6 +184,7 @@ const UserSingleJob = () => {
                   display: "flex",
                   // justifyContent: "center",
                   flexDirection: "column",
+                  minWidth: "100%",
                 }}
               >
                 {clickedColumn === 1 && (

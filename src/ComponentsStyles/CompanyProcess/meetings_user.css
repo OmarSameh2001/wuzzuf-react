@@ -80,6 +80,7 @@
     background-image: radial-gradient(circle at 10px 10px, rgba(144, 27, 38, 0.07) 1px, transparent 0),
       linear-gradient(to right, rgba(144, 27, 38, 0.03), rgba(0, 0, 0, 0.01));
     background-size: 30px 30px, 100% 100%;
+    min-width: 100%;
   }
   
   .dark-mode.meeting-container {
