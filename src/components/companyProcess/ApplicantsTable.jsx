@@ -444,13 +444,13 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                           <UserX
                             className="action-icon action-icon-error"
                             onClick={() => handleFail(applicant.id, phase)}
-                            size={25}
+                            size={20}
                           />
                           {phase !== 6 && (
                             <UserCheck
                               className="action-icon action-icon-success"
                               onClick={() => handleNext(applicant.id, phase)}
-                              size={25}
+                              size={20}
                             />
                           )}
                           {applicant.answers &&
@@ -458,7 +458,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                               <MessageSquare
                                 className="action-icon action-icon-primary"
                                 onClick={() => handleAnswer(applicant)}
-                                size={25}
+                                size={20}
                               />
                             )}
                         </>
@@ -492,7 +492,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                               },
                             });
                           }}
-                          size={35}
+                          size={20}
                         />
                       )}
                       {!applicant.fail && phase === 6 && (
@@ -511,7 +511,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                               },
                             });
                           }}
-                          size={35}
+                          size={25}
                         />
                       )}
                     </div>

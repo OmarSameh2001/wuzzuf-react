@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef,createContext,useEffect, useContext } from 'react';
 import { AxiosApi } from '../../services/Api';
 import '../../styles/user/interview.css';
 import { 
@@ -9,12 +9,18 @@ import {
     FaPaperPlane, 
     FaExclamationCircle,
     FaCheckCircle,
-    FaTrophy
+    FaTrophy,
+    FaMoon,
+    FaSun,
   } from "react-icons/fa"
 import { Camera } from 'lucide-react';
 import { Button } from '@mui/material';
 import { showConfirmToast, showSuccessToast } from '../../confirmAlert/toastConfirm';
 import { userContext } from '../../context/UserContext';
+export const ThemeContext = createContext({
+  isDark: false,
+  toggleTheme: () => {},
+})
 const VideoInterview = ({ application, handleClose, question, setDisabled, question_id }) => {
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -35,6 +41,16 @@ const VideoInterview = ({ application, handleClose, question, setDisabled, quest
     const [animateQuestion, setAnimateQuestion] = useState(false)
     const [showSuccessMessage, setShowSuccessMessage] = useState(false)
     const { isLight } = useContext(userContext)
+
+
+    useEffect(() => {
+      if (!isLight) {
+        document.documentElement.classList.add("dark-theme")
+      } else {
+        document.documentElement.classList.remove("dark-theme")
+      }
+    }, [isLight])
+
     // Camera setup
     useEffect(() => {
         async function startCamera() {
@@ -188,196 +204,202 @@ const VideoInterview = ({ application, handleClose, question, setDisabled, quest
         setRecording(false);
     };
 
-    if (error) {
-        return (
-          <div className="container">
-            <div className="alert alert-error animate-slide-in">
-              <FaExclamationCircle className="alert-icon" />
-              <div>
-                <h4 className="alert-title">Error</h4>
-                <p className="alert-description">{error}</p>
-              </div>
-            </div>
+    
+  if (error) {
+    return (
+      <div className="container">
+        {/* <div className="theme-toggle" onClick={() => window.dispatchEvent(new CustomEvent("toggle-theme"))}>
+          {!isLight ? <FaSun className="theme-icon" /> : <FaMoon className="theme-icon" />}
+        </div> */}
+        <div className="alert alert-error animate-slide-in">
+          <FaExclamationCircle className="alert-icon" />
+          <div>
+            <h4 className="alert-title">Error</h4>
+            <p className="alert-description">{error}</p>
           </div>
-        )
-      }
-    
-      if (interviewFinished && interviewScore) {
-        return (
-          <div className="container">
-            <div className="card animate-fade-in">
-              <div className="card-header">
-                <div className="trophy-container">
-                  <FaTrophy className="trophy-icon" />
-                </div>
-                <h2 className="card-title">Interview Completed</h2>
-                <p className="card-subtitle">Great job! Here's your performance summary</p>
-              </div>
-              <div className="card-content">
-                <div className="score-grid">
-                  <ScoreItem label="Answer Relevance" value={interviewScore.answer_score} />
-                  <ScoreItem label="Pronunciation" value={interviewScore.pronunciation_score} />
-                  <ScoreItem label="Eye Contact" value={interviewScore.eye_contact_score} />
-                  <ScoreItem label="Attire" value={interviewScore.attire_score} />
-                  <div className="total-score animate-scale-in">
-                    <h3 className="total-score-title">Total Score</h3>
-                    <div className="total-score-value">{interviewScore.total_score}%</div>
-                    <div className="score-message">
-                      {interviewScore.total_score >= 80
-                        ? "Excellent! You did great in this interview."
-                        : interviewScore.total_score >= 60
-                          ? "Good job! You performed well in this interview."
-                          : "Thanks for completing the interview. Keep practicing!"}
-                    </div>
-                  </div>
-                </div>
-              </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (interviewFinished && interviewScore) {
+    return (
+      <div className="container">
+        {/* <div className="theme-toggle" onClick={() => window.dispatchEvent(new CustomEvent("toggle-theme"))}>
+          {!isLight ? <FaSun className="theme-icon" /> : <FaMoon className="theme-icon" />}
+        </div> */}
+        <div className="card animate-fade-in">
+          <div className="card-header">
+            <div className="trophy-container">
+              <FaTrophy className="trophy-icon" />
             </div>
+            <h2 className="card-title">Interview Completed</h2>
+            <p className="card-subtitle">Great job! Here's your performance summary</p>
           </div>
-        )
-      }
-    
-      return (
-        <div className="container">
-          <div className="card animate-fade-in">
-            <div className="card-header">
-              <h2 className="card-title">Video Interview</h2>
-              <div className="progress-container">
-                <div
-                  className="progress-bar"
-                  style={{ width: `${(currentQuestionIndex / questions.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-    
-            <div className="card-content">
-              <div className={`question-container ${animateQuestion ? "animate-slide-in" : ""}`}>
-                <h3 className="question-counter">
-                  Question {currentQuestionIndex + 1} of {questions.length}
-                </h3>
-                <p className="question-text">{questions[currentQuestionIndex]}</p>
-                <p className="question-instructions">1- Your english level will be considered in the final score</p>
-                <p className="question-instructions">2- Please wear a formal attire</p>
-                <p className="question-instructions">3- Tip: stay in queit place and test your microphone.</p>
-                <p className="question-instructions">Good luck! 🙂</p>
-              </div>
-    
-              <div className="video-container">
-                {videoPreviewUrl ? (
-                  <video src={videoPreviewUrl} controls className="video-element animate-fade-in" />
-                ) : (
-                  <video ref={videoRef} autoPlay muted className="video-element" />
-                )}
-    
-                {countdown !== null && (
-                  <div className="countdown-overlay">
-                    <span className="countdown-number animate-scale-pulse">{countdown}</span>
-                  </div>
-                )}
-    
-                {recording && (
-                  <div className="recording-indicator">
-                    <span className="recording-dot"></span>
-                    <span className="recording-text">Recording</span>
-                  </div>
-                )}
-    
-                {showSuccessMessage && (
-                  <div className="success-overlay animate-fade-in">
-                    <div className="success-content animate-scale-in">
-                      <FaCheckCircle className="success-icon" />
-                      <p>Answer submitted successfully!</p>
-                    </div>
-                  </div>
-                )}
-    
-                {processing && !showSuccessMessage && (
-                  <div className="processing-overlay">
-                    <div className="spinner"></div>
-                    <p>Processing your answer...</p>
-                  </div>
-                )}
-              </div>
-    
-              <div className="controls">
-                {!recording && recordedChunks.length === 0 && (
-                  <button
-                    className="button primary-button animate-bounce-in"
-                    onClick={startCountdown}
-                    disabled={processing}
-                  >
-                    <FaCamera className="button-icon" />
-                    <span>{processing ? "Processing..." : "Start Recording"}</span>
-                  </button>
-                )}
-    
-                {recording && (
-                  <button className="button danger-button animate-bounce-in" onClick={stopRecording}>
-                    <FaVideo className="button-icon" />
-                    <span>Stop Recording</span>
-                  </button>
-                )}
-    
-                {recordedChunks.length > 0 && !recording && (
-                  <div className="button-group animate-fade-in">
-                    <button
-                      className="button primary-button"
-                      onClick={() => uploadVideo(new Blob(recordedChunks))}
-                      disabled={processing}
-                    >
-                      <FaPaperPlane className="button-icon" />
-                      <span>{processing ? "Submitting..." : "Submit Answer"}</span>
-                    </button>
-    
-                    <button className="button secondary-button" onClick={retryRecording} disabled={processing}>
-                      <FaRedo className="button-icon" />
-                      <span>Record Again</span>
-                    </button>
-                  </div>
-                )}
-                <button
-                    className="button animate-bounce-in"
-                    onClick={handleExit}
-                    disabled={processing}
-                  >
-                    <FaCamera className="button-icon" />
-                    <span>Exit Interview</span>
-                  </button>
-              </div>
-            </div>
-    
-            <div className="card-footer">
-              <div className="mic-reminder">
-                <FaMicrophone className="mic-icon" />
-                <span>Make sure your microphone is working properly</span>
+          <div className="card-content">
+            <div className="score-grid">
+              <ScoreItem label="Answer Relevance" value={interviewScore.answer_score} />
+              <ScoreItem label="Pronunciation" value={interviewScore.pronunciation_score} />
+              <ScoreItem label="Eye Contact" value={interviewScore.eye_contact_score} />
+              <ScoreItem label="Attire" value={interviewScore.attire_score} />
+              <div className="total-score animate-scale-in">
+                <h3 className="total-score-title">Total Score</h3>
+                <div className="total-score-value">{interviewScore.total_score}%</div>
+                <div className="score-message">
+                  {interviewScore.total_score >= 80
+                    ? "Excellent! You did great in this interview."
+                    : interviewScore.total_score >= 60
+                      ? "Good job! You performed well in this interview."
+                      : "Thanks for completing the interview. Keep practicing!"}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      )
-    }
-    
-    const ScoreItem = ({ label, value }) => {
-      const [width, setWidth] = useState(0)
-    
-      useEffect(() => {
-        // Animate progress bar after component mounts
-        setTimeout(() => {
-          setWidth(value)
-        }, 300)
-      }, [value])
-    
-      return (
-        <div className="score-item animate-slide-in">
-          <div className="score-header">
-            <span className="score-label">{label}</span>
-            <span className="score-value">{value}%</span>
-          </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="container">
+      <div className="theme-toggle" onClick={() => window.dispatchEvent(new CustomEvent("toggle-theme"))}>
+        {!isLight ? <FaSun className="theme-icon" /> : <FaMoon className="theme-icon" />}
+      </div>
+      <div className="card animate-fade-in">
+        <div className="card-header">
+          <h2 className="card-title">Video Interview</h2>
           <div className="progress-container">
-            <div className="progress-bar" style={{ width: `${width}%` }}></div>
+            <div
+              className="progress-bar"
+              style={{ width: `${(currentQuestionIndex / questions.length) * 100}%` }}
+            ></div>
           </div>
         </div>
-      )
+
+        <div className="card-content">
+          <div className={`question-container ${animateQuestion ? "animate-slide-in" : ""}`}>
+            <h3 className="question-counter">
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </h3>
+            <p className="question-text">{questions[currentQuestionIndex]}</p>
+            <p className="question-instructions">1- Your english level will be considered in the final score</p>
+            <p className="question-instructions">2- Please wear a formal attire</p>
+            <p className="question-instructions">3- Tip: stay in queit place and test your microphone.</p>
+            <p className="question-instructions">Good luck! 🙂</p>
+          </div>
+
+          <div className="video-container">
+            {videoPreviewUrl ? (
+              <video src={videoPreviewUrl} controls className="video-element animate-fade-in" />
+            ) : (
+              <video ref={videoRef} autoPlay muted className="video-element" />
+            )}
+
+            {countdown !== null && (
+              <div className="countdown-overlay">
+                <span className="countdown-number animate-scale-pulse">{countdown}</span>
+              </div>
+            )}
+
+            {recording && (
+              <div className="recording-indicator">
+                <span className="recording-dot"></span>
+                <span className="recording-text">Recording</span>
+              </div>
+            )}
+
+            {showSuccessMessage && (
+              <div className="success-overlay animate-fade-in">
+                <div className="success-content animate-scale-in">
+                  <FaCheckCircle className="success-icon" />
+                  <p>Answer submitted successfully!</p>
+                </div>
+              </div>
+            )}
+
+            {processing && !showSuccessMessage && (
+              <div className="processing-overlay">
+                <div className="spinner"></div>
+                <p>Processing your answer...</p>
+              </div>
+            )}
+          </div>
+
+          <div className="controls">
+            {!recording && recordedChunks.length === 0 && (
+              <button
+                className="button primary-button animate-bounce-in"
+                onClick={startCountdown}
+                disabled={processing}
+              >
+                <FaCamera className="button-icon" />
+                <span>{processing ? "Processing..." : "Start Recording"}</span>
+              </button>
+            )}
+
+            {recording && (
+              <button className="button danger-button animate-bounce-in" onClick={stopRecording}>
+                <FaVideo className="button-icon" />
+                <span>Stop Recording</span>
+              </button>
+            )}
+
+            {recordedChunks.length > 0 && !recording && (
+              <div className="button-group animate-fade-in">
+                <button
+                  className="button primary-button"
+                  onClick={() => uploadVideo(new Blob(recordedChunks))}
+                  disabled={processing}
+                >
+                  <FaPaperPlane className="button-icon" />
+                  <span>{processing ? "Submitting..." : "Submit Answer"}</span>
+                </button>
+
+                <button className="button secondary-button" onClick={retryRecording} disabled={processing}>
+                  <FaRedo className="button-icon" />
+                  <span>Record Again</span>
+                </button>
+              </div>
+            )}
+            <button className="button exit-button animate-bounce-in" onClick={handleExit} disabled={processing}>
+              <FaCamera className="button-icon" />
+              <span>Exit Interview</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="card-footer">
+          <div className="mic-reminder">
+            <FaMicrophone className="mic-icon" />
+            <span>Make sure your microphone is working properly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ScoreItem = ({ label, value }) => {
+  const [width, setWidth] = useState(0)
+
+  useEffect(() => {
+    // Animate progress bar after component mounts
+    setTimeout(() => {
+      setWidth(value)
+    }, 300)
+  }, [value])
+
+  return (
+    <div className="score-item animate-slide-in">
+      <div className="score-header">
+        <span className="score-label">{label}</span>
+        <span className="score-value">{value}%</span>
+      </div>
+      <div className="progress-container">
+        <div className="progress-bar" style={{ width: `${width}%` }}></div>
+      </div>
+    </div>
+  )
     }
     
 export default VideoInterview;

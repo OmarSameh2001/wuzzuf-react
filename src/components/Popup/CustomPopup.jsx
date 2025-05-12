@@ -12,6 +12,10 @@ export default function CustomPopup() {
 
   const PopupPicker = () => {
     if (!update.user?.id) return null;
+    console.log(update)
+    console.log(update.user.id)
+    console.log(update.user)
+    
     
     if(contract) return (
       <ContractBox
@@ -38,7 +42,7 @@ export default function CustomPopup() {
         setDisabled={setDisabled}
       />
     );
-
+    
     return (
       <CompanySchedule
         applicant={update.user}
@@ -47,7 +51,7 @@ export default function CustomPopup() {
       />
     );
   };
-
+  
   return (
     <>
       {update?.user?.id && (

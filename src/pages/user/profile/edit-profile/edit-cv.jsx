@@ -136,19 +136,40 @@ const EditCV = () => {
 
   if (loading) {
     return (
+      <div style={{ display: 'flex', 
+      justifyContent: 'center',
+       alignItems: 'center',
+        width: '100%',
+        backgroundColor: isLight ? '#f5f5f5' : '#121212' }}>
       <Box sx={{ 
         display: "flex", 
         justifyContent: "center", 
         alignItems: "center",
         minHeight: 200,
         flexDirection: 'column',
-        gap: 2
+        gap: 2,
+        backgroundColor: isLight ? '#f5f5f5' : '#121212',
+        p: 3,
+        textAlign: 'center'
       }}>
-        <CircularProgress size={isMobile ? 24 : 32} />
-        <Typography variant="body1" color="text.secondary">
+ 
+        <CircularProgress 
+        size={isMobile ? 24 : 32}
+        thickness={4}
+        sx={{ 
+          color: isLight ? theme.palette.primary.main : '#901b26'
+        }} 
+         />
+        <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 500,
+          color: isLight ? 'text.primary' : 'rgba(255, 255, 255, 0.87)'
+        }}>
           Loading your CV...
         </Typography>
       </Box>
+      </div>
     );
   }
 

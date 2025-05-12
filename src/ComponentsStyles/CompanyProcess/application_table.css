@@ -84,8 +84,8 @@
     gap: 0.5rem;
   }
   .action-icon {
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 20px;
     cursor: pointer;
     transition: color 0.2s ease-in-out;
   }

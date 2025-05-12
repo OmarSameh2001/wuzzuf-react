@@ -137,13 +137,23 @@ const JobCreate = () => {
     setQuestions(updatedQuestions);
   };
 
+  // const handleQuestionChange = (index, key, value) => {
+  //   const updatedQuestions = [...questions];
+  //   updatedQuestions[index][key] = value;
+  //   updatedQuestions[index].text = key === "type" && value === "video" ? screeningQuestions[Math.floor(Math.random() * screeningQuestions.length)] : ''
+  //   setQuestions(updatedQuestions);
+  // };
+   
   const handleQuestionChange = (index, key, value) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index][key] = value;
-    updatedQuestions[index].text = key === "type" && value === "video" ? screeningQuestions[Math.floor(Math.random() * screeningQuestions.length)] : ''
-    setQuestions(updatedQuestions);
+    setQuestions(prevQuestions => {
+      const updatedQuestions = [...prevQuestions];
+      updatedQuestions[index] = {
+        ...updatedQuestions[index],
+        [key]: value
+      };
+      return updatedQuestions;
+    });
   };
-
   const addChoice = (index) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index].choices.push("");

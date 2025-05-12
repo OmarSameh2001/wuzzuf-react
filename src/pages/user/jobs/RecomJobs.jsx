@@ -1143,7 +1143,7 @@ const RecommendedJobs = () => {
                 py: 3,
                 position: "sticky",
                 bottom: 0,
-                backgroundColor: "#fff",
+                backgroundColor:  isLight ? "#fff" : "#121212",
                 zIndex: 1,
                 borderTop: `1px solid #e2e8f0`,
                 boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.05)",
@@ -1160,14 +1160,26 @@ const RecommendedJobs = () => {
                   sx={{
                     "& .MuiPaginationItem-root": {
                       fontWeight: 600,
-                      color: "#4a5568",
+                      color: isLight ? "#4a5568" : "#e2e8f0",
+                      backgroundColor: isLight ? "transparent" : "#242424",
                       "&.Mui-selected": {
                         backgroundColor: primaryColor,
                         color: "#fff",
                         "&:hover": {
                           backgroundColor: "#b32828",
                         },
+                        "&.MuiPaginationItem-ellipsis": {
+                        color: isLight ? "#4a5568" : "#e2e8f0",
+                        },
                       },
+                      "& .MuiSvgIcon-root": {
+                        color: isLight ? "#4a5568" : "#e2e8f0",
+                      },
+                      "& .MuiPaginationItem-ellipsis": {
+                        
+                    },
+
+                     
                     },
                   }}
                 />
