@@ -32,6 +32,7 @@ export default function CustomPopup() {
     if (video) return (
       <VideoInterview
         applicationId={update.id}
+        question_id={update?.user?.job_details?.questions?.find((q) => q.type === "video")?.id || null}
         handleClose={handleClose}
         question={update?.user?.job_details?.questions?.find((q) => q.type === "video")?.text || null}
         setDisabled={setDisabled}

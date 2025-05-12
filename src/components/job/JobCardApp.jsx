@@ -26,6 +26,7 @@
 import { useNavigate } from "react-router-dom";
 import { userContext } from "../../context/UserContext";
 import '../../ComponentsStyles/job/jobcardApp.css' 
+import { CgProfile } from "react-icons/cg";
  const  JobCardApp  = ({ application, index, primaryColor }) => {
    const theme = useTheme();
    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -178,6 +179,12 @@ import '../../ComponentsStyles/job/jobcardApp.css'
         <div className="job-tag remote">
           <FiHome />
           <span>{application.job_details.attend}</span>
+        </div>
+      )}
+      {application?.job_details?.applicant_count >-1 && (
+        <div className="job-tag experience">
+          <CgProfile />
+          <span>{application?.job_details?.applicant_count || "0"}</span>
         </div>
       )}
     </div>

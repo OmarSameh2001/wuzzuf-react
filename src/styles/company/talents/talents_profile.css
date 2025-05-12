@@ -283,13 +283,28 @@
   border-radius: 8px;
   background-color: var(--accent-bg);
   transition: var(--transition);
+  min-width: 100%;
+  min-height: fit-content;
+}
+.contact-item-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.20rem;
+  border-radius: 8px;
+  background-color: var(--accent-bg);
+  transition: var(--transition);
+  /* min-width: 100%; */
 }
 
 .contact-item:hover {
   background-color: var(--primary-light);
   transform: translateX(5px);
 }
-
+.contact-item-card:hover {
+  background-color: var(--primary-light);
+  transform: translateX(5px);
+}
 .contact-icon {
   color: var(--primary-color);
   font-size: 1.2rem;
@@ -302,6 +317,16 @@
 }
 
 .contact-item a:hover {
+  color: var(--primary-color);
+}
+
+.contact-item-card a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.contact-item-card a:hover {
   color: var(--primary-color);
 }
 
@@ -384,7 +409,7 @@
 }
 
 .skill-item {
-  flex: 1 0 calc(33.333% - 1.5rem);
+  /* flex: 1 0 calc(33.333% - 1.5rem); */
   min-width: 200px;
 }
 

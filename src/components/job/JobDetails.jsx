@@ -18,6 +18,7 @@ import { BsCalendarDate, BsLightningCharge } from "react-icons/bs";
 import "../../ComponentsStyles/job/job_details.css";
 import { showConfirmToast, showErrorToast } from "../../confirmAlert/toastConfirm";
 import { Button } from "@mui/material";
+import { CgProfile } from "react-icons/cg";
 
 function JobDetails({ job, refetch }) {
   if (!job) return null;
@@ -212,9 +213,20 @@ function JobDetails({ job, refetch }) {
                 </div>
                 <div className="detail-content">
                   <span className="detail-label">Posted</span>
-                  <span className="detail-value">{job.posted_date || "Recently"}</span>
+                  <span className="detail-value">{job?.created_at?.split("T")[0] || "Recently"}</span>
                 </div>
               </div>
+
+              <div className="detail-item">
+                <div className="detail-icon">
+                  <CgProfile />
+                </div>
+                <div className="detail-content">
+                  <span className="detail-label">Clicked Apply</span>
+                  <span className="detail-value">{job?.applicant_count || 'You are the first to apply'}</span>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

@@ -55,13 +55,13 @@ const CompanyBox = ({ profileData }) => {
               >
                 {type === "linkedin" && <LinkedIn />}
                 {type === "github" && <GitHub />}
-                {type === "personal website" && <InsertLink />}
+                {type === "website" && <InsertLink />}
                 {type === "leetcode" && <SiLeetcode />}
               </a>
             ))}
           </div>
         </div>}
-      <div className="mt-4">
+      {["industry", "location", "phone", "est", "about"].some((key) => profileData?.[key]) && <div className="mt-4">
         <h2 style={{ fontSize: "1.25rem",color: textColor }}>Company Profile</h2>
         {["industry", "location", "phone", "est", "about"].map((label, i) =>
           profileData?.[label] ? (
@@ -73,7 +73,7 @@ const CompanyBox = ({ profileData }) => {
             </div>
           ) : null
         )}
-      </div>
+      </div>}
     </div>
   );
 };

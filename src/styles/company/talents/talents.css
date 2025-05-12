@@ -424,6 +424,9 @@ body.dark-mode {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 16px;
+  /* max-height: 30%;
+  overflow-y: auto;
+  overflow-x: hidden; */
 }
 
 .skill-chip {
@@ -665,4 +668,16 @@ body.dark-mode {
   .talents-error {
     padding: 24px 16px;
   }
+}
+
+.iti-info{
+  padding: 0;
+  margin: 0;
+  max-width: 50%;
+}
+
+.iti-info-text{
+  padding: 0;
+  margin: 0;
+  font-size: x-small;
 }

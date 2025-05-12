@@ -15,7 +15,7 @@ import { Camera } from 'lucide-react';
 import { Button } from '@mui/material';
 import { showConfirmToast, showSuccessToast } from '../../confirmAlert/toastConfirm';
 import { userContext } from '../../context/UserContext';
-const VideoInterview = ({ applicationId, handleClose, question, setDisabled }) => {
+const VideoInterview = ({ applicationId, handleClose, question, setDisabled, question_id }) => {
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const [recording, setRecording] = useState(false);
@@ -122,10 +122,14 @@ const VideoInterview = ({ applicationId, handleClose, question, setDisabled }) =
         setProcessing(true);
         setError('');
         try {
+            if(!question_id) {
+                return
+            }
             const formData = new FormData();
             formData.append('video', videoBlob, `interview_${applicationId}.webm`);
             formData.append('question', questions[currentQuestionIndex]);
             formData.append('application_id', applicationId);
+            formData.append('question_id', question_id);
             
             const response = await AxiosApi.post(
                 `applications/${applicationId}/submit_video/`,

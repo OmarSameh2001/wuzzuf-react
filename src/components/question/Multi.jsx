@@ -1,4 +1,6 @@
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, useMediaQuery, useTheme } from "@mui/material";
+import { useContext } from "react";
+import { userContext } from "../../context/UserContext";
 
 function Multi({ question, handleMultiChange, answer, value }) {
     const { isLight } = useContext(userContext)
@@ -58,26 +60,6 @@ function Multi({ question, handleMultiChange, answer, value }) {
           />
         ))}
       </Box>
-        // <>
-        //     {question.choices?.map((option, index) => (
-        //         <FormControlLabel
-        //             sx={{
-        //                 backgroundColor: isDisabled ? "#f0f0f0" : "transparent",
-        //                 padding: "10px",
-        //                 borderRadius: "5px",
-        //             }}
-        //             disabled={isDisabled}
-        //             key={index}
-        //             control={
-        //                 <Checkbox
-        //                     checked={selectedOptions.includes(option) || value[question.id]?.includes(option) || false}
-        //                     onChange={() => handleMultiChange(question.id, option)}
-        //                 />
-        //             }
-        //             label={option}
-        //         />
-        //     ))}
-        // </>
     );
 }
 

@@ -33,6 +33,7 @@ import {
 } from "../../services/Application";
 import '../../ComponentsStyles/job/jobcarduser.css'
 import { showConfirmToast, showErrorToast, showSuccessToast } from "../../confirmAlert/toastConfirm";
+import { CgProfile } from "react-icons/cg";
 function JobCard({ job, type, isSelected, refetch }) {
   // const keywords = job?.keywords?.join(" · ") || "";
   const { user, isLight } = useContext(userContext);
@@ -210,6 +211,12 @@ function JobCard({ job, type, isSelected, refetch }) {
             <FiCalendar />
             <span>{getRelativeTime(job?.created_at)}</span>
           </div>
+          {job?.applicant_count >-1 && (
+            <div className="job-tag experience">
+              <CgProfile />
+              <span>{job.applicant_count || "0"}</span>
+            </div>
+          )}
         </div>
 
         <div className="job-type-row">
@@ -227,11 +234,11 @@ function JobCard({ job, type, isSelected, refetch }) {
             </div>
           )}
           
-          {job?.status && (
+          {/* {job?.status && (
             <div className={`job-type-badge status ${job.status.toLowerCase()}`}>
               <span>{job.status === "1" ? "Open" : "Closed"}</span>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="job-description">

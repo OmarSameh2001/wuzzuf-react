@@ -16,6 +16,8 @@ import {
   FiEdit,
 } from "react-icons/fi";
 import '../../ComponentsStyles/job/jobcardcomp.css';
+import { CgProfile } from "react-icons/cg";
+
 const JobCardCompany = ({ job, isSelected }) => {
     const { isLight } = useContext(userContext)
     const navigate = useNavigate()
@@ -128,6 +130,12 @@ const JobCardCompany = ({ job, isSelected }) => {
             <div className="job-tag experience">
               <FiTrendingUp />
               <span>{job.experince}</span>
+            </div>
+          )}
+          {job?.applicant_count > -1 && (
+            <div className="job-tag experience">
+              <CgProfile />
+              <span>{job.applicant_count || "0"}</span>
             </div>
           )}
         </div>

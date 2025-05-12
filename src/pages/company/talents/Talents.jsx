@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTalents, getBranches, getTracks } from "../../../services/Talents";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { userContext } from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 import CustomPagination from "../../../components/pagination/pagination";
@@ -40,6 +40,7 @@ import '../../../styles/company/talents/talents.css';
 import '../../../styles/company/companyteme.css';
 import CustomAutoComplete from "../../../components/autoComplete/CustomAutoComplete";
 import dayjs from 'dayjs'; // or use new Date().getFullYear() if you prefer
+import TalentCard from "../../../components/talent/TalentCard";
 
 
 function Talents() {
@@ -53,7 +54,7 @@ function Talents() {
   // const isTablet = useMediaQuery(theme.breakpoints.down("md"))
   // const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"))
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(6);
   const [total, setTotal] = useState(0);
   const primaryColor = "#e53946"
   const backgroundColor = isLight ? "#ffffff" : "#121212"
@@ -69,8 +70,8 @@ function Talents() {
     skills: "",
     specialization: "",
     iti_grad_year: "",
-    track: "",
-    branch: "",
+    track_name: "",
+    branch_name: "",
   });
   const [searchFilters, setSearchFilters] = useState({
     name: "",
@@ -79,8 +80,8 @@ function Talents() {
     skills: "",
     specialization: "",
     iti_grad_year: "",
-    track: "",
-    branch: "",
+    track_name: "",
+    branch_name: "",
   });
 
   const handleReset = () => {
@@ -90,8 +91,8 @@ function Talents() {
       location: "",
       skills: "",
       iti_grad_year: "",
-      track: "",
-      branch: "",  
+      track_name: "",
+      branch_name: "",
     });
     setSearchFilters({
       name: "",
@@ -99,8 +100,8 @@ function Talents() {
       location: "",
       skills: "",
       iti_grad_year: "",
-      track: "",
-      branch: "",
+      track_name: "",
+      branch_name: "",
   
     });
     setPage(1);
@@ -127,6 +128,9 @@ function Talents() {
     queryFn: getTracks,
   });
 
+  useEffect(() => {
+    console.log(filters.branch, filters.track, filters.iti_grad_year)
+  },[filters.branch, filters.track, filters.iti_grad_year])
   const getSkillsArray = (skills) => {
     if (!skills) return []
 
@@ -254,7 +258,60 @@ function Talents() {
 
             <Grid item xs={12} sm={6}>
               <Box className="filter-field-wrapper">
-                <FormControl fullWidth size="small">
+                {/* <FormControl fullWidth size="small">
+                  <InputLabel>Branch</InputLabel>
+                  <Select
+                    value={filters.branch}
+                    onChange={(e) => setFilters((prev) => ({ ...prev, branch: e.target.value }))}
+                    label="Branch"
+                  >
+                    {branches.map((branch) => (
+                      <MenuItem key={branch.id} value={branch.id}>
+                        {branch.name}
+                      </MenuItem>
+                    ))}
+                  </Select> */}
+                  <CustomAutoComplete
+                    setter={setFilters}
+                    getter={filters.branch_name}
+                    options={branches.map((branch) => branch.name)}
+                    label="Branch"
+                    value="branch_name"
+                    multiple={true}
+                  />
+                {/* </FormControl> */}
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Box className="filter-field-wrapper">
+                {/* <FormControl fullWidth size="small">
+                  <InputLabel>Track</InputLabel>
+                  <Select
+                    value={filters.track}
+                    onChange={(e) => setFilters((prev) => ({ ...prev, track: e.target.value }))}
+                    label="Track"
+                  >
+                    {tracks.map((track) => (
+                      <MenuItem key={track.id} value={track.id}>
+                        {track.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl> */}
+                <CustomAutoComplete
+                  setter={setFilters}
+                  getter={filters.track_name}
+                  options={tracks.map((track) => track.name)}
+                  label="Track"
+                  value="track_name"
+                  multiple={true}
+                />
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={12}><Box className="filter-field-wrapper">
+                {/* <FormControl fullWidth size="small">
                   <InputLabel>Graduation Year</InputLabel>
                   <Select
                     label="Graduation Year"
@@ -269,46 +326,17 @@ function Talents() {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
+                <CustomAutoComplete
+                  setter={setFilters}
+                  getter={filters.iti_grad_year}
+                  options={years}
+                  label="Graduation Year"
+                  value="iti_grad_year"
+                  multiple={true}
+                />
               </Box>
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Box className="filter-field-wrapper">
-                <FormControl fullWidth size="small">
-                  <InputLabel>Track</InputLabel>
-                  <Select
-                    value={filters.track}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, track: e.target.value }))}
-                    label="Track"
-                  >
-                    {tracks.map((track) => (
-                      <MenuItem key={track.id} value={track.id}>
-                        {track.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Box className="filter-field-wrapper">
-                <FormControl fullWidth size="small">
-                  <InputLabel>Branch</InputLabel>
-                  <Select
-                    value={filters.branch}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, branch: e.target.value }))}
-                    label="Branch"
-                  >
-                    {branches.map((branch) => (
-                      <MenuItem key={branch.id} value={branch.id}>
-                        {branch.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
+              
             </Grid>
           </Grid>
 
@@ -366,116 +394,7 @@ function Talents() {
                   const skillsArray = getSkillsArray(talent.skills)
 
                   return (
-                    <motion.div
-                      key={talent.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="applicant-card-wrapper"
-                    >
-                      <Paper className="applicant-card">
-                        <Box className="applicant-card__header">
-                          <Avatar
-                            src={talent.img || "/placeholder.svg"}
-                            alt={talent.name}
-                            className="applicant-avatar"
-                          />
-                          <Box className="applicant-details">
-                            <Typography variant="h6" className="applicant-name">
-                              {talent.name}
-                            </Typography>
-                            {talent.specialization && (
-                              <Typography variant="body2" className="applicant-specialization">
-                                {talent.specialization}
-                              </Typography>
-                            )}
-                            {talent.title && (
-                              <Typography variant="body2" className="applicant-title">
-                                {typeof talent.title === "string" ? talent.title : "Professional"}
-                              </Typography>
-                            )}
-                            <Box className="applicant-meta">
-                              {talent.location && (
-                                <Box className="meta-item">
-                                  <LocationOn fontSize="small" />
-                                  <span>{typeof talent.location === "string" ? talent.location : "Location"}</span>
-                                </Box>
-                              )}
-                              {talent.experience && (
-                                <Box className="meta-item">
-                                  <Work fontSize="small" />
-                                  <span>
-                                    {typeof talent.experience === "string" || typeof talent.experience === "number"
-                                      ? `${talent.experience} yrs`
-                                      : "Experienced"}
-                                  </span>
-                                </Box>
-                              )}
-                            </Box>
-                          </Box>
-                        </Box>
-
-                        <Box className="applicant-card__body">
-                          <Box className="applicant-skills">
-                            {skillsArray.slice(0, 5).map((skill, index) => (
-                              <Chip key={index} label={skill} size="small" className="skill-chip" />
-                            ))}
-                            {skillsArray.length > 5 && (
-                              <Chip label={`+${skillsArray.length - 5}`} size="small" className="more-skills-chip" />
-                            )}
-                          </Box>
-
-                          <Typography variant="body2" className="applicant-summary">
-                            {talent.about && typeof talent.about === "string"
-                              ? `${talent.about.substring(0, 120)}${talent.about.length > 120 ? "..." : ""}`
-                              : "No summary available for this applicant."}
-                          </Typography>
-
-                          <Box className="applicant-contact">
-                            {talent.email && (
-                              <Tooltip title={talent.email}>
-                                <Box component="a" href={`mailto:${talent.email}`} className="contact-item">
-                                  <Mail fontSize="small" />
-                                </Box>
-                              </Tooltip>
-                            )}
-                            {talent.phone_number && (
-                              <Tooltip title={talent.phone_number}>
-                                <Box component="a" href={`tel:${talent.phone_number}`} className="contact-item">
-                                  <Phone fontSize="small" />
-                                </Box>
-                              </Tooltip>
-                            )}
-                            {talent.cv && (
-                              <Tooltip title="View CV">
-                                <Box
-                                  component="a"
-                                  href={talent.cv + ".pdf"}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="contact-item contact-item--primary"
-                                >
-                                  <BookmarkBorder fontSize="small" />
-                                </Box>
-                              </Tooltip>
-                            )}
-                          </Box>
-                        </Box>
-
-                        <Box className="applicant-card__footer">
-                          <Button
-                            variant="contained"
-                            fullWidth
-                            onClick={() => navigate(`/company/talents/${talent.id}`)}
-                            startIcon={<Visibility />}
-                            className="view-profile-button"
-                          >
-                            View Full Profile
-                          </Button>
-                        </Box>
-                      </Paper>
-                    </motion.div>
+                    <TalentCard key={talent.id} talent={talent} index={index} skillsArray={skillsArray} />
                   )
                 })}
               </AnimatePresence>

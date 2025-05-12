@@ -29,6 +29,10 @@ import { userContext } from "../../../context/UserContext"
 import { useNavigate, useLocation, useParams } from "react-router-dom"
 import { getTalentById } from "../../../services/Talents"
 import '../../../styles/company/talents/talents_profile.css'
+import { LocationCity, Work } from "@mui/icons-material"
+import { FaHome, FaPenFancy } from "react-icons/fa";
+import { Calendar } from "lucide-react"
+
 
 const parseJSONField = (field) => {
   try {
@@ -229,7 +233,7 @@ const TalentProfile = () => {
               >
                 <div className="profile-banner">
                   <div className="profile-avatar">
-                    <img src={talent.img || "/placeholder.svg"} alt={talent.name} />
+                    <img src={talent.img || "/placeholder.svg"}  />
                   </div>
                 </div>
 
@@ -268,6 +272,29 @@ const TalentProfile = () => {
                 </div>
 
                 <div className="sidebar-section">
+                  <h3 className="sidebar-section-title">Professional Details</h3>
+                  <div className="contact-list">
+                    {talent.seniority && (
+                      <div className="contact-item">
+                        <Work fontSize="small" className="contact-icon" />
+                        <span>{talent.seniority}</span>
+                      </div>
+                    )}
+                    {talent.specialization && (
+                      <div className="contact-item">
+                        <FaPenFancy className="contact-icon" />
+                        <span>{talent.specialization}</span>
+                      </div>
+                    )}
+                    {talent?.experience?.length > 0 && (
+                      <div className="contact-item">
+                        <FaHome className="contact-icon" />
+                        <span>{talent.experience.find((e) => e.endDate === "Present")?.company || talent.experience[0]?.company}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="sidebar-section">
                   <h3 className="sidebar-section-title">Contact Information</h3>
                   <div className="contact-list">
                     {talent.location && (
@@ -288,6 +315,12 @@ const TalentProfile = () => {
                         <a href={`tel:${talent.phone_number}`}>{talent.phone_number}</a>
                       </div>
                     )}
+                    {talent.location && (
+                      <div className="contact-item">
+                        <LocationCity className="contact-icon" />
+                        <span>{talent.location}</span>
+                      </div>
+                    )}
                     {talent.dob && (
                       <div className="contact-item">
                         <FiCalendar className="contact-icon" />
@@ -298,6 +331,29 @@ const TalentProfile = () => {
                             day: "numeric",
                           })}
                         </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="sidebar-section">
+                  <h3 className="sidebar-section-title">ITI Information</h3>
+                  <div className="contact-list">
+                    {talent.branch.name && (
+                      <div className="contact-item">
+                        <FaHome className="contact-icon" />
+                        <span>{talent.branch.name}</span>
+                      </div>
+                    )}
+                    {talent.track.name && (
+                      <div className="contact-item">
+                        <FaPenFancy className="contact-icon" />
+                        <span>{talent.track.name}</span>
+                      </div>
+                    )}
+                    {talent.iti_grad_year && (
+                      <div className="contact-item">
+                        <Calendar className="contact-icon" />
+                        <span>{talent.iti_grad_year}</span>
                       </div>
                     )}
                   </div>
@@ -326,18 +382,24 @@ const TalentProfile = () => {
                           <p>{talent.about}</p>
                         </div>
                       )}
-                      {talent.specialization && (
+                      {talent.summary && (
+                        <div className="summary-item">
+                          <h4>Summary</h4>
+                          <p>{talent.summary}</p>
+                        </div>
+                      )}
+                      {/* {talent.specialization && (
                         <div className="summary-item">
                           <h4>Specialization</h4>
                           <p>{talent.specialization}</p>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </motion.div>
                 )}
 
                 {/* Skills Section */}
-                {skills.length > 0 && (
+                {talent?.skills?.length > 0 && (
                   <motion.div
                     className="profile-card"
                     initial={{ opacity: 0, y: 20 }}
@@ -351,7 +413,7 @@ const TalentProfile = () => {
                     </div>
                     <div className="card-content">
                       <div className="skills-container">
-                        {skills.map((skill, index) => {
+                        {talent?.skills?.map((skill, index) => {
                           const skillName = typeof skill === "object" ? skill.name : skill
                           const proficiency = typeof skill === "object" ? skill.proficiency : null
                           const level = getSkillLevel(proficiency)
@@ -404,7 +466,7 @@ const TalentProfile = () => {
                 )}
 
                 {/* Experience Section */}
-                {experience.length > 0 && (
+                {talent?.experience?.length > 0 && (
                   <motion.div
                     className="profile-card"
                     initial={{ opacity: 0, y: 20 }}
@@ -418,7 +480,7 @@ const TalentProfile = () => {
                     </div>
                     <div className="card-content">
                       <div className="timeline-container">
-                        {experience.map((exp, index) => (
+                        {talent?.experience?.map((exp, index) => (
                           <motion.div
                             className="timeline-item"
                             key={index}
@@ -444,8 +506,8 @@ const TalentProfile = () => {
                                   </div>
                                 </div>
                                 <div className="experience-status">
-                                  <span className={`status-badge ${exp.endDate ? "past" : "current"}`}>
-                                    {exp.endDate ? "Past" : "Current"}
+                                  <span className={`status-badge ${exp.endDate != 'Present' ? "past" : "current"}`}>
+                                    {exp.endDate != 'Present' ? "Past" : "Current"}
                                   </span>
                                 </div>
                               </div>
@@ -481,7 +543,7 @@ const TalentProfile = () => {
                 )}
 
                 {/* Education Section */}
-                {education.length > 0 && (
+                {talent?.education?.length > 0 && (
                   <motion.div
                     className="profile-card"
                     initial={{ opacity: 0, y: 20 }}
@@ -495,7 +557,7 @@ const TalentProfile = () => {
                     </div>
                     <div className="card-content">
                       <div className="education-grid">
-                        {education.map((edu, index) => (
+                        {talent?.education?.map((edu, index) => (
                           <motion.div
                             className="education-item"
                             key={index}
