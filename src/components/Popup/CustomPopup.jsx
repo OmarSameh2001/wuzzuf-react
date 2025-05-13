@@ -5,12 +5,14 @@ import { userContext } from "../../context/UserContext";
 import { useContext } from "react";
 import ContractBox from "./ContractBox";
 import VideoInterview from "./VideoInterview";
+import Summary from "./Summary";
 
 export default function CustomPopup() {
   const { isLight, update, setUpdate } = useContext(userContext);
-  const { answer, contract, video, phase, handleClose, handleNext, handleFail, refetch } = update.settings;
-
+  const { answer, contract, video, summary, phase, handleClose, handleNext, handleFail, refetch } = update.settings;
+  console.log(update)
   const PopupPicker = () => {
+    console.log(update)
     if (!update.user?.id) return null;
     console.log(update)
     console.log(update.user.id)
@@ -42,6 +44,12 @@ export default function CustomPopup() {
         refetch={refetch}
       />
     );
+    if (summary) return (
+      <Summary
+        aboutSummary={summary}
+        refetch={refetch}
+        />
+    );
     
     return (
       <CompanySchedule
@@ -62,7 +70,7 @@ export default function CustomPopup() {
         <div
           className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"
           style={{ backdropFilter: "blur(10px)" }}
-          onClick={video ? null : handleClose}
+          onClick={()=>video || summary ? null : handleClose() || setUpdate({ user: {}, settings: {} })}
         ></div>
         <div
           className="position-relative p-4 rounded-4 shadow-lg"
@@ -78,7 +86,8 @@ export default function CustomPopup() {
           <h2 className="text-center mb-3" style={{ color: isLight ? "#121212" : "#fff", display: video ? "none" : "block" }}>
             {answer
               ? `${update.user_name} Answers`
-              : video ? "Video Interview" : Number(phase) === 2
+              : summary ? "Summary and About Comparison" :
+              video ? "Video Interview" : Number(phase) === 2
               ? "Assessment Link"
               : Number(phase) === 6 ? "Offer Letter" : "Set Schedule"}
           </h2>
@@ -92,7 +101,7 @@ export default function CustomPopup() {
               color: "red",
               display: video ? "none" : "block",
             }}
-            onClick={handleClose}
+            onClick={()=>handleClose() || setUpdate({ user: {}, settings: {} })}
           />
           <PopupPicker />
         </div>

@@ -28,7 +28,7 @@ import {
 const EditCV = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { user, isLight } = useContext(userContext);
+  const { user, isLight, setUpdate, refetchUser } = useContext(userContext);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const EditCV = () => {
   const [parse, setParse] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  console.log(parse);
+  // console.log(parse);
   useEffect(() => {
     if (!userId) {
       navigate("/applicant/profile", { replace: true });
@@ -113,7 +113,7 @@ const EditCV = () => {
     }
 
     try {
-      await AxiosApi.patch(`/user/jobseekers/${userId}/`, formData, {
+      const res = await AxiosApi.patch(`/user/jobseekers/${userId}/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Token ${localStorage.getItem("token")}`,
@@ -121,6 +121,10 @@ const EditCV = () => {
         timeout: 30000,
       });
       showSuccessToast("CV uploaded successfully!", 2000, isLight);
+      if(parse){
+        console.log(res)
+        setUpdate({user:{id:123}, settings:{summary:res?.data?.about_summary || {about: "", summary: ""}, refetch: refetchUser}});
+      }
       navigate("/applicant/profile");
     } catch (err) {
       console.error("Upload error:", err);
@@ -161,7 +165,7 @@ const EditCV = () => {
       justifyContent: 'center',
        alignItems: 'center',
         width: '100%',
-        backgroundColor: isLight ? '#f5f5f5' : '#121212' }}>
+        backgroundColor: isLight ? '#f5f5f5' : '#121212', height:'80vh' }}>
       <Box sx={{ 
         display: "flex", 
         justifyContent: "center", 

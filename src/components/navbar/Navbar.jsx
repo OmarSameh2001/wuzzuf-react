@@ -33,7 +33,7 @@ function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [hover, setHover] = useState(false);
-  const { user, setUser, setToken, isLight, setIsLight } =
+  const { user, setUser, setToken, isLight, setIsLight, loading } =
     useContext(userContext);
   const navigate = useNavigate();
 
@@ -268,7 +268,7 @@ function Navbar() {
             Sign Out
           </Button>
         </Box>
-      ) : (
+      ) : !loading ? (
         <Box sx={{ p: 2, borderTop: `1px solid ${theme.divider}` }}>
           <Button
             component={Link}
@@ -304,7 +304,7 @@ function Navbar() {
             Already have an account? Sign In
           </Button>
         </Box>
-      )}
+      ): null}
     </Box>
   );
 
@@ -574,7 +574,7 @@ function Navbar() {
                     </Slide>
                   </Box>
                 </>
-              ) : (
+              ) : !loading ? (
                 <>
                   <Button
                     component={Link}
@@ -612,7 +612,7 @@ function Navbar() {
                     Join Now
                   </Button>
                 </>
-              )}
+              ): null}
 
               {/* Mobile Menu Button */}
               {user && Object.keys(user).length > 0 && (

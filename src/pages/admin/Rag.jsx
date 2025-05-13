@@ -23,6 +23,7 @@ import { FaTrashAlt, FaFileUpload } from "react-icons/fa";
 import { createRag, deleteRag, getRag } from "../../services/ChatBot";
 import { set } from "date-fns";
 import { userContext } from "../../context/UserContext";
+import { showConfirmToast } from "../../confirmAlert/toastConfirm";
 
 
 function AdminRag() {
@@ -170,12 +171,15 @@ function AdminRag() {
 
   const handleDeleteClick = (rag) => {
     // Optional: Add confirmation dialog here
-    if (
-      window.confirm(`Are you sure you want to delete RAG: ${rag.name}?\nThis action cannot be undone.`)
-    ) {
-      setFeedback({ message: "", severity: "info" }); // Clear previous feedback
-      deleteMutation.mutate(rag._id); // Pass the ID to the mutation
-    }
+    showConfirmToast({
+      title: "Delete RAG",
+      message: `Are you sure you want to delete RAG: ${rag.name}?`,
+      onConfirm: () => {
+        setFeedback({ message: "", severity: "info" }); // Clear previous feedback
+        deleteMutation.mutate(rag._id); // Pass the ID to the mutation
+      },
+      isLight: isLight,
+    })
   };
 
   // --- Render Logic ---

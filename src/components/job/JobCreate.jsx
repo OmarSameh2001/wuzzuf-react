@@ -113,6 +113,7 @@ const JobCreate = () => {
         location: jobOld.location,
         status: jobOld.status,
         attend: jobOld.attend,
+        specialization: jobOld.specialization,
       });
       setQuestions(jobOld.questions);
       setUpdate(true);
