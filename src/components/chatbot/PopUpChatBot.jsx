@@ -24,7 +24,7 @@ const PopupChatBot = () => {
   } = useQuery({
     queryKey: ["quota", chatBot],
     queryFn:async () => {
-      if(!user?.id) return []
+      if(!user?.id || !chatBot) return []
       const response = await getQuota();
       return response;
     }
@@ -61,7 +61,6 @@ const PopupChatBot = () => {
     }
   }
 
-  
   return (
     <div style={{ display: user?.id ? "block" : "none" }}>
       {/* Chat toggle button */}

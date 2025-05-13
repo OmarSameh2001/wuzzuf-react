@@ -100,6 +100,6 @@ export const verifyCompany = async (companyId, token) => {
 export const getCompanyById = async (id) => {
   if(id === undefined || id == 0) return {};
   const response = await AxiosApi.get(`user/companies/${id}/`);
-
+  response.data.img = response.data.img.replace("image/upload/", "");
   return response.data;
 };

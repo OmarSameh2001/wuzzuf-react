@@ -19,6 +19,8 @@ import UserProtected from "./ProtectedRoute/UserProtected.jsx";
 import AdminProtected from "./ProtectedRoute/AdminProtected.jsx";
 import AccountProtected from "./ProtectedRoute/AccountProtected.jsx";
 import VideoInterview from "./components/Popup/VideoInterview.jsx";
+import NotFound from "./pages/helpers/NotFound.jsx";
+// import SingleCompany from "./pages/user/jobs/SingleCompany.jsx";
 
 
 
@@ -98,6 +100,7 @@ function App() {
   // const Users = React.lazy(() => import("./pages/admin/Users.jsx"));
   const JobCreate = React.lazy(() => import("./components/job/JobCreate"));
   const Accounts = React.lazy(() => import("./components/accounts/Accounts"));
+  const SingleCompany = React.lazy(() => import('./pages/user/jobs/SingleCompany.jsx'))
   return (
     <>
       <QueryClientProvider client={new QueryClient()}>
@@ -206,6 +209,10 @@ function App() {
                           path="/applicant/recommended"
                           element={<UserProtected><RecommendedJobs /></UserProtected>}
                         />
+                        <Route
+                          path="/applicant/companies/:id"
+                          element={<UserProtected><SingleCompany /></UserProtected>}
+                        />
                         
                         
                         {/* Company Dashboard */}
@@ -249,7 +256,10 @@ function App() {
                        
                         {/* <Route path="/company/register" element={<RegisterCompany />} /> */}
 
-                        {/* Company Profile */}
+                        <Route
+                          path="/*"
+                          element={<NotFound/>}
+                        />
                       </Routes>
                     </Suspense>
                     <PopupChatBot />

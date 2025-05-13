@@ -123,13 +123,21 @@ function JobDetails({ job, refetch }) {
                   src={job.company_logo || "https://static.thenounproject.com/png/3198584-200.png"}
                   alt={job.company_name}
                   className="company-logo"
+                  onClick={()=>{
+                    user?.user_type === "JOBSEEKER" ? navigate(`/applicant/companies/${job.company}`) : null
+                  }}
+                  style={{cursor: user?.user_type === "JOBSEEKER" ? 'pointer' : null}}
                 />
               </div>
               
               <div className="job-title-container">
                 <h1 className="job-title">{job.title}</h1>
                 <div className="company-info">
-                  <span className="company-name">
+                  <span className="company-name"
+                    onClick={()=>{
+                      user?.user_type === "JOBSEEKER" ? navigate(`/applicant/companies/${job.company}`) : null
+                    }}
+                    style={{cursor: user?.user_type === "JOBSEEKER" ? 'pointer' : null}}>
                     <FaRegBuilding className="company-icon" />
                     {job.company_name}
                   </span>

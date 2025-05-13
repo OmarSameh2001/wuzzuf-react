@@ -8,7 +8,7 @@ import VideoInterview from "./VideoInterview";
 
 export default function CustomPopup() {
   const { isLight, update, setUpdate } = useContext(userContext);
-  const { answer, contract, video, phase, handleClose, handleNext, handleFail, setDisabled } = update.settings;
+  const { answer, contract, video, phase, handleClose, handleNext, handleFail, refetch } = update.settings;
 
   const PopupPicker = () => {
     if (!update.user?.id) return null;
@@ -39,7 +39,7 @@ export default function CustomPopup() {
         question_id={update?.user?.job_details?.questions?.find((q) => q.type === "video")?.id || null}
         handleClose={handleClose}
         question={update?.user?.job_details?.questions?.find((q) => q.type === "video")?.text || null}
-        setDisabled={setDisabled}
+        refetch={refetch}
       />
     );
     

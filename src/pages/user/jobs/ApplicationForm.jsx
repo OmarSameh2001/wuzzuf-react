@@ -95,6 +95,7 @@ const ApplicationForm = ({
           return;
         }
         cvForm.append("cv", cv, cv.name);
+        cvForm.append("update", false);
         try {
           const cvRes = await patchUser(user.id, cvForm);
           if (!cvRes) {
@@ -142,15 +143,42 @@ const ApplicationForm = ({
     });
     refetch();
   }
+  
+  const unansweredRequiredNonVideoQuestions = questions?.some((question) => {
+    if (!question.required || question.type === "video") {
+      return false;
+    }
+    const answerValue = answers[question.id];
+
+    if (question.type === "boolean") {
+      return answerValue === undefined || answerValue === null;
+    }
+    return !answerValue || answerValue < 1;
+  });
+
+  const hasVideoQuestion = questions?.some(
+    (question) => question.type === "video"
+  );
+  const isVideo =
+    hasVideoQuestion
+      ? Object.entries(answers)?.some(([key, answer]) => {
+          return (
+            typeof answer === "object" &&
+            answer !== null &&
+            answer.question ===
+              questions?.filter((q) => q.type === "video")[0]?.id
+          );
+        })
+      : false;
+
+  const videoNotAnswered = hasVideoQuestion && !isVideo;
 
   const isFormDisabled =
-    questions?.some(
-      (question) =>
-        question.required && typeof answers[question.id] === "undefined"
-    ) ||
-    !cv ||
-    Number.parseInt(application.status) > 1 ||
-    application.job_details.status === "0";
+    unansweredRequiredNonVideoQuestions || // True if any required non-video question is unanswered
+    videoNotAnswered || // True if video exists and is not answered
+    !cv || // True if CV is missing
+    Number.parseInt(application.status) > 1 || // True if application already submitted/processed
+    application.job_details.status === "0"; // True if job is closed
 
   return (
     <Container className="application-form-container">
@@ -308,10 +336,11 @@ const ApplicationForm = ({
                           settings: {
                             video: true,
                             handleClose,
+                            refetch,
                           },
                         })
                       }
-                      disabled={application.screening_res || disabled}
+                      disabled={application.screening_res || isVideo}
                     >
                       Record Video
                     </Button>

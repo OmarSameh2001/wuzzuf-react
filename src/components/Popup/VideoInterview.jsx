@@ -21,7 +21,7 @@ export const ThemeContext = createContext({
   isDark: false,
   toggleTheme: () => {},
 })
-const VideoInterview = ({ application, handleClose, question, setDisabled, question_id }) => {
+const VideoInterview = ({ application, handleClose, question, question_id, refetch }) => {
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const [recording, setRecording] = useState(false);
@@ -71,6 +71,9 @@ const VideoInterview = ({ application, handleClose, question, setDisabled, quest
                 setStream(cameraStream);
             } catch (err) {
                 setError('Error accessing camera/microphone');
+                setTimeout(() => {
+                  handleClose()
+                }, 2000);
             }
         }
 
@@ -161,8 +164,8 @@ const VideoInterview = ({ application, handleClose, question, setDisabled, quest
             } else {
                 setInterviewFinished(true);
             }
+            refetch()
             showSuccessToast("Successfully submitted video!", 2000, isLight);
-            setDisabled(true)
             handleClose();
     
         } catch (error) {

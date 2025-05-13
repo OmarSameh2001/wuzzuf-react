@@ -112,7 +112,7 @@ const CompanyBox = ({ profileData }) => {
             {Object.keys(profileData?.accounts || {}).map((type) => (
               <a
                 key={type}
-                href={profileData.accounts[type]}
+                href={profileData.accounts[type] || null}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-link"

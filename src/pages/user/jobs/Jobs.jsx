@@ -36,7 +36,7 @@ import CustomAutoComplete from "../../../components/autoComplete/CustomAutoCompl
 const primaryColor = "#d43132";
 const secondaryColor = "#f5f5f5";
 
-function UserJobs() {
+function UserJobs({fixedCompany}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [page, setPage] = useState(1);
@@ -53,8 +53,7 @@ function UserJobs() {
       "Senior",
       "Lead",
       "Manager",
-    
-  ]
+    ]
 
   const [filters, setFilters] = useState({
     title: "",
@@ -85,6 +84,7 @@ function UserJobs() {
     ordering: "",
     specialization: "",
     company_name: "",
+    company: fixedCompany || ''
   });
 
   const {
@@ -142,6 +142,7 @@ function UserJobs() {
       ordering: "",
       specialization: "",
       company_name: "",
+      company: fixedCompany || ''
     });
     setFilters(defaultFilters);
     setSearchFilters(defaultFilters);
@@ -403,6 +404,7 @@ function UserJobs() {
               name="company_name"
               value={filters.company_name}
               onChange={handleChange}
+              disabled={fixedCompany}
               sx={{
                 flex: "1 1 200px",
                 "& .MuiOutlinedInput-root": {
