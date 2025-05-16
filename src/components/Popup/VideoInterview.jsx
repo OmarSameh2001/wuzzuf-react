@@ -166,7 +166,9 @@ const VideoInterview = ({ application, handleClose, question, question_id, refet
             }
             refetch()
             showSuccessToast("Successfully submitted video!", 2000, isLight);
-            handleClose();
+            setTimeout(() => {
+                handleClose();
+            }, 2000);
     
         } catch (error) {
             setError(error.response?.data?.error || error.message);

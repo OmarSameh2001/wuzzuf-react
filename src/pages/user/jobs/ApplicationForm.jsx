@@ -39,7 +39,7 @@ const ApplicationForm = ({
 }) => {
   const location = useLocation();
   const theme = useTheme();
-  const { user, setUser, isLight, setUpdate } = useContext(userContext);
+  const { user, setUser, isLight, setUpdate, update } = useContext(userContext);
   const [answers, setAnswers] = useState(
     savedAnswers ? { ...savedAnswers } : {}
   );
@@ -119,7 +119,8 @@ const ApplicationForm = ({
         showSuccessToast("Application submitted successfully", 2000, isLight);
         refetch();
       }
-      if (Object.keys(answers).length > 0) {
+      if (Object.keys(answers).length > 0 && !(Object.keys(answers).length === 1 && answers[Object.keys(answers)[0]]?.answer_text === "submited")) {
+        
         const output = Object.entries(answers).map(([key, value]) => ({
           answer_text: Array.isArray(value) ? JSON.stringify(value) : value,
           application: application.id,

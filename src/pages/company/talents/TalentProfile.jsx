@@ -176,10 +176,10 @@ const TalentProfile = () => {
   // const education = parseJSONField(talent?.education)
   // const experience = parseJSONField(talent?.experience)
   // const skills = parseJSONField(talent?.skills)
-  const education = talent ? parseJSONField(talent.education) : []
-  const experience = talent ? parseJSONField(talent.experience) : []
-  const skills = talent ? parseJSONField(talent.skills) : []
-  if (isError || (!isLoading && !talent)) {
+  const education = talent ? parseJSONField(talent?.education) : []
+  const experience = talent ? parseJSONField(talent?.experience) : []
+  const skills = talent ? parseJSONField(talent?.skills) : []
+  if (isError || (!isLoading && !talent.id)) {
     return (
       <div className={`talent-profile-container ${isLight ? "light-mode" : "dark-mode"}`}>
         <div className="background-pattern"></div>
@@ -233,35 +233,35 @@ const TalentProfile = () => {
               >
                 <div className="profile-banner">
                   <div className="profile-avatar">
-                    <img src={talent.img || "/placeholder.svg"}  />
+                    <img src={talent?.img || "/placeholder.svg"}  />
                   </div>
                 </div>
 
                 <div className="profile-info">
-                  <h2 className="profile-name">{talent.name}</h2>
-                  {talent.title && <p className="profile-title">{talent.title}</p>}
+                  <h2 className="profile-name">{talent?.name}</h2>
+                  {talent?.title && <p className="profile-title">{talent?.title}</p>}
 
                   <div className="profile-social-links">
-                    {talent.linkedin && (
-                      <a href={talent.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+                    {talent?.linkedin && (
+                      <a href={talent?.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
                         <FiLinkedin />
                       </a>
                     )}
-                    {talent.github && (
-                      <a href={talent.github} target="_blank" rel="noopener noreferrer" className="social-link">
+                    {talent?.github && (
+                      <a href={talent?.github} target="_blank" rel="noopener noreferrer" className="social-link">
                         <FiGithub />
                       </a>
                     )}
-                    {talent.website && (
-                      <a href={talent.website} target="_blank" rel="noopener noreferrer" className="social-link">
+                    {talent?.website && (
+                      <a href={talent?.website} target="_blank" rel="noopener noreferrer" className="social-link">
                         <FiGlobe />
                       </a>
                     )}
                   </div>
 
-                  {talent.cv && (
+                  {talent?.cv && (
                     <a
-                      href={talent.cv.endsWith(".pdf") ? talent.cv : talent.cv + ".pdf"}
+                      href={talent?.cv.endsWith(".pdf") ? talent?.cv : talent?.cv + ".pdf"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="download-cv-button"
@@ -274,22 +274,22 @@ const TalentProfile = () => {
                 <div className="sidebar-section">
                   <h3 className="sidebar-section-title">Professional Details</h3>
                   <div className="contact-list">
-                    {talent.seniority && (
+                    {talent?.seniority && (
                       <div className="contact-item">
                         <Work fontSize="small" className="contact-icon" />
-                        <span>{talent.seniority}</span>
+                        <span>{talent?.seniority}</span>
                       </div>
                     )}
-                    {talent.specialization && (
+                    {talent?.specialization && (
                       <div className="contact-item">
                         <FaPenFancy className="contact-icon" />
-                        <span>{talent.specialization}</span>
+                        <span>{talent?.specialization}</span>
                       </div>
                     )}
                     {talent?.experience?.length > 0 && (
                       <div className="contact-item">
                         <FaHome className="contact-icon" />
-                        <span>{talent.experience.find((e) => e.endDate === "Present")?.company || talent.experience[0]?.company}</span>
+                        <span>{talent?.experience.find((e) => e.endDate === "Present")?.company || talent?.experience[0]?.company}</span>
                       </div>
                     )}
                   </div>
@@ -297,35 +297,35 @@ const TalentProfile = () => {
                 <div className="sidebar-section">
                   <h3 className="sidebar-section-title">Contact Information</h3>
                   <div className="contact-list">
-                    {talent.location && (
+                    {talent?.location && (
                       <div className="contact-item">
                         <FiMapPin className="contact-icon" />
-                        <span>{talent.location}</span>
+                        <span>{talent?.location}</span>
                       </div>
                     )}
-                    {talent.email && (
+                    {talent?.email && (
                       <div className="contact-item">
                         <FiMail className="contact-icon" />
-                        <a href={`mailto:${talent.email}`}>{talent.email}</a>
+                        <a href={`mailto:${talent?.email}`}>{talent?.email}</a>
                       </div>
                     )}
-                    {talent.phone_number && (
+                    {talent?.phone_number && (
                       <div className="contact-item">
                         <FiPhone className="contact-icon" />
-                        <a href={`tel:${talent.phone_number}`}>{talent.phone_number}</a>
+                        <a href={`tel:${talent?.phone_number}`}>{talent?.phone_number}</a>
                       </div>
                     )}
-                    {talent.location && (
+                    {talent?.location && (
                       <div className="contact-item">
                         <LocationCity className="contact-icon" />
-                        <span>{talent.location}</span>
+                        <span>{talent?.location}</span>
                       </div>
                     )}
-                    {talent.dob && (
+                    {talent?.dob && (
                       <div className="contact-item">
                         <FiCalendar className="contact-icon" />
                         <span>
-                          {new Date(talent.dob).toLocaleDateString("en-US", {
+                          {new Date(talent?.dob).toLocaleDateString("en-US", {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
@@ -338,22 +338,22 @@ const TalentProfile = () => {
                 <div className="sidebar-section">
                   <h3 className="sidebar-section-title">ITI Information</h3>
                   <div className="contact-list">
-                    {talent.branch.name && (
+                    {talent?.branch?.name && (
                       <div className="contact-item">
                         <FaHome className="contact-icon" />
-                        <span>{talent.branch.name}</span>
+                        <span>{talent?.branch?.name}</span>
                       </div>
                     )}
-                    {talent.track.name && (
+                    {talent?.track?.name && (
                       <div className="contact-item">
                         <FaPenFancy className="contact-icon" />
-                        <span>{talent.track.name}</span>
+                        <span>{talent?.track?.name}</span>
                       </div>
                     )}
-                    {talent.iti_grad_year && (
+                    {talent?.iti_grad_year && (
                       <div className="contact-item">
                         <Calendar className="contact-icon" />
-                        <span>{talent.iti_grad_year}</span>
+                        <span>{talent?.iti_grad_year}</span>
                       </div>
                     )}
                   </div>
@@ -363,7 +363,7 @@ const TalentProfile = () => {
               {/* Main Content */}
               <div className="profile-main">
                 {/* About Section */}
-                {(talent.about || talent.specialization) && (
+                {(talent?.about || talent?.specialization) && (
                   <motion.div
                     className="profile-card"
                     initial={{ opacity: 0, y: 20 }}
@@ -376,22 +376,22 @@ const TalentProfile = () => {
                       </h3>
                     </div>
                     <div className="card-content">
-                      {talent.about && (
+                      {talent?.about && (
                         <div className="summary-item">
                           <h4>About</h4>
-                          <p>{talent.about}</p>
+                          <p>{talent?.about}</p>
                         </div>
                       )}
-                      {talent.summary && (
+                      {talent?.summary && (
                         <div className="summary-item">
                           <h4>Summary</h4>
-                          <p>{talent.summary}</p>
+                          <p>{talent?.summary}</p>
                         </div>
                       )}
-                      {/* {talent.specialization && (
+                      {/* {talent?.specialization && (
                         <div className="summary-item">
                           <h4>Specialization</h4>
-                          <p>{talent.specialization}</p>
+                          <p>{talent?.specialization}</p>
                         </div>
                       )} */}
                     </div>

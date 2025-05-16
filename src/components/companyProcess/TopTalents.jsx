@@ -159,6 +159,7 @@ const TopTalents = ({ job }) => {
                     key={applicant.id}
                     className={index % 2 === 0 ? "row-even" : "row-odd"}
                   >
+                    {console.log(applicant)}
                     <TableCell>{(page - 1)* rowsPerPage +index + 1}</TableCell>
                     <TableCell>{applicant.name}</TableCell>
                     <TableCell>{applicant.email}</TableCell>
@@ -177,17 +178,20 @@ const TopTalents = ({ job }) => {
                     <TableCell>
                       <div className="action-buttons">
                         <a
-                          href={`${
-                            import.meta.env.VITE_FRONTEND
-                          }company/talents/${applicant.id}`}
+                          // href={`${
+                          //   import.meta.env.VITE_FRONTEND
+                          // }company/talents/${applicant.id}`}
+                          href={`http://localhost:5173/company/talents/${applicant.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           title="View Applicant Profile"
+                          
                         >
                           <CircleUserRound
                             style={{ color: "#2f3744" }}
                             className="action-icon"
                             size={25}
+                            color={applicant.id > 99 ? "red" : "black" }
                           />
                         </a>
                         <a

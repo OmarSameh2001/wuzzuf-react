@@ -294,11 +294,12 @@ body.dark-mode {
   border-color: #cbd5e0;
 }
 
+/* MODIFIED: Changed grid to display exactly 3 cards per row */
 .talents-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  /* gap: 1rem; */
-  /* margin-bottom: 32px; */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
 .applicant-card-wrapper {
@@ -307,9 +308,8 @@ body.dark-mode {
 
 .applicant-card {
   width: 100%;
-  max-width: 350px;
+  max-width: 100%; /* Changed from 350px to allow cards to fill the space */
   margin: auto;
-  /* padding: 16px; */
   box-sizing: border-box;
   height: 100%;
   transition: all 0.3s ease;
@@ -424,9 +424,6 @@ body.dark-mode {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 16px;
-  /* max-height: 30%;
-  overflow-y: auto;
-  overflow-x: hidden; */
 }
 
 .skill-chip {
@@ -583,7 +580,8 @@ body.dark-mode {
   margin-top: 32px;
 }
 
-/* Responsive design */
+/* MODIFIED: Updated responsive breakpoints to ensure 3 cards per row on large screens
+   and proper scaling for smaller screens */
 @media (min-width: 1400px) {
   .talents-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -592,7 +590,8 @@ body.dark-mode {
 
 @media (max-width: 1200px) {
   .talents-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 }
 
@@ -600,8 +599,9 @@ body.dark-mode {
   .talents-container {
     padding: 16px;
   }
-
+  
   .talents-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
 }
@@ -634,7 +634,7 @@ body.dark-mode {
   }
 
   .talents-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 

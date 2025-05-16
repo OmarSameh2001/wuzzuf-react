@@ -27,7 +27,7 @@ import { showErrorToast,showInfoToast,showSuccessToast } from "../../../confirmA
 import Contract from "../../../components/job/user/Contract";
 const UserSingleJob = () => {
   const { jobId } = useParams();
-  const { user, isLight } = useContext(userContext);
+  const { user, isLight , update  } = useContext(userContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
@@ -108,7 +108,7 @@ const UserSingleJob = () => {
     isLoading: userAppLoading,
     refetch: userAppRefetch,
   } = useQuery({
-    queryKey: ["userApp", jobId],
+    queryKey: ["userApp", jobId, update ],
     queryFn: async () => {
       const res = await getApplicationsByUser({
         filters: searchFilters,

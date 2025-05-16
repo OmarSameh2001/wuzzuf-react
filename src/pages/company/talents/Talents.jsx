@@ -37,7 +37,7 @@ import {
 } from "@mui/icons-material"
 import { motion, AnimatePresence } from "framer-motion"
 import '../../../styles/company/talents/talents.css';
-import '../../../styles/company/companyteme.css';
+// import '../../../styles/company/companyteme.css';
 import CustomAutoComplete from "../../../components/autoComplete/CustomAutoComplete";
 import dayjs from 'dayjs'; // or use new Date().getFullYear() if you prefer
 import TalentCard from "../../../components/talent/TalentCard";
