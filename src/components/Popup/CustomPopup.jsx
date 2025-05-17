@@ -10,7 +10,7 @@ import Summary from "./Summary";
 export default function CustomPopup() {
   const { isLight, update, setUpdate } = useContext(userContext);
   const { answer, contract, video, summary, phase, handleClose, handleNext, handleFail, refetch } = update.settings;
-  console.log(update)
+  // console.log(update)
   const PopupPicker = () => {
     console.log(update)
     if (!update.user?.id) return null;

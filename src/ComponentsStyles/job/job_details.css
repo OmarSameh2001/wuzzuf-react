@@ -188,11 +188,13 @@
 
 /* Content Grid */
 .job-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 350px;
+  display: flex;
+  flex-wrap: wrap;
+  /* grid-template-columns: 1fr 350px; */
   gap: 1.5rem;
   padding: 1.5rem;
   flex: 1;
+  /* width: 80%; */
 }
 
 @media (max-width: 992px) {
@@ -206,6 +208,12 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+@media (min-width: 1424px) {
+  .job-main-content {
+    max-width: 80%;
+  }
 }
 
 /* Job Header */
@@ -350,6 +358,15 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: max-content;
+  max-width: 20%;
+  /* align-self: flex-end; */
+}
+@media (max-width: 1424px) {
+  .job-sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .sidebar-card {
@@ -359,6 +376,7 @@
   border: 1px solid var(--card-border);
   padding: 1.5rem;
   overflow: hidden;
+  /* width: max-content; */
 }
 
 .sidebar-card-title {
@@ -408,18 +426,21 @@
 .detail-content {
   display: flex;
   flex-direction: column;
+  width: max-content;
 }
 
 .detail-label {
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-bottom: 0.25rem;
+  align-self: center;
 }
 
 .detail-value {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-color);
+  align-self: center;
 }
 
 /* Responsive Adjustments */

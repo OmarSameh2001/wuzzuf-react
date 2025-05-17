@@ -4,8 +4,8 @@
     overflow: hidden;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: fit-content;
-    min-width: 280px;
+    /* width: 100%; */
+    min-width: 100px;
     max-width: 100%;
     margin-bottom: 16px;
     animation: fadeIn 0.5s ease forwards;

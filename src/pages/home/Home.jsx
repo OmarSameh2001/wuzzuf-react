@@ -400,7 +400,7 @@ export default function Home() {
       )}
 
       {/* Job Types Section */}
-      {(isJobSeeker || !user) && (
+      {(isJobSeeker || !user?.id) && (
         <div
           style={{
             padding: "80px 20px",
@@ -553,7 +553,7 @@ export default function Home() {
       )}
 
       {/* ITI Graduates Section */}
-      {(isCompany || !user) && (
+      {(isCompany || !user?.id) && (
         <div
           style={{
             padding: "80px 20px",
