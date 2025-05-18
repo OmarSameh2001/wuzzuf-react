@@ -117,6 +117,7 @@ const CompanyBox = ({ profileData }) => {
                 rel="noopener noreferrer"
                 className="social-link"
                 title={type}
+                style={{display: type === "linkedin" || type === "github" || type === "website" || type === "leetcode" ? "flex" : "none"}}
               >
                 {type === "linkedin" && <LinkedIn />}
                 {type === "github" && <GitHub />}

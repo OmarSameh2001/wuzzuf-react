@@ -32,6 +32,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaFilterCircleXmark } from "react-icons/fa6";
 import { userContext } from "../../../context/UserContext";
 import CustomAutoComplete from "../../../components/autoComplete/CustomAutoComplete";
+import { getJobStatusByUser } from "../../../services/Application";
 
 const primaryColor = "#d43132";
 const secondaryColor = "#f5f5f5";
@@ -43,7 +44,7 @@ function UserJobs({fixedCompany}) {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [expand,setExpand] = useState(false);
-  const { isLight } = useContext(userContext);
+  const { isLight, user } = useContext(userContext);
 
   const experienceOptions = 
     [
@@ -110,6 +111,23 @@ function UserJobs({fixedCompany}) {
       return res.data.results;
     },
   });
+  const {
+    data: applications,
+    error: appError,
+    isLoading: appLoading,
+    refetch: applicationsRefetch,
+  } = useQuery({
+    queryKey: ["applications", user?.id], // Use pagination values
+    queryFn: async () => { 
+      if(user?.id){
+        return await getJobStatusByUser(user?.id)
+      } else {
+        return []
+      }
+    },
+
+  });
+  // console.log(applications)
 
   const handleChange = (e) => {
     setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -843,6 +861,8 @@ function UserJobs({fixedCompany}) {
                     user={"user"}
                     index={index}
                     primaryColor={primaryColor}
+                    applications={applications}
+                    refetch={applicationsRefetch}
                   />
                 ))}
               </AnimatePresence>

@@ -103,3 +103,10 @@ export const setContract = async (id, data) => {
   const response = await AxiosApi.post(`applications/set_contract/?application=${id}`, data);
   return response.data;
 }
+
+export const getJobStatusByUser = async (userId) => {
+  // console.log(userId)
+  const response = await AxiosApi.get(`applications/job_status/?user_id=${userId}`);
+  // console.log(response)
+  return response.data;
+}

@@ -25,6 +25,7 @@ import CompanyBox from "../../../components/accounts/CompanyBox";
 import CompanyJobsBox from "../../../components/job/CompanyJobsBox";
 import { showErrorToast,showInfoToast,showSuccessToast } from "../../../confirmAlert/toastConfirm";
 import Contract from "../../../components/job/user/Contract";
+import '../../../styles/user/user_single_job.css'
 const UserSingleJob = () => {
   const { jobId } = useParams();
   const { user, isLight , update  } = useContext(userContext);
@@ -143,6 +144,7 @@ const UserSingleJob = () => {
     <div
       style={{
         display: "flex",
+        flexWrap: "wrap",
         gap: "0.5rem",
         flexDirection: isMobile ? "column" : "row",
         maxWidth: "100vw",
@@ -151,7 +153,7 @@ const UserSingleJob = () => {
       }}
     >
       <div
-        className="mt-2 d-flex flex-column justify-content-center align-items-center"
+        className="user-single-job-container mt-2 d-flex flex-column justify-content-center align-items-center"
         // style={{ maxWidth: "100vw" }}
       >
         <JobDetails job={userApp?.job_details || jobsData} />
@@ -267,7 +269,7 @@ const UserSingleJob = () => {
           )}
         </div>
       </div>
-      <div style={{ padding: "5px" }}>
+      <div style={{ padding: "5px", width: "25%" }} className="mt-4">
         {company && <CompanyBox profileData={company} />}
         {companyJobs && company && companyJobs?.length > 0 && (
           <CompanyJobsBox profileData={company} job={companyJobs} />

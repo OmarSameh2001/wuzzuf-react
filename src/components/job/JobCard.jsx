@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useContext ,useState } from "react";
+import { useContext, useState } from "react";
 import { userContext } from "../../context/UserContext";
 import {
   FiBriefcase,
@@ -11,7 +11,7 @@ import {
   FiHome,
   FiTrendingUp,
   FiBookmark,
-  FiDollarSign
+  FiDollarSign,
 } from "react-icons/fi";
 // import {
 //   LocationOn,
@@ -28,13 +28,20 @@ import {
 // } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  createApplication,
   deleteApplication,
   getApplicationsByUser,
 } from "../../services/Application";
-import '../../ComponentsStyles/job/jobcarduser.css'
-import { showConfirmToast, showErrorToast, showSuccessToast } from "../../confirmAlert/toastConfirm";
+import "../../ComponentsStyles/job/jobcarduser.css";
+import {
+  showConfirmToast,
+  showErrorToast,
+  showSuccessToast,
+} from "../../confirmAlert/toastConfirm";
 import { CgProfile } from "react-icons/cg";
-function JobCard({ job, type, isSelected, refetch }) {
+import { FaBookmark } from "react-icons/fa6";
+import { AiOutlineFileDone } from "react-icons/ai";
+function JobCard({ job, type, isSelected, refetch, applications }) {
   // const keywords = job?.keywords?.join(" · ") || "";
   const { user, isLight } = useContext(userContext);
   const navigate = useNavigate();
@@ -42,6 +49,8 @@ function JobCard({ job, type, isSelected, refetch }) {
   const [isHovered, setIsHovered] = useState(false);
   // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const primaryColor = "#d43132";
+  const jobApplied = applications?.some((application) => application.job_id === job.id && application.status != "1");
+  const jobSaved = applications?.some((application) => application.job_id === job.id && application.status === "1");
 
   // const handleJobClick = (jobId) => {
   //   navigate(
@@ -73,7 +82,6 @@ function JobCard({ job, type, isSelected, refetch }) {
   //   }
   // };
 
-  
   // const handleDeleteJob = async () => {
   //   try {
   //     const app = await getApplicationsByUser({
@@ -129,11 +137,31 @@ function JobCard({ job, type, isSelected, refetch }) {
 
   const handleDeleteJob = async () => {
     try {
-      const app = await getApplicationsByUser({
+      const app = applications.filter((app) => app.job_id === job.id) || await getApplicationsByUser({
         filters: { user: user?.id, job: job?.id },
       });
-      const res = await deleteApplication(app.results[0].id);
+      await deleteApplication(app[0]?.app_id || app?.results[0]?.id);
       showSuccessToast("Job unsaved successfully", 2000, isLight);
+      refetch();
+    } catch (err) {
+      showErrorToast("Failed to unsave job", 2000, isLight);
+      console.log(err);
+      refetch();
+    }
+  };
+  const handleSaveJob = async () => {
+    try {
+      const application = {
+        user: `${user?.id}`,
+        job: `${job?.id}`,
+        status: `1`,
+      };
+      const res = await createApplication(application);
+      showSuccessToast(
+        "Job saved successfully find it in saved section",
+        2000,
+        isLight
+      );
       refetch();
     } catch (err) {
       showErrorToast("Failed to unsave job", 2000, isLight);
@@ -141,20 +169,34 @@ function JobCard({ job, type, isSelected, refetch }) {
     }
   };
 
-  const handleSaveJob = async (e) => {
+  const handleSaveButton = async (e) => {
     e.stopPropagation();
-    showConfirmToast({
-      message: `Are you sure you want to unsave job: ${job?.title}?`,
-      onConfirm: handleDeleteJob,
-      confirmText: "Unsave",
-      cancelText: "Cancel",
-      isLight: isLight,
-    });
+    if (
+      jobSaved
+    ) {
+      showConfirmToast({
+        message: `Are you sure you want to unsave job: ${job?.title}?`,
+        onConfirm: handleDeleteJob,
+        confirmText: "Unsave",
+        cancelText: "Cancel",
+        isLight: isLight,
+      });
+    } else if (!applications?.find((app) => app.job === job?.id)) {
+      showConfirmToast({
+        message: `Are you sure you want to save job: ${job?.title}?`,
+        onConfirm: handleSaveJob,
+        confirmText: "Save",
+        cancelText: "Cancel",
+        isLight: isLight,
+      });
+    }
   };
 
   return (
     <motion.div
-      className={`job-card-container ${isLight ? "light" : "dark"} ${isSelected ? "selected" : ""}`}
+      className={`job-card-container ${isLight ? "light" : "dark"} ${
+        isSelected ? "selected" : ""
+      }`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -163,16 +205,19 @@ function JobCard({ job, type, isSelected, refetch }) {
       onClick={() => handleJobClick(job?.id)}
     >
       <div className="job-card-accent"></div>
-      
+
       <div className="job-card-content">
         <div className="job-card-header">
           <div className="company-logo">
             <img
-              src={job?.company_logo || "https://static.thenounproject.com/png/3198584-200.png"}
+              src={
+                job?.company_logo ||
+                "https://static.thenounproject.com/png/3198584-200.png"
+              }
               alt={job?.company_name || "Company"}
             />
           </div>
-          
+
           <div className="job-header-content">
             <h3 className="job-title">{job?.title || "Job Title"}</h3>
             <div className="company-info">
@@ -181,37 +226,62 @@ function JobCard({ job, type, isSelected, refetch }) {
             </div>
           </div>
 
-          {type === "saved" && (
-            <button className="bookmark-button" onClick={handleSaveJob} aria-label="Unsave job">
+          {jobSaved || type === "saved" ? (
+            <button
+              className="bookmark-button"
+              onClick={handleSaveButton}
+              aria-label="Unsave job"
+              title="Unsave job"
+            >
+              <FaBookmark color="red" />
+            </button>
+          ) : jobApplied ? (
+            <button
+              className="bookmark-button"
+              // onClick={handleSaveButton}
+              aria-label="Applied"
+              title="Applied"
+              disabled
+            >
+              <AiOutlineFileDone color='green'/>
+            </button>
+          ) : (
+            <button
+              className="bookmark-button"
+              onClick={handleSaveButton}
+              aria-label="Save job"
+              title="Save job"
+            >
               <FiBookmark />
             </button>
           )}
+          {/* {applications?.find((app) => app.job_id === job?.id && app.status != '1') && (
+            
+          )} */}
         </div>
 
         {job?.specialization && (
-          <div className="specialization-badge">
-            {job.specialization}
-          </div>
+          <div className="specialization-badge">{job.specialization}</div>
         )}
-        
+
         <div className="job-details-row">
           <div className="job-detail-item">
             <FiMapPin />
             <span>{job?.location || "Location"}</span>
           </div>
-          
+
           {job?.experince && (
             <div className="job-detail-item">
               <FiTrendingUp />
               <span>{job.experince}</span>
             </div>
           )}
-          
+
           <div className="job-detail-item">
             <FiCalendar />
             <span>{getRelativeTime(job?.created_at)}</span>
           </div>
-          {job?.applicant_count >-1 && (
+          {job?.applicant_count > -1 && (
             <div className="job-tag experience">
               <CgProfile />
               <span>{job.applicant_count || "0"}</span>
@@ -233,7 +303,7 @@ function JobCard({ job, type, isSelected, refetch }) {
               <span>{job.attend}</span>
             </div>
           )}
-          
+
           {/* {job?.status && (
             <div className={`job-type-badge status ${job.status.toLowerCase()}`}>
               <span>{job.status === "1" ? "Open" : "Closed"}</span>
@@ -270,12 +340,12 @@ function JobCard({ job, type, isSelected, refetch }) {
       </div>
 
       <div className="job-card-footer">
-        <motion.button 
-          className="view-details-button" 
-          whileHover={{ scale: 1.03 }} 
+        <motion.button
+          className="view-details-button"
+          whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          <span>View Details</span>
+          {jobApplied ? <span>View Application</span> : <span>View Details</span>}
           <FiArrowRight />
         </motion.button>
       </div>
@@ -292,7 +362,7 @@ function JobCard({ job, type, isSelected, refetch }) {
         )}
       </AnimatePresence>
     </motion.div>
-);
-};
+  );
+}
 
 export default JobCard;
