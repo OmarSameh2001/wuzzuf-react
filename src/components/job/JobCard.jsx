@@ -344,6 +344,7 @@ function JobCard({ job, type, isSelected, refetch, applications }) {
           className="view-details-button"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
+          style={{backgroundColor: jobApplied ? "#830000" : null}}
         >
           {jobApplied ? <span>View Application</span> : <span>View Details</span>}
           <FiArrowRight />

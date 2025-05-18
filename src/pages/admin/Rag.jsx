@@ -321,7 +321,7 @@ function AdminRag() {
       </Typography>
 
       {/* Loading/Error/Empty States for Table */}
-      {isFetchingRags && !isRefetchingRags && (
+      {isFetchingRags && (
         <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
           <CircularProgress />
         </Box>

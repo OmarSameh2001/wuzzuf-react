@@ -219,7 +219,7 @@ function AdminCompany() {
         </Alert>
       )}
 
-      {isFetching && !isRefetching && ( // Show main loading spinner only on initial load/page change
+      {isFetching && ( // Show main loading spinner only on initial load/page change
         <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
           <CircularProgress />
         </Box>

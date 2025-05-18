@@ -597,7 +597,7 @@ function AdminItian() {
         </Grid>
 
         {/* Loading/Error/Empty States for Table */}
-        {isFetchingItians && !isRefetchingItians && (
+        {isFetchingItians && (
           <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
             <CircularProgress
               sx={{

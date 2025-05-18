@@ -29,12 +29,13 @@ import { userContext } from "../../context/UserContext";
 // Import your API service functions
 import { createTrack, createBranch, getBranches, getTracks } from "../../services/Api";
 import { showConfirmToast } from "../../confirmAlert/toastConfirm";
+import Loading from "../helpers/Loading";
 
 function ItiInfo() {
 
   const [tracks, setTracks] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const { isLight } = useContext(userContext);
   // Modern color palette
   const colors = {
@@ -116,33 +117,56 @@ function ItiInfo() {
   const [searchBranch, setSearchBranch] = useState("");
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [tracksData, branchesData] = await Promise.all([
-          getTracks(),
-          getBranches(),
-        ]);
-        setTracks(tracksData);
-        setBranches(branchesData);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const [tracksData, branchesData] = await Promise.all([
+  //         getTracks(),
+  //         getBranches(),
+  //       ]);
+  //       setTracks(tracksData);
+  //       setBranches(branchesData);
 
-      } catch (error) {
-        console.error("Error fetching data:", error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
+  const {
+      data: trackData,
+      error: trackError,
+      isLoading: trackLoading,
+      refetch: trackRefetch,
+    } = useQuery({
+      // Unique query key including pagination parameters
+      queryKey: ["track"],
+      queryFn: async () => {
+        return await getTracks();
+      },
+    });
+    const {
+        data: branchData,
+        error: branchError,
+        isLoading: branchLoading,
+        refetch: branchRefetch,
+      } = useQuery({
+        queryKey: ["branch"],
+        queryFn: async () => {
+          return await getBranches();
+        },
+      });
 
-  if (loading) return <p>Loading...</p>;
+  if (trackLoading || branchLoading) return <Loading />;
 
-  const filteredTracks = tracks.filter((track) =>
+  const filteredTracks = trackData.filter((track) =>
     track.name.toLowerCase().includes(searchTrack.toLowerCase())
   );
 
-  const filteredBranches = branches.filter((branch) =>
+  const filteredBranches = branchData.filter((branch) =>
     branch.name.toLowerCase().includes(searchBranch.toLowerCase())
   );
 
@@ -170,7 +194,8 @@ function ItiInfo() {
           e.preventDefault();
           try {
             await createBranch(newBranchName, newBranchAddress);
-            setBranches(prev => [...prev, { name: newBranchName, address: newBranchAddress }]);
+            // setBranches(prev => [...prev, { name: newBranchName, address: newBranchAddress }]);
+            branchRefetch();
             setNewBranchName("");
             setNewBranchAddress("");
             setOpenAddBranch(false);
@@ -198,7 +223,8 @@ function ItiInfo() {
         e.preventDefault();
         try {
           await createTrack(newTrackName);
-          setTracks(prev => [...prev, { name: newTrackName }]);
+          // setTracks(prev => [...prev, { name: newTrackName }]);
+          trackRefetch();
           setNewTrackName("");
           setOpenAddTrack(false);
         } catch (err) {
