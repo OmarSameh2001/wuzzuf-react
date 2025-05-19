@@ -25,7 +25,7 @@ const Loading = ({minHeight, minWidth}) => {
           letterSpacing: "-0.5px",
         }}
       >
-        RecruitHub
+        HireGenius AI
       </Typography>
       <CircularProgress sx={{ color: "#882024", scale: "1" }} />
     </div>

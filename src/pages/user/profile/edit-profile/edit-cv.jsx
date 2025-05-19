@@ -165,17 +165,18 @@ const EditCV = () => {
       justifyContent: 'center',
        alignItems: 'center',
         width: '100%',
-        backgroundColor: isLight ? '#f5f5f5' : '#121212', height:'80vh' }}>
+        backgroundColor: isLight ? '#f5f5f5' : '#121212'}}>
       <Box sx={{ 
         display: "flex", 
         justifyContent: "center", 
         alignItems: "center",
-        minHeight: 200,
+        // minHeight: 200,
         flexDirection: 'column',
         gap: 2,
         backgroundColor: isLight ? '#f5f5f5' : '#121212',
         p: 3,
-        textAlign: 'center'
+        textAlign: 'center', 
+        minHeight:'80vh' 
       }}>
  
         <CircularProgress 
@@ -203,6 +204,7 @@ const EditCV = () => {
       sx={{
         minWidth: "100vw",
         backgroundColor: isLight ? "#f5f5f5" : "#242424",
+        minHeight:'80vh' 
       }}
     >
       <Box

@@ -19,6 +19,7 @@ import {
   useTheme,
   useMediaQuery,
   Fade,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Search, Briefcase, X, FileText } from "lucide-react";
@@ -36,8 +37,8 @@ function UserSaved() {
   const navigate = useNavigate();
 
   // Search states
-  const [jobTitle, setJobTitle] = useState("");
-  const [company, setCompany] = useState("");
+  // const [jobTitle, setJobTitle] = useState("");
+  // const [company, setCompany] = useState("");
   const [debouncedJobTitle, setDebouncedJobTitle] = useState("");
   const [debouncedCompany, setDebouncedCompany] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -58,42 +59,43 @@ function UserSaved() {
   });
 
   // Debounce job title input
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedJobTitle(jobTitle);
-      setFilters((prev) => ({ ...prev, job_title: jobTitle }));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [jobTitle]);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setDebouncedJobTitle(jobTitle);
+  //     setFilters((prev) => ({ ...prev, job_title: jobTitle }));
+  //   }, 500);
+  //   return () => clearTimeout(timer);
+  // }, [jobTitle]);
 
-  // Debounce company input
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedCompany(company);
-      setFilters((prev) => ({ ...prev, company_name: company }));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [company]);
+  // // Debounce company input
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setDebouncedCompany(company);
+  //     setFilters((prev) => ({ ...prev, company_name: company }));
+  //   }, 500);
+  //   return () => clearTimeout(timer);
+  // }, [company]);
 
   // Update search when debounced values change
-  useEffect(() => {
-    if (debouncedJobTitle !== "" || debouncedCompany !== "") {
-      setIsSearching(true);
-      handleSearch();
-    } else if (
-      debouncedJobTitle === "" &&
-      debouncedCompany === "" &&
-      isSearching
-    ) {
-      setIsSearching(false);
-      handleReset();
-    }
-  }, [debouncedJobTitle, debouncedCompany]);
+  // useEffect(() => {
+  //   if (debouncedJobTitle !== "" || debouncedCompany !== "") {
+  //     setIsSearching(true);
+  //     handleSearch();
+  //   } else if (
+  //     debouncedJobTitle === "" &&
+  //     debouncedCompany === "" &&
+  //     isSearching
+  //   ) {
+  //     setIsSearching(false);
+  //     handleReset();
+  //   }
+  // }, [debouncedJobTitle, debouncedCompany]);
 
   const {
     data: saved,
     error: savedError,
     isLoading: savedLoading,
+    isFetching: savedFetching,
     refetch,
   } = useQuery({
     queryKey: ["saved", page, pageSize, searchFilters],
@@ -110,12 +112,10 @@ function UserSaved() {
 
   const handleSearch = () => {
     setSearchFilters({
-      ...filters,
-      user: `${user.id}`,
-      status: "1",
+      ...filters
     });
     setPage(1);
-    refetch();
+    // refetch();
   };
 
   const handleReset = () => {
@@ -132,13 +132,13 @@ function UserSaved() {
       status: "1",
     });
     setPage(1);
-    refetch();
+    // refetch();
   };
 
   const handleClearSearch = () => {
-    setJobTitle("");
-    setCompany("");
-    setIsSearching(false);
+    // setJobTitle("");
+    // setCompany("");
+    // setIsSearching(false);
     handleReset();
   };
 
@@ -157,6 +157,8 @@ function UserSaved() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
+
+  const noChange = JSON.stringify(filters) === JSON.stringify(searchFilters);
 
   return (
     <Container
@@ -219,7 +221,7 @@ function UserSaved() {
             </Typography>
           </Box>
 
-          <Button
+          {/* <Button
             variant="contained"
             startIcon={<Search size={18} />}
             onClick={() => navigate("/applicant/jobs")}
@@ -237,7 +239,7 @@ function UserSaved() {
             }}
           >
             Browse Jobs
-          </Button>
+          </Button> */}
         </Box>
 
         {/* Search Section */}
@@ -258,8 +260,8 @@ function UserSaved() {
                 fullWidth
                 placeholder="Search by job title"
                 name="job_title"
-                value={jobTitle}
-                onChange={(e) => setJobTitle(e.target.value)}
+                value={filters.job_title}
+                onChange={(e) => setFilters({ ...filters, job_title: e.target.value })}
                 variant="outlined"
                 size="small"
                 InputProps={{
@@ -268,9 +270,9 @@ function UserSaved() {
                       <FileText size={18} color="#718096" />
                     </InputAdornment>
                   ),
-                  endAdornment: jobTitle ? (
+                  endAdornment: filters.job_title ? (
                     <InputAdornment position="end">
-                      <IconButton size="small" onClick={() => setJobTitle("")}>
+                      <IconButton size="small" onClick={() => setFilters({ ...filters, job_title: "" })}>
                         <X size={16} />
                       </IconButton>
                     </InputAdornment>
@@ -297,8 +299,8 @@ function UserSaved() {
                 fullWidth
                 placeholder="Search by company"
                 name="company_name"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
+                value={filters.company_name}
+                onChange={(e) => setFilters({ ...filters, company_name: e.target.value })}
                 variant="outlined"
                 size="small"
                 InputProps={{
@@ -307,9 +309,9 @@ function UserSaved() {
                       <Building2 size={18} color="#718096" />
                     </InputAdornment>
                   ),
-                  endAdornment: company ? (
+                  endAdornment: filters.company_name ? (
                     <InputAdornment position="end">
-                      <IconButton size="small" onClick={() => setCompany("")}>
+                      <IconButton size="small" onClick={() => setFilters({ ...filters, company_name: "" })}>
                         <X size={16} />
                       </IconButton>
                     </InputAdornment>
@@ -331,12 +333,34 @@ function UserSaved() {
               />
             </Grid>
 
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} md={3} style={{display:'flex'}}>
               <Button
                 fullWidth
                 variant="outlined"
                 // disabled={!isSearching}
-                onClick={handleClearSearch}
+                onClick={handleSearch}
+                startIcon={savedFetching ? <CircularProgress size={20} color="white"/> : <Search size={18} />}
+                sx={{
+                  height: "40px",
+                  borderColor: isLight ? "#e2e8f0" : 'white',
+                  color: isLight ? "#718096" : 'white',
+                  borderRadius: "8px",
+                  "&:hover": {
+                    borderColor: "#cbd5e0",
+                    backgroundColor: "#121212",
+                  },
+                  textTransform: "none",
+                  fontWeight: 600,
+                }}
+                disabled={noChange || savedFetching}
+              >
+                Search
+              </Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                disabled={savedFetching}
+                onClick={handleReset}
                 startIcon={<X size={18} />}
                 sx={{
                   height: "40px",

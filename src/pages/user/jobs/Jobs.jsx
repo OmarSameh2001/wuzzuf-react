@@ -115,6 +115,7 @@ function UserJobs({fixedCompany}) {
     data: applications,
     error: appError,
     isLoading: appLoading,
+    isFetching,
     refetch: applicationsRefetch,
   } = useQuery({
     queryKey: ["applications", user?.id], // Use pagination values
@@ -299,7 +300,7 @@ function UserJobs({fixedCompany}) {
               <Button
                 variant="contained"
                 onClick={refetch}
-                disabled={jobLoading}
+                disabled={jobLoading || isFetching}
                 sx={{
                   px: 3,
                   borderRadius: 2,
@@ -313,7 +314,7 @@ function UserJobs({fixedCompany}) {
                     backgroundColor: "#e2e8f0",
                   },
                 }}
-                startIcon={jobLoading ? <CircularProgress /> : <RefreshIcon />}
+                startIcon={isFetching ? <CircularProgress size={20} color="white"/> : <RefreshIcon />}
               >
                 Refresh
               </Button>
@@ -613,7 +614,7 @@ function UserJobs({fixedCompany}) {
             />
           </Box>
           </Collapse>
-          <Box sx={{ display: "flex", justifyContent: 'space-between' }}>
+          <Box sx={{ display: "flex", justifyContent: 'space-between', flexWrap:'wrap' }}>
             <Box sx={{ display: "flex", gap: 2}}>
             <Button
               variant="outlined"

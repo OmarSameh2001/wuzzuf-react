@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import JobCardCompany from "../../../components/job/JobCardCompany"; 
 import { useContext, useState } from "react";
-import { TextField, Button, Box, Typography, FormControlLabel, Checkbox } from "@mui/material";
+import { TextField, Button, Box, Typography, FormControlLabel, Checkbox, CircularProgress } from "@mui/material";
 import { Add, Search, Refresh, CheckBox } from "@mui/icons-material"
 import { userContext } from "../../../context/UserContext";
 import { getAllJobs } from "../../../services/Job";
@@ -64,9 +64,10 @@ function CompanyJobs() {
     data: companyJobs,
     error: companyJobsError,
     isLoading: companyJobsLoading,
+    isFetching: companyJobsFetching,
     refetch: companyJobsRefetch,
   } = useQuery({
-    queryKey: ["companyJobs", page, pageSize],
+    queryKey: ["companyJobs", page, pageSize, searchFilters],
     queryFn: async () => {
       if (!user?.id) {
         return [];
@@ -89,14 +90,14 @@ function CompanyJobs() {
   const handleSearch = () => {
     setSearchFilters(filters);
     setPage(1);
-    companyJobsRefetch();
+    // companyJobsRefetch();
   };
 
   const handleReset = () => {
     setFilters({ title: "", company: user?.id, status: '' });
     setSearchFilters({ title: "", company: user?.id, status: '' });
     setPage(1);
-    companyJobsRefetch();
+    // companyJobsRefetch();
   };
 
   const handleActive = () => {
@@ -114,6 +115,8 @@ function CompanyJobs() {
   //   companyJobsRefetch();
   // };
 
+  const noChange = JSON.stringify(filters) === JSON.stringify(searchFilters);
+
   return (
     <div className={`company-jobs ${isLight ? "light-mode" : "dark-mode"}`} style={{ backgroundColor: isLight ? "#f8f9fa" : "#121212" }}>
       <div className="container">
@@ -127,6 +130,54 @@ function CompanyJobs() {
             <Add />
           </button>
         </div>
+        <div className="company-jobs__search">
+              <Box className="search-field-wrapper" sx={{ display: "flex", alignItems: "center", width: "100%", gap: "16px" }}>
+                {/* <Search className="search-icon" /> */}
+                <TextField
+                  label="Search by job title"
+                  name="title"
+                  value={filters.title}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  className="company-jobs__search-input"
+                  
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="active"
+                      checked={active}
+                      onChange={handleActive}
+                      sx={{ cursor: "pointer" }}
+                    />
+                  }
+                  label="Active"
+                  sx={{ color: isLight ? "#000" : "#fff" }}
+                />
+              </Box>
+              <Box className="search-buttons d-flex gap-2">
+                <Button
+                  variant="contained"
+                  onClick={handleSearch}
+                  startIcon={companyJobsFetching ? <CircularProgress size={20} /> : <Search />}
+                  disabled={companyJobsFetching || noChange}
+                  className="company-jobs__button company-jobs__button--primary"
+                >
+                  <span className="button-text">Search</span>
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleReset}
+                  startIcon={<Refresh />}
+                  disabled={companyJobsFetching}
+                  className="company-jobs__button company-jobs__button--secondary"
+                >
+                  <span className="button-text">Reset</span>
+                </Button>
+              </Box>
+            </div>
 
         {companyJobsLoading ? (
           <div className="company-jobs__loading d-flex flex-column align-items-center">
@@ -164,52 +215,7 @@ function CompanyJobs() {
           </div>
         ) : (
           <>
-            <div className="company-jobs__search">
-              <Box className="search-field-wrapper" sx={{ display: "flex", alignItems: "center", width: "100%", gap: "16px" }}>
-                {/* <Search className="search-icon" /> */}
-                <TextField
-                  label="Search by job title"
-                  name="title"
-                  value={filters.title}
-                  onChange={handleChange}
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                  className="company-jobs__search-input"
-                  
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      name="active"
-                      checked={active}
-                      onChange={handleActive}
-                      sx={{ cursor: "pointer" }}
-                    />
-                  }
-                  label="Active"
-                  sx={{ color: isLight ? "#000" : "#fff" }}
-                />
-              </Box>
-              <Box className="search-buttons d-flex gap-2">
-                <Button
-                  variant="contained"
-                  onClick={handleSearch}
-                  startIcon={<Search />}
-                  className="company-jobs__button company-jobs__button--primary"
-                >
-                  <span className="button-text">Search</span>
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={handleReset}
-                  startIcon={<Refresh />}
-                  className="company-jobs__button company-jobs__button--secondary"
-                >
-                  <span className="button-text">Reset</span>
-                </Button>
-              </Box>
-            </div>
+            
 
             <AnimatePresence>
               <div className="company-jobs__list">

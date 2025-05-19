@@ -185,6 +185,12 @@ function AdminRag() {
   // --- Render Logic ---
   const rags = ragData?.results || [];
   const totalRags = ragData?.count || 0;
+  const headerStyle = {
+  backgroundColor: isLight ? "rgba(161, 161, 161, 0.9)" : "#242424",
+  color: "#ffffff",
+  fontWeight: "bold",
+};
+
 
   return (
 <div
@@ -375,9 +381,9 @@ function AdminRag() {
               <TableBody>
                 {rags.map((rag) => (
                   <TableRow hover key={rag._id}>
-                    <TableCell>{rag._id}</TableCell>
-                    <TableCell>{rag.name}</TableCell>
-                    <TableCell align="center">
+                    <TableCell sx={isLight ? null : headerStyle}>{rag._id}</TableCell>
+                    <TableCell sx={isLight ? null : headerStyle}>{rag.name}</TableCell>
+                    <TableCell sx={isLight ? null : headerStyle} align="center">
                       <IconButton
                         aria-label="delete rag document"
                         color="error"
@@ -411,6 +417,10 @@ function AdminRag() {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{ 
+              backgroundColor: isLight ? "white" : "rgba(161, 161, 161, 0.9)",
+              // color: isLight ? "black" : "white",
+             }}
           />
         </Paper>
       )}
@@ -420,10 +430,5 @@ function AdminRag() {
 }
 
 // Header style definition (same as AdminItian)
-const headerStyle = {
-  backgroundColor: "black",
-  color: "#ffffff",
-  fontWeight: "bold",
-};
 
 export default AdminRag;

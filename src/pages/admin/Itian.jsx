@@ -674,7 +674,7 @@ function AdminItian() {
               </Box>
             )}
             <TableContainer sx={{ maxHeight: 600 }}>
-              <Table stickyHeader aria-label="itians table">
+              <Table aria-label="itians table">
                 <TableHead>
                   <TableRow>
                     <TableCell

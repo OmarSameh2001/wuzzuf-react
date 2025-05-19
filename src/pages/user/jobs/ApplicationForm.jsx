@@ -132,7 +132,7 @@ const ApplicationForm = ({
         });
         const formData = { answers: output };
         const res = await createAnswer(formData);
-        showSuccessToast("Application submitted successfully", 2000, isLight);
+        showSuccessToast("Answers submitted successfully", 2000, isLight);
         setIsSubmitting(false);
       }
     } catch (error) {

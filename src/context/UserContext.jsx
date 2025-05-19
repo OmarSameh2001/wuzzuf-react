@@ -8,7 +8,7 @@ export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [chatBot, setChatBot] = useState(false);
-  const [isLight, setIsLight] = useState(true);
+  const [isLight, setLight] = useState(localStorage.getItem("isLight") === "true");
   const [update, setUpdate] = useState({ user: {}, settings: {} });
 
   const refetchUser = async (tok) => {
@@ -110,6 +110,11 @@ export function UserContextProvider({ children }) {
       return fallback;
     }
   };
+
+  const setIsLight = () => {
+    setLight(!isLight);
+    localStorage.setItem("isLight", !isLight);
+  }
 
   return (
     <userContext.Provider
