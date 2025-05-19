@@ -276,7 +276,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
   function handleAnswer(applicant) {
     if (applicant?.answers && applicant?.answers.length > 0) {
       setAnswer(true);
-      setUpdate({ user: applicant, settings: {} });
+      setUpdate({ user: applicant, settings: {answer:true, phase, handleNext, handleFail} });
     } else {
       showInfoToast("No answers found for this applicant.", 2000, isLight);
     }
@@ -294,7 +294,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
   if (isLoading) {
     return <CircularProgress style={{ display: "block", margin: "auto" }} />;
   }
-
+  
   return (
     <div
       className="applicants-table-container"
@@ -454,7 +454,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                             />
                           )}
                           {applicant.answers &&
-                            applicant.answers.length > 0 && (
+                            applicant.answers.length > 0 && phase === 1 && (
                               <MessageSquare
                                 className="action-icon action-icon-primary"
                                 onClick={() => handleAnswer(applicant)}
