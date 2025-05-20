@@ -22,6 +22,7 @@ import { userContext } from "../../../../context/UserContext";
 import { showErrorToast, showSuccessToast } from "../../../../confirmAlert/toastConfirm";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loading from '../../../../pages/helpers/Loading';
 
 
 const SaveButton = styled(Button)(({ theme }) => ({
@@ -125,12 +126,7 @@ const EditITI = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <CircularProgress sx={{ color: primaryColor }} />
-        <Typography variant="body1" sx={{ ml: 2 }}>
-          Loading tracks and branches...
-        </Typography>
-      </Box>
+      <Loading />
     );
   }
 
@@ -139,7 +135,7 @@ const EditITI = () => {
       style={{
         width: "100%",
         minHeight: "100vh",
-        backgroundColor: isLight ? "#transparent" : "#2d2829",
+        backgroundColor: isLight ? "white" : "#2d2829",
         color: theme.text,
         transition: "background-color 0.3s ease, color 0.3s ease",
         padding: "20px",
@@ -147,8 +143,9 @@ const EditITI = () => {
     >
     <Container maxWidth="sm" sx={{ 
       py: 4, 
-      backgroundColor: isLight ? "#transparent" : "#2d2829", 
-      color: isLight ? "#2d2829" : "white", 
+      backgroundColor: isLight ? "white" : "#2d2829", 
+      color: isLight ? "#2d2829" : "white",
+      border: "1px solid #e2e8f0", 
       padding: { xs: 2, sm: 3 },
           width: { xs: "95%", sm: "90%", md: "80%", lg: "70%" },
           mx: "auto",

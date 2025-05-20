@@ -52,15 +52,16 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
 
   const [selected, setSelected] = useState([]);
   const [answer, setAnswer] = useState(false);
+  const [success, setSuccess] = useState(true);
   const { user, update, setUpdate } = useContext(userContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const isScreening = job?.questions?.find((q) => q.type === "video")
 
-  const queryKey = ["applicants", page, rowsPerPage, phase, fetch];
+  const queryKey = ["applicants", page, rowsPerPage, phase, fetch, success];
   const queryFn = async () => {
     const response = await axios.get(`${import.meta.env.VITE_BACKEND}/applications/`, {
-      params: { page, page_size: rowsPerPage, status: phase + 1, job: id }, //, company: 3
+      params: { page, page_size: rowsPerPage, status: phase + 1, job: id, fail: success ? 'False' : '' }, //, company: 3
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -90,9 +91,9 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
     }));
   };
 
-  useEffect(() => {
-    refetch();
-  }, [page, rowsPerPage, phase, refetch]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [page, rowsPerPage, phase, refetch]);
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
@@ -276,7 +277,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
   function handleAnswer(applicant) {
     if (applicant?.answers && applicant?.answers.length > 0) {
       setAnswer(true);
-      setUpdate({ user: applicant, settings: {} });
+      setUpdate({ user: applicant, settings: {answer:true, phase, handleNext, handleFail} });
     } else {
       showInfoToast("No answers found for this applicant.", 2000, isLight);
     }
@@ -294,12 +295,24 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
   if (isLoading) {
     return <CircularProgress style={{ display: "block", margin: "auto" }} />;
   }
-
+  
   return (
     <div
       className="applicants-table-container"
       style={{ backgroundColor: theme.background }}
     >
+      
+      <Checkbox
+        checked={success || false}
+        onChange={() => setSuccess(!success)}
+        sx={{
+          color: "#d43132",
+          "&.Mui-checked": {
+            color: "#d43132",
+          },
+        }}
+      />
+      <label className="checkbox-label" onClick={() => setSuccess(!success)} style={{cursor:'pointer'}}>Non failed applicants only</label>
       {applicants?.length < 1 && (
         <div className="no-applicants-message">
           <p>There are no applicants in the current phase of this job.</p>
@@ -379,7 +392,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                 <TableCell>Name</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>ATS{isScreening && 'and Screening'}</TableCell>
+                <TableCell>ATS{isScreening && ' and Screening'}</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -454,7 +467,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                             />
                           )}
                           {applicant.answers &&
-                            applicant.answers.length > 0 && (
+                            applicant.answers.length > 0 && phase === 1 && (
                               <MessageSquare
                                 className="action-icon action-icon-primary"
                                 onClick={() => handleAnswer(applicant)}

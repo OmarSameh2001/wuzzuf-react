@@ -1,16 +1,16 @@
-import { Box, Checkbox, FormControlLabel, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { userContext } from "../../context/UserContext";
 import { useContext } from "react";
 
 
 
-function Multi({ question, handleMultiChange, answer, value }) {
+function Multi({ question, handleMultiChange, answer, value, disabled }) {
     const { isLight } = useContext(userContext)
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
     const filteredAnswer = answer.filter((item) => item.question === question.id);
     const selectedOptions = JSON.parse(filteredAnswer[0]?.answer_text || '[]');
-    const isDisabled = filteredAnswer.length > 0;
+    const isDisabled = disabled || filteredAnswer.length > 0;
     const primaryColor = "#e53946"
   const backgroundColor = isLight ? "#ffffff" : "#121212"
   const disabledBg = isLight ? "#f0f0f0" : "#2a2a2a"
@@ -48,17 +48,17 @@ function Multi({ question, handleMultiChange, answer, value }) {
                 checked={selectedOptions.includes(option) || value[question.id]?.includes(option) || false}
                 onChange={() => handleMultiChange(question.id, option)}
                 sx={{
-                  color: isLight ? "#a0a0a0" : "#6c6c6c",
+                  color: isLight ? "#a0a0a0" : "#fff",
                   "&.Mui-checked": {
                     color: primaryColor,
                   },
                   "&.Mui-disabled": {
-                    color: isLight ? "#c0c0c0" : "#4a4a4a",
+                    color: isLight ? "#c0c0c0" : "#121212",
                   },
                 }}
               />
             }
-            label={option}
+            label={<Typography color={isLight ? "#2d3748" : "#e2e8f0"}>{option}</Typography>}
           />
         ))}
       </Box>

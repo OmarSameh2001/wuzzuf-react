@@ -3,7 +3,7 @@ import { userContext } from "../../context/UserContext";
 import { patchJob } from "../../services/Job";
 import { useNavigate } from "react-router";
 // import { Button } from "@mui/material";
-import { TbCancel } from "react-icons/tb";
+import { TbCancel, TbFileDescription } from "react-icons/tb";
 import { FaEdit, FaMapMarkerAlt, FaRegClock, FaBriefcase, FaRegBuilding, FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { IoIosCloudDone } from "react-icons/io";
 import { 
@@ -27,6 +27,7 @@ function JobDetails({ job, refetch }) {
   const id = job.id;
   const [loading, setLoading] = useState(false);
   const [expand, setExpand] = useState(false);
+  const jobLength = job?.description?.split(/\r\n|\r|\n/)?.length;
 
   const handleActivation = async (state) => {
     setLoading(true);
@@ -153,13 +154,16 @@ function JobDetails({ job, refetch }) {
             <div className="job-section description-section">
               <h2 className="section-title">
                 <span className="section-icon-wrapper">
-                  <FaRegClock className="section-icon" />
+                  <TbFileDescription className="section-icon" />
                 </span>
                 Job Description
-                <Button className="btn btn-primary" onClick={() => setExpand(!expand)}>{expand ? "Collapse" : "Expand"}{expand ? <FaArrowUp /> : <FaArrowDown />}</Button>
+                {jobLength > 4 && <Button className="btn btn-primary" onClick={() => setExpand(!expand)}>{expand ? "Collapse" : "Expand"}{expand ? <FaArrowUp /> : <FaArrowDown />}</Button>}
               </h2>
               
-              <div className="description-content" style={{height: expand ? "auto" : "100px", overflow: "hidden"}}>{job.description}</div>
+              <div className="description-content" style={{
+                height: jobLength < 4 ? "auto" : expand ? "auto" : "100px",
+                overflow: "hidden"
+              }}>{job.description}</div>
             </div>
             
             {/* Skills Section */}
@@ -231,7 +235,7 @@ function JobDetails({ job, refetch }) {
                 </div>
                 <div className="detail-content">
                   <span className="detail-label">Clicked Apply</span>
-                  <span className="detail-value">{job?.applicant_count || 'You are the first to apply'}</span>
+                  <span className="detail-value">{job?.applicant_count || 'You are the first'}</span>
                 </div>
               </div>
 

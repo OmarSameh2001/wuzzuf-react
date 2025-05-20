@@ -200,7 +200,7 @@ function Navbar() {
             letterSpacing: "-0.5px",
           }}
         >
-          RecruitHub
+          HireGenius AI
         </Typography>
         <IconButton
           onClick={handleDrawerToggle}

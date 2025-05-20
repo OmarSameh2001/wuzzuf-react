@@ -36,7 +36,7 @@ export default function NotFound() {
           letterSpacing: "-0.5px",
         }}
       >
-        RecruitHub
+        HireGenius AI
       </Typography>
       <Typography
         variant="h4"

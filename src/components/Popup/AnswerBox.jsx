@@ -3,7 +3,8 @@ import { FaUserCheck, FaUserSlash } from "react-icons/fa";
 function AnswerBox({ applicant, phase, next, fail }) {
   const questions = applicant?.job_details?.questions || [];
   const answers = applicant?.answers || [];
-
+  console.log(applicant)
+  console.log(phase)
   return (
     <div
       style={{

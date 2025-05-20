@@ -70,7 +70,7 @@ export default function CustomPopup() {
         <div
           className="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"
           style={{ backdropFilter: "blur(10px)" }}
-          onClick={()=>video || summary ? null : handleClose() || setUpdate({ user: {}, settings: {} })}
+          onClick={()=>video || summary ? null : handleClose ? handleClose() : setUpdate({ user: {}, settings: {} })}
         ></div>
         <div
           className="position-relative p-4 rounded-4 shadow-lg"
@@ -85,7 +85,7 @@ export default function CustomPopup() {
         >
           <h2 className="text-center mb-3" style={{ color: isLight ? "#121212" : "#fff", display: video ? "none" : "block" }}>
             {answer
-              ? `${update.user_name} Answers`
+              ? `${update.user.user_name} Answers`
               : summary ? "Summary and About Comparison" :
               video ? "Video Interview" : Number(phase) === 2
               ? "Assessment Link"
@@ -101,7 +101,7 @@ export default function CustomPopup() {
               color: "red",
               display: video ? "none" : "block",
             }}
-            onClick={()=>handleClose() || setUpdate({ user: {}, settings: {} })}
+            onClick={()=>handleClose ? handleClose() : setUpdate({ user: {}, settings: {} })}
           />
           <PopupPicker />
         </div>

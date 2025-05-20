@@ -597,7 +597,7 @@ function AdminItian() {
         </Grid>
 
         {/* Loading/Error/Empty States for Table */}
-        {isFetchingItians && !isRefetchingItians && (
+        {isFetchingItians && (
           <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
             <CircularProgress
               sx={{
@@ -674,7 +674,7 @@ function AdminItian() {
               </Box>
             )}
             <TableContainer sx={{ maxHeight: 600 }}>
-              <Table stickyHeader aria-label="itians table">
+              <Table aria-label="itians table">
                 <TableHead>
                   <TableRow>
                     <TableCell

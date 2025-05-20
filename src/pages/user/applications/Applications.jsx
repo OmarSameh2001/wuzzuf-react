@@ -59,6 +59,7 @@ const JobApplication = () => {
     data: application,
     error: applicationError,
     isLoading: applicationLoading,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey: [
@@ -301,7 +302,7 @@ const JobApplication = () => {
               <Button
                 variant="contained"
                 onClick={handleRefresh}
-                disabled={applicationLoading}
+                disabled={applicationLoading || isFetching}
                 sx={{
                   px: 3,
                   borderRadius: 2,
@@ -317,8 +318,8 @@ const JobApplication = () => {
                   },
                 }}
                 startIcon={
-                  applicationLoading ? (
-                    <CircularProgress size={18} color="white" />
+                  isFetching ? (
+                    <CircularProgress size={20} color="white" />
                   ) : (
                     <Refresh />
                   )

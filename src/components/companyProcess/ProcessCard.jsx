@@ -118,9 +118,9 @@ function ProcessCard({ column, phases, job }) {
   //     "Hr Interview",
   //     "Offer",
   //   ];
-  useEffect(() => {
-    console.log(combine);
-  }, [combine]);
+  // useEffect(() => {
+  //   console.log(combine);
+  // }, [combine]);
   return (
     <div className={`recruitment-card ${isLight ? "light" : "dark"}`}>
       <div className="phase-header">
@@ -169,7 +169,7 @@ function ProcessCard({ column, phases, job }) {
         <div className="filter-container">
           <div className="filter-header">
             <h2 className="filter-title">Next Phase ATS Score</h2>
-            {job?.questions?.find((q) => q.type === "video") && <div className="checkbox-container">
+            {/* {job?.questions?.find((q) => q.type === "video") && <div className="checkbox-container">
               <Checkbox
                 checked={combine || false}
                 onChange={(e) => setCombine(e.target.checked)}
@@ -183,7 +183,7 @@ function ProcessCard({ column, phases, job }) {
               <label className="checkbox-label">
                 Combine ATS and Screening
               </label>
-            </div>}
+            </div>} */}
             <span className="filter-badge">{ats}%</span>
           </div>
 

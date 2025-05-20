@@ -95,6 +95,7 @@ const RecommendedJobs = () => {
     data: jobs,
     error: jobsError,
     isLoading: jobsLoading,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey: ["jobsRecomm", user?.id, pagination.page, pagination.pageSize, searchFilters],
@@ -377,7 +378,7 @@ const RecommendedJobs = () => {
               <Button
                 variant="contained"
                 onClick={handleRefresh}
-                disabled={jobsLoading}
+                disabled={jobsLoading || isFetching}
                 sx={{
                   px: 3,
                   borderRadius: 2,
@@ -392,7 +393,7 @@ const RecommendedJobs = () => {
                     backgroundColor: "#e2e8f0",
                   },
                 }}
-                startIcon={<Refresh />}
+                startIcon={isFetching ? <CircularProgress size={20} color="white"/> : <Refresh />}
               >
                 Refresh
               </Button>
@@ -586,7 +587,7 @@ const RecommendedJobs = () => {
             />
           </Box>
           </Collapse>
-          <Box sx={{ display: "flex", justifyContent: 'space-between' }}>
+          <Box sx={{ display: "flex", justifyContent: 'space-between', flexWrap:'wrap' }}>
             <Box sx={{ display: "flex", gap: 2}}>
             <Button
               variant="outlined"

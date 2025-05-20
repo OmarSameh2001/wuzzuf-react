@@ -75,7 +75,7 @@ const JobCardCompany = ({ job, isSelected }) => {
         onClick={() => handleJobClick(job?.id)}
       >
         <div className="job-status-badge">
-          {job?.status? (
+          {job?.status ==="1" ? (
             <span className="active-badge">Active</span>
           ) : (
             <span className="inactive-badge">Inactive</span>
@@ -132,12 +132,12 @@ const JobCardCompany = ({ job, isSelected }) => {
               <span>{job.experince}</span>
             </div>
           )}
-          {job?.applicant_count > -1 && (
+          {/* {job?.applicant_count > -1 && (
             <div className="job-tag experience">
               <CgProfile />
               <span>{job.applicant_count || "0"}</span>
             </div>
-          )}
+          )} */}
         </div>
   
         <div className="job-description">
@@ -166,12 +166,18 @@ const JobCardCompany = ({ job, isSelected }) => {
         )} */}
             {/* style={{height: "20.5rem" ,paddingBottom: "10rem"}} */}
        
-        <div className="job-card-footer company-footer" >
-          {/* <div className={`applicants-badge ${getApplicantsBadge(job?.id).className}`}>
-            <FiUsers />
-            <span>{getApplicantsBadge(job?.id).text}</span>
-          </div> */}
-  
+            <div className="job-card-footer company-footer">
+            <div className={`applicants-badge ${applicantsBadge.className}`}>
+              <FiUsers />
+              <span>{applicantsBadge.text}</span>
+              {job?.applicant_count > -1 && (
+                <span className="applicant-count">
+                  <CgProfile />
+                  {job.applicant_count || "0"}
+                </span>
+              )}
+            </div>
+
           <motion.button className="view-details-button" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} style={{paddingBottom: "1rem"}}>
             <span>Show the job details</span>
             <FiArrowRight />

@@ -173,7 +173,7 @@ export default function Home() {
               backgroundColor: isLight ? "black" : "white",
             }}
           >
-            RecruitHub
+            HireGenius AI
           </motion.h1>
 
           <motion.p
