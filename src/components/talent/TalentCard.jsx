@@ -10,7 +10,16 @@ import '../../styles/company/talents/talents.css';
 
 const TalentCard = ({ talent, index, skillsArray }) => {
   const navigate = useNavigate();
-
+  const formatLink = (link) => {
+    if (!link.startsWith("https://")) {
+      link = `https://res.cloudinary.com/dkvyfbtdl/raw/upload/v1746521870/${link}`
+    } 
+    
+    if (!link.endsWith(".pdf")) {
+      link = `${link}.pdf`
+    }
+    return link
+  }
   return (
         <motion.div
           key={talent.id}
@@ -96,7 +105,7 @@ const TalentCard = ({ talent, index, skillsArray }) => {
                   <Tooltip title="View CV">
                     <Box
                       component="a"
-                      href={talent.cv + ".pdf"}
+                      href={formatLink(talent?.cv)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="contact-item-card contact-item--primary"

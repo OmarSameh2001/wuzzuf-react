@@ -172,6 +172,16 @@ const TalentProfile = () => {
     return () => setIsContentReady(false)
   }, [isLoading, talent])
 
+  const formatLink = (link) => {
+    if (!link.startsWith("https://")) {
+      link = `https://res.cloudinary.com/dkvyfbtdl/raw/upload/v1746521870/${link}`
+    } 
+    
+    if (!link.endsWith(".pdf")) {
+      link = `${link}.pdf`
+    }
+    return link
+  }
 
   // const education = parseJSONField(talent?.education)
   // const experience = parseJSONField(talent?.experience)
@@ -261,7 +271,7 @@ const TalentProfile = () => {
 
                   {talent?.cv && (
                     <a
-                      href={talent?.cv.endsWith(".pdf") ? talent?.cv : talent?.cv + ".pdf"}
+                      href={formatLink(talent?.cv)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="download-cv-button"
