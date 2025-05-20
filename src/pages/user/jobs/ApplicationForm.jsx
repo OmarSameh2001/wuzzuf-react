@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Container,
@@ -184,6 +184,10 @@ const ApplicationForm = ({
     Number.parseInt(application.status) > 1 || // True if application already submitted/processed
     application.job_details.status === "0"; // True if job is closed
 
+  useEffect(() => {
+    setAnswers(savedAnswers);
+  }, [savedAnswers]);
+
   const QuestionsBox = ({applied}) => {
     return (
       <>
@@ -253,7 +257,7 @@ const ApplicationForm = ({
                     },
                   })
                 }
-                disabled={application.screening_res || isVideo || applied}
+                disabled={isVideo || application.screening_res || applied}
               >
                 <Typography
                   sx={{

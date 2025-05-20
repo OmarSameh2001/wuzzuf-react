@@ -5,7 +5,7 @@
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     /* width: 100%; */
-    min-width: 100px;
+    /* min-width: 'fit-content'; */
     max-width: 100%;
     margin-bottom: 16px;
     animation: fadeIn 0.5s ease forwards;
@@ -49,12 +49,14 @@
     background-color: #ffffff;
     color: #2d3748;
     border: 1px solid #e2e8f0;
+    min-width: fit-content;
   }
   
   .company-box.dark-mode {
     background-color: #1e1e1e;
     color: #e2e8f0;
     border: 1px solid #2d3748;
+    min-width: fit-content;
   }
   
   .company-box-header {
@@ -121,6 +123,7 @@
     animation: slideIn 0.3s ease forwards;
     animation-delay: calc(var(--index) * 0.1s);
     opacity: 0;
+    min-width: max-content;
   }
   
   .job-item::before {
@@ -191,6 +194,7 @@
     animation: slideIn 0.3s ease forwards;
     animation-delay: calc(var(--index) * 0.1s);
     opacity: 0;
+    min-width: max-content;
   }
   
   .detail-item:hover {
