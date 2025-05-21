@@ -281,12 +281,12 @@ function JobCard({ job, type, isSelected, refetch, applications }) {
             <FiCalendar />
             <span>{getRelativeTime(job?.created_at)}</span>
           </div>
-          {job?.applicant_count > -1 && (
+          {/* {job?.applicant_count > -1 && (
             <div className="job-tag experience">
               <CgProfile />
               <span>{job.applicant_count || "0"}</span>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="job-type-row">
@@ -339,7 +339,17 @@ function JobCard({ job, type, isSelected, refetch, applications }) {
         )}
       </div>
 
-      <div className="job-card-footer">
+      <div className="job-card-footer company-footer">
+      <div className={`applicants-badge ${job?.applicant_count === 0 ? 'no-applicants' : 
+        job?.applicant_count < 5 ? 'few-applicants' : 
+        job?.applicant_count < 10 ? 'some-applicants' : 'many-applicants'}`}>
+        {/* <FiUsers /> */}
+        <span>
+          {job?.applicant_count > 0 
+            ? `${job.applicant_count} applicants applied for this job` 
+            : "No applicants yet"}
+        </span>
+      </div>
         <motion.button
           className="view-details-button"
           whileHover={{ scale: 1.03 }}

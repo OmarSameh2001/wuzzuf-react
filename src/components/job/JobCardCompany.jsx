@@ -1,5 +1,5 @@
 
-import { useState, useContext } from "react"
+import { useState, useContext ,useEffect} from "react"
 import { useNavigate } from "react-router-dom"
 import { userContext } from "../../context/UserContext"
 import { motion, AnimatePresence } from "framer-motion"
@@ -22,7 +22,19 @@ const JobCardCompany = ({ job, isSelected }) => {
     const { isLight } = useContext(userContext)
     const navigate = useNavigate()
     const [isHovered, setIsHovered] = useState(false)
-  
+    
+
+    useEffect(() => {
+      // Force a repaint to ensure styles are applied correctly
+      const element = document.querySelector(".job-card-container")
+      if (element) {
+        element.style.display = "none"
+        // This triggers a reflow
+        void element.offsetHeight
+        element.style.display = ""
+      }
+    }, [isLight])
+
     // Format date to relative time
     const getRelativeTime = (dateString) => {
       if (!dateString) return "Recent"
@@ -54,16 +66,7 @@ const JobCardCompany = ({ job, isSelected }) => {
       navigate(`/company/jobEdit/${job?.id}`)
     }
   
-    // Calculate applicants badge
-    const getApplicantsBadge = () => {
-      const count = job?.id.applications?.length || 0
-      if (count === 0) return { text: "No applicants", className: "no-applicants" }
-      if (count < 5) return { text: `${count} applicants`, className: "few-applicants" }
-      if (count < 20) return { text: `${count} applicants`, className: "some-applicants" }
-      return { text: `${count} applicants`, className: "many-applicants" }
-    }
-    const applicantsBadge = getApplicantsBadge()
-  
+
     return (
       <motion.div
         className={`job-card-container company-card ${isLight ? "light" : "dark"} ${isSelected ? "selected" : ""}`}
@@ -167,16 +170,10 @@ const JobCardCompany = ({ job, isSelected }) => {
             {/* style={{height: "20.5rem" ,paddingBottom: "10rem"}} */}
        
             <div className="job-card-footer company-footer">
-            <div className={`applicants-badge ${applicantsBadge.className}`}>
-              <FiUsers />
-              <span>{applicantsBadge.text}</span>
-              {job?.applicant_count > -1 && (
-                <span className="applicant-count">
-                  <CgProfile />
-                  {job.applicant_count || "0"}
-                </span>
-              )}
-            </div>
+              <div className={`applicants-badge ${job?.applicant_count === 0 ? 'no-applicants' : job?.applicant_count < 5 ? 'few-applicants' : job?.applicant_count < 10 ? 'some-applicants' : 'many-applicants'}`}>
+                <FiUsers />
+                <span>{job?.applicant_count > 0 ? `${job.applicant_count} applicants applied for this job` : "No applicants yet"}</span>
+              </div>
 
           <motion.button className="view-details-button" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} style={{paddingBottom: "1rem"}}>
             <span>Show the job details</span>

@@ -64,7 +64,7 @@ export default function CustomPopup() {
     <>
       {update?.user?.id && (
         <div
-        className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+        className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center "
         style={{ zIndex: 99 }}
       >
         <div
@@ -75,7 +75,7 @@ export default function CustomPopup() {
         <div
           className="position-relative p-4 rounded-4 shadow-lg"
           style={{
-            width: video ? "90vw" : "400px",
+            width: video ? "90vw" : "max-content",
             maxHeight: video ? "100vh" : "80vh",
             overflowY: "auto",
             backdropFilter: "blur(5px)",

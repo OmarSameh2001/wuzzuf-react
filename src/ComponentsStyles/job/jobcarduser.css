@@ -160,9 +160,78 @@
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    word-break: break-word;
+    max-height: calc(1.4em * 2);
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+/* Add these styles to your CSS */
+
+/* Applicant Badge Styles */
+html body .applicants-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+html body .applicants-badge svg {
+  font-size: 1rem;
+}
+
+html body .applicants-badge.no-applicants {
+  background-color: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+html body .applicants-badge.few-applicants {
+  background-color: var(--info-light);
+  color: var(--info-color);
+}
+
+html body .applicants-badge.some-applicants {
+  background-color: var(--warning-light);
+  color: var(--warning-color);
+}
+
+html body .applicants-badge.many-applicants {
+  background-color: var(--success-light);
+  color: var(--success-color);
+}
+
+/* Company Footer Adjustments */
+html body .company-footer {
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+html body .view-details-button {
+  width: auto;
+  min-width: 140px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  html body .company-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  html body .applicants-badge {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  html body .view-details-button {
+    width: 100%;
+  }
+}
   
   .company-info {
     display: flex;
