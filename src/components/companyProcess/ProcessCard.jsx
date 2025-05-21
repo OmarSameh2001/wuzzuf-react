@@ -144,7 +144,7 @@ function ProcessCard({ column, phases, job }) {
               )}
             </button>
           )}
-          {column !== 1 && filters && (
+          {column !== 1 && column !== 6 && filters && (
             <button
               className={`action-button ${csvDisplay ? "active" : ""}`}
               onClick={() => setCsvDisplay(!csvDisplay)}

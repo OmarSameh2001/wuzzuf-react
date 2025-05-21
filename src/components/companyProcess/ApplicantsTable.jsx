@@ -425,7 +425,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
 
                   <TableCell>
                     <div className="status-chips">
-                      {applicant?.fail && <Chip
+                      {/* {applicant?.fail && <Chip
                         label={applicant.fail ? "Failed" : "Pending"}
                         className={`status-chip ${
                           applicant.fail
@@ -433,7 +433,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                             : "status-chip-success"
                         }`}
                         size="small"
-                      />}
+                      />} */}
                       {applicant?.ats_res > 0 && (
                         <Chip
                           label={`${applicant.ats_res}%`}
@@ -454,17 +454,20 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                     <div className="action-buttons">
                       {!applicant.fail ? (
                         <>
+                          {phase !== 6 && (
+                            <>
+                            
                           <UserX
                             className="action-icon action-icon-error"
                             onClick={() => handleFail(applicant.id, phase)}
                             size={20}
                           />
-                          {phase !== 6 && (
                             <UserCheck
                               className="action-icon action-icon-success"
                               onClick={() => handleNext(applicant.id, phase)}
                               size={20}
                             />
+                            </>
                           )}
                           {applicant.answers &&
                             applicant.answers.length > 0 && phase === 1 && (
