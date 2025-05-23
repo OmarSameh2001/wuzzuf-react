@@ -27,6 +27,8 @@ import { useNavigate } from "react-router-dom";
 import { userContext } from "../../context/UserContext";
 import '../../ComponentsStyles/job/jobcardApp.css' 
 import { CgProfile } from "react-icons/cg";
+import { FaMoneyBillWave } from "react-icons/fa";
+
  const  JobCardApp  = ({ application, index, primaryColor }) => {
    const theme = useTheme();
    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -40,34 +42,7 @@ import { CgProfile } from "react-icons/cg";
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
-   const getStatusChipProps = (status, fail) => {
-    if(fail){
-      return { label: "fail", color: "error" }
-    }
-     switch(status) {
-       case 1: // Applied
-         return { label: "Applied", color: "default" };
-       case 2: // Under Review
-         return { label: "Under Review", color: "info" };
-       case 3: // Shortlisted
-         return { label: "Technical Assessment", color: "primary" };
-       case 4: // Interview
-         return { label: "Technical Interview", color: "warning" };
-       case 5: // Offered
-         return { label: "Hr Interview", color: "success" };
-       case 6: // Rejected
-         return { label: "Offer", color: "success" };
-       default:
-         return { label: "Unknown", color: "default" };
-     }
-   };
-   
 
- 
-  //  const formatDate = (dateString) => {
-  //    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  //    return new Date(dateString).toLocaleDateString(undefined, options);
-  //  };
   const handleJobClick = (jobId) => {
     navigate(`/applicant/jobs/${jobId}`);
   };
@@ -119,6 +94,12 @@ import { CgProfile } from "react-icons/cg";
           label: "Offer", 
           className: "offer",
           icon: <FiCheckCircle />
+        };
+      case 7:
+        return { 
+          label: "Contract", 
+          className: "contract",
+          icon: <FaMoneyBillWave />
         };
       default:
         return { 

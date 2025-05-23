@@ -45,7 +45,7 @@ const JobApplication = () => {
     user: "",
     job: "",
     fail: 'False',
-    status: "2,3,4,5,6",
+    status: "2,3,4,5,6,7",
   });
   const [statusFilter, setStatusFilter] = useState("2,3,4,5,6"); // default to all active statuses
 
@@ -108,7 +108,7 @@ const JobApplication = () => {
 
   const handleStatusFilterChange = (event) => {
     setStatusFilter(event.target.value);
-    if (event.target.value == 7) {
+    if (event.target.value == 8) {
       setFilters((prev) => ({
         ...prev,
         status: "2,3,4,5,6",
@@ -256,7 +256,8 @@ const JobApplication = () => {
                   <MenuItem value="4">Technical Interview</MenuItem>
                   <MenuItem value="5">Hr Interview</MenuItem>
                   <MenuItem value="6">Offer Phase</MenuItem>
-                  <MenuItem value="7">Rejected</MenuItem>
+                  <MenuItem value="7">Contract Phase</MenuItem>
+                  <MenuItem value="8">Rejected</MenuItem>
                 </Select>
               </FormControl>
 

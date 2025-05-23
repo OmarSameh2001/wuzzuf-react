@@ -11,6 +11,8 @@
   --info-light: rgba(59, 130, 246, 0.1);
   --error-color: #ef4444;
   --error-light: rgba(239, 68, 68, 0.1);
+  --accepted-color: #d0da09;
+  --accepted-light: rgba(134, 141, 5, 0.1);
   --border-radius: 16px;
   --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -271,6 +273,10 @@
 .application-status-badge.offer {
   background-color: var(--success-light);
   color: var(--success-color);
+}
+.application-status-badge.contract {
+  background-color: var(--accepted-light);
+  color: var(--accepted-color);
 }
 
 .application-status-badge.failed {

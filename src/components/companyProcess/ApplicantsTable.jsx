@@ -236,6 +236,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
               }
             );
             refetch();
+            handleClose();
             showSuccessToast("Applicant moved to next phase", 2000, isLight);
           } catch (error) {
             console.error("Error:", error);
@@ -265,6 +266,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
             }
           );
           refetch();
+          handleClose();
           showSuccessToast("Applicant marked as failed", 2000, isLight);
         } catch (error) {
           console.error("Error:", error);
