@@ -269,7 +269,13 @@ const UserSingleJob = () => {
           )}
         </div>
       </div>
-      <div style={{ padding: "5px", width: "25%" }} className="mt-4">
+      <div style={{ 
+              padding: isMobile ? "0 16px" : "5px",
+              width: isMobile ? "100%" : "25%",
+              marginTop: isMobile ? "2rem" : "1rem",
+              boxSizing: 'border-box'
+            }} 
+            className="mt-4">
         {company && <CompanyBox profileData={company} />}
         {companyJobs && company && companyJobs?.length > 0 && (
           <CompanyJobsBox profileData={company} job={companyJobs} />

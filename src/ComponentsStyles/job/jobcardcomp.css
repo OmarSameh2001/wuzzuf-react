@@ -135,22 +135,40 @@ html body .applicants-badge {
   border-radius: 50px;
   font-size: 0.75rem;
   font-weight: 600;
-  position: relative;
+  transition: var(--transition);
 }
 
-html body .applicant-count {
-  display: flex;
+html body .applicants-badge svg {
+  font-size: 1rem;
+}
+
+html body .applicants-badge.no-applicants {
+  background-color: var(--tag-bg);
+  color: var(--text-secondary);
+}
+
+html body .applicants-badge.few-applicants {
+  background-color: var(--info-light);
+  color: var(--info-color);
+}
+
+html body .applicants-badge.some-applicants {
+  background-color: var(--warning-light);
+  color: var(--warning-color);
+}
+
+html body .applicants-badge.many-applicants {
+  background-color: var(--success-light);
+  color: var(--success-color);
+}
+
+/* Company Footer Adjustments */
+html body .company-footer {
+  justify-content: space-between;
   align-items: center;
-  gap: 0.25rem;
-  margin-left: 0.5rem;
-  padding-left: 0.5rem;
-  border-left: 1px solid currentColor;
+  flex-wrap: nowrap;
+  gap: 1rem;
 }
-
-html body .applicant-count svg {
-  font-size: 0.875rem;
-}
-
 html body .company-info,
 html body .location-info {
   display: flex;
@@ -431,6 +449,23 @@ html body .company-footer {
 }
 
 html body .applicants-badge {
+  background-color: transparent !important;
+  border: 1px solid var(--primary-light);
+  color: var(--primary-color);
+}
+
+/* Remove specific background colors for applicant counts */
+html body .applicants-badge.no-applicants,
+html body .applicants-badge.few-applicants,
+html body .applicants-badge.some-applicants,
+html body .applicants-badge.many-applicants {
+  background-color: transparent !important;
+}
+
+/* Update status colors using border and text colors instead */
+html body .applicants-badge.few-applicants {
+  border-color: var(--info-color);
+  color: var(--info-color);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -438,29 +473,25 @@ html body .applicants-badge {
   border-radius: 50px;
   font-size: 0.75rem;
   font-weight: 600;
-}
-
-html body .applicants-badge svg {
-  font-size: 1rem;
-}
-
-html body .applicants-badge.no-applicants {
-  background-color: var(--tag-bg);
-  color: var(--text-secondary);
-}
-
-html body .applicants-badge.few-applicants {
-  background-color: var(--info-light);
-  color: var(--info-color);
+  transition: var(--transition);
 }
 
 html body .applicants-badge.some-applicants {
-  background-color: var(--warning-light);
+  border-color: var(--warning-color);
   color: var(--warning-color);
+  color: var(--info-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: var(--transition);
 }
 
 html body .applicants-badge.many-applicants {
-  background-color: var(--success-light);
+  border-color: var(--success-color);
   color: var(--success-color);
 }
 

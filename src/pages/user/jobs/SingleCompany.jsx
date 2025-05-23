@@ -7,7 +7,7 @@ import { FaRegBuilding } from "react-icons/fa";
 import UserJobs from "./Jobs";
 import { useContext } from "react";
 import { userContext } from "../../../context/UserContext";
-
+import "../../../styles/user/usersinglecompanyjob.css"
 const SingleCompany = () => {
   const { id } = useParams();
   const {isLight} = useContext(userContext)
@@ -25,40 +25,45 @@ const SingleCompany = () => {
   });
   console.log(company);
   return (
-    <div>
-      {company && (
-        <>
-          <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column',background: isLight ? '#fff' : '#121212'}}>
-            <div className="job-header">
-            <div className="company-logo-container">
-              <img
-                src={
-                  company.img ||
-                  "https://static.thenounproject.com/png/3198584-200.png"
-                }
-                alt={company.name}
-                className="company-logo"
-              />
-            </div>
-
-            <div className="job-title-container">
-              <div className="company-info">
-                <span
-                  className="company-name"
-                >
-                  {/* <FaRegBuilding className="company-icon" /> */}
+    <div className={`company-container ${isLight ? 'light' : 'dark'}`}>
+    {company && (
+      <div className="company-content-wrapper">
+        <div className="company-profile-section">
+          <div className="company-header-container">
+            <div className="company-header-grid">
+              <div className="company-logo-wrapper">
+                <img
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                  src={company.img || "https://static.thenounproject.com/png/3198584-200.png"}
+                  alt={company.name}
+                  className="company-logo"
+                />
+              </div>
+              <div className="company-info-wrapper">
+                <h1 className="company-title">
+                  <FaRegBuilding className="company-icon" />
                   {company.name}
-                </span>
+                </h1>
+                {company.industry && (
+                  <p className="company-industry">{company.industry}</p>
+                )}
               </div>
             </div>
           </div>
-          <CompanyBox profileData={company} />
+
+          <div className="company-details-section">
+            <CompanyBox profileData={company} />
           </div>
-          <UserJobs fixedCompany={company.id}/>
-        </>
-      )}
-    </div>
-  );
+        </div>
+
+        <div >
+          <h2 className="jobs-section-title">Open Positions</h2>
+          <UserJobs fixedCompany={company.id} />
+        </div>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default SingleCompany;

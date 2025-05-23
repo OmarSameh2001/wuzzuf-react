@@ -1,0 +1,168 @@
+/* Company Profile Styles */
+
+/* Dark Mode Styles */
+.company-container.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+.company-container.dark .company-header-container,
+.company-container.dark .company-details-section {
+  background: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(255,255,255,0.05);
+}
+
+.company-container.dark .company-title {
+  color: #ffffff;
+}
+
+.company-container.dark .company-industry {
+  color: #a0a0a0;
+}
+
+.company-container.dark .jobs-section-title {
+  color: #ffffff;
+  border-bottom-color: #373737;
+}
+
+.company-container.dark .company-logo-wrapper {
+  background: #2d2d2d;
+}
+
+/* Existing light mode styles remain the same */
+.company-container.light .company-header-container,
+.company-container.light .company-details-section {
+  background: #ffffff;
+}
+
+.company-container.light .company-title {
+  color: #2d3748;
+}
+
+.company-container.light .company-industry {
+  color: #718096;
+}
+
+/* Keep all your existing responsive styles below */
+.company-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.company-header-container {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.company-header-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.company-logo-wrapper {
+  width: 150px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8f9fa;
+  padding: 0.5rem;
+}
+
+
+
+.company-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.company-title {
+  font-size: 2rem;
+  margin: 0;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.company-industry {
+  font-size: 1.1rem;
+  color: #718096;
+  margin: 0;
+}
+
+.company-details-section {
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.company-jobs-section {
+  width: 100%;
+  overflow: visible;
+}
+
+.jobs-section-title {
+  font-size: 2rem;
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-left: 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .company-container {
+    padding: 1rem;
+  }
+
+  .company-header-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .company-info-wrapper {
+    align-items: center;
+  }
+
+  .company-title {
+    font-size: 1.75rem;
+    flex-direction: column;
+  }
+
+  .company-logo-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .company-details-section {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .company-title {
+    font-size: 1.5rem;
+  }
+
+  .company-industry {
+    font-size: 1rem;
+  }
+
+  .company-header-container,
+  .company-details-section {
+    padding: 1rem;
+  }
+
+  .jobs-section-title {
+    font-size: 1.25rem;
+  }
+}

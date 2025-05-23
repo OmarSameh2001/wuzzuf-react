@@ -6,7 +6,6 @@ const CompanyJobsBox = ({ profileData, job }) => {
   const { isLight } = useContext(userContext);
   const textColor = isLight ? "#121212" : "#fff";
   
-
   return (
     <div className={`company-box ${isLight ? "light-mode" : "dark-mode"}`}>
       <div className="company-box-header">

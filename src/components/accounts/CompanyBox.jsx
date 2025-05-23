@@ -4,6 +4,7 @@ import {
   GitHub,
   InsertLink,
   LinkedIn,
+  
 } from "@mui/icons-material"
 import '../../ComponentsStyles/CompanyProcess/companyJobBox.css'
 const CompanyBox = ({ profileData }) => {
