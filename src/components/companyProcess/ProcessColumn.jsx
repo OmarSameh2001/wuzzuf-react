@@ -16,7 +16,7 @@ function ProcessColumn({setter, column, phases, application}) {
     <div className="process-column-container" style={{borderBottom: '1px solid var(--gray-300)'}}>
         <Tabs
           orientation="horizontal"
-          value={column}
+          value={column <= phases.length ? column : 1}
           variant="scrollable"
           scrollButtons="auto"
           className="process-tabs"

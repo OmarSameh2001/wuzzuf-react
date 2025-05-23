@@ -17,14 +17,19 @@ import {
   Grid,
   Divider,
   IconButton,
-  Dialog, DialogTitle, DialogContent, DialogActions
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { FaTrashAlt, FaFileUpload } from "react-icons/fa";
 import { createRag, deleteRag, getRag } from "../../services/ChatBot";
 import { set } from "date-fns";
 import { userContext } from "../../context/UserContext";
-import { showConfirmToast } from "../../confirmAlert/toastConfirm";
-
+import {
+  showConfirmToast,
+  showSuccessToast,
+} from "../../confirmAlert/toastConfirm";
 
 function AdminRag() {
   const [open, setOpen] = useState(false);
@@ -86,6 +91,7 @@ function AdminRag() {
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Reset file input visually
     }
+    showSuccessToast(successMessage, 2000, isLight);
     setLoading(false);
   };
 
@@ -119,7 +125,9 @@ function AdminRag() {
   const createRagMutation = useMutation({
     mutationFn: createRag, // Our placeholder or actual service call
     onSuccess: (data) =>
-      handleMutationSuccess(data.message || "File uploaded and processed!"),
+      handleMutationSuccess(
+        data.message || "File uploaded and will be processed then reflect in the table."
+      ),
     onError: (error) => handleMutationError(error, "Failed to upload file."),
   });
 
@@ -179,21 +187,20 @@ function AdminRag() {
         deleteMutation.mutate(rag._id); // Pass the ID to the mutation
       },
       isLight: isLight,
-    })
+    });
   };
 
   // --- Render Logic ---
   const rags = ragData?.results || [];
   const totalRags = ragData?.count || 0;
   const headerStyle = {
-  backgroundColor: isLight ? "rgba(161, 161, 161, 0.9)" : "#242424",
-  color: "#ffffff",
-  fontWeight: "bold",
-};
-
+    backgroundColor: isLight ? "rgba(161, 161, 161, 0.9)" : "#242424",
+    color: "#ffffff",
+    fontWeight: "bold",
+  };
 
   return (
-<div
+    <div
       style={{
         width: "100%",
         minHeight: "100vh",
@@ -216,26 +223,34 @@ function AdminRag() {
           transition: "all 0.3s ease",
         }}
       >
-      <Typography variant="h5" gutterBottom sx={{ textAlign: "center", mb: 3 ,
-        color: isLight ? "black" : "white", // Text color for dark mode
-        "& .MuiInputLabel-root": {
-          color: isLight ? "black" : "white", // Label color for dark mode
-        },
-        "& .MuiInputBase-root": {
-          color: isLight ? "black" : "white", // Input text color for dark mode
-        },
-        "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: isLight ? "grey.300" : "rgba(255, 255, 255, 0.5)", // Lighter border in dark mode
-        },
-        "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: isLight ? "primary.main" : "rgba(255, 255, 255, 0.8)", // Hover border color
-        },
-        fontWeight: 600,
-      }}>
-        Manage RAG Documents
-      </Typography>
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{
+            textAlign: "center",
+            mb: 3,
+            color: isLight ? "black" : "white", // Text color for dark mode
+            "& .MuiInputLabel-root": {
+              color: isLight ? "black" : "white", // Label color for dark mode
+            },
+            "& .MuiInputBase-root": {
+              color: isLight ? "black" : "white", // Input text color for dark mode
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: isLight ? "grey.300" : "rgba(255, 255, 255, 0.5)", // Lighter border in dark mode
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: isLight
+                ? "primary.main"
+                : "rgba(255, 255, 255, 0.8)", // Hover border color
+            },
+            fontWeight: 600,
+          }}
+        >
+          Manage RAG Documents
+        </Typography>
 
-      {/* Display Feedback Messages
+        {/* Display Feedback Messages
       {feedback.message && (
         <Alert
           severity={feedback.severity}
@@ -247,184 +262,224 @@ function AdminRag() {
       )}
 
       {/* --- File Upload Form (Bulk Creation) --- */}
-      <Grid container spacing={4} sx={{ mb: 4 }}>
-        <Grid item xs={12}>
-          {" "}
-          {/* Use full width for just one form */}
-          <Paper elevation={2} sx={{ p: 3, 
-            backgroundColor: isLight ? "white" : "rgba(33, 33, 33, 0.9)",  // Adjust background color for dark mode
-            filter: isLight ? "brightness(1)" : "brightness(0.7) saturate(0.8)",  // Adjust brightness and saturation
-            transition: "background-color 0.5s ease, filter 0.5s ease",  // Smooth transition for both background and filter
-          }}>
-            <Typography variant="h6" gutterBottom sx={{ color: theme.text}}>
-              Upload Document for RAG
-            </Typography>
-            <Box component="form" onSubmit={(e) => { handleBulkSubmit(e) }} noValidate>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1, color: theme.text }}>
-                Upload a PDF document (.pdf).
-              </Typography>
-              <Button
-                variant="outlined"
-                component="label" // Makes the button act like a label for the hidden input
-                fullWidth
-                sx={{ mt: 1, mb: 2, backgroundColor: theme.background, color: theme.text, borderColor: "#882024" }}
-                disabled={createRagMutation.isLoading}
-              >
-                {selectedFile
-                  ? `File: ${selectedFile.name}`
-                  : "Choose PDF File"}
-                <input
-                  type="file"
-                  hidden
-                  accept=".pdf" // Accept only PDF files
-                  onChange={handleFileChange}
-                  ref={fileInputRef} // Assign ref
-                  disabled={createRagMutation.isLoading}
-                />
-              </Button>
-              <Button
-                sx={{ mt: 1, mb: 2, backgroundColor: "#882024", color: "white" }}
-                type="submit"
-                fullWidth
-                variant="contained"
-                disabled={!selectedFile || loading}
-                startIcon={
-                  loading ? (
-                    <CircularProgress size={20} color="inherit" />
-                  ) : (
-                    <FaFileUpload />
-                  )
-                }
-              >
-                {loading
-                  ? "Uploading..."
-                  : "Upload and Process"}
-              </Button>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      <Divider sx={{ my: 3 }} />
-
-      {/* --- RAG Table --- */}
-      <Typography variant="h5" gutterBottom sx={{ textAlign: "center", mb: 2, 
-        color: isLight ? "black" : "white", // Text color for dark mode
-        "& .MuiInputLabel-root": {
-          color: isLight ? "black" : "white", // Label color for dark mode
-        },
-        "& .MuiInputBase-root": {
-          color: isLight ? "black" : "white", // Input text color for dark mode
-        },
-        "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: isLight ? "grey.300" : "rgba(255, 255, 255, 0.5)", // Lighter border in dark mode
-        },
-        "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: isLight ? "primary.main" : "rgba(255, 255, 255, 0.8)", // Hover border color
-        },
-      }}>
-        RAG Documents
-      </Typography>
-
-      {/* Loading/Error/Empty States for Table */}
-      {isFetchingRags && (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
-          <CircularProgress />
-        </Box>
-      )}
-
-      {fetchError && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          Failed to load RAG documents: {fetchError.message}
-        </Alert>
-      )}
-
-      {!isFetchingRags && !fetchError && rags.length === 0 && (
-        <Typography
-          sx={{ textAlign: "center", mt: 4, color: "text.secondary" }}
-        >
-          No RAG documents found.
-        </Typography>
-      )}
-
-      {/* Actual Table */}
-      {!isFetchingRags && !fetchError && rags.length > 0 && (
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          {/* Optional: Indicate background refetching */}
-          {isRefetchingRags && (
-            <Box
+        <Grid container spacing={4} sx={{ mb: 4 }}>
+          <Grid item xs={12}>
+            {" "}
+            {/* Use full width for just one form */}
+            <Paper
+              elevation={2}
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                p: 1,
-                opacity: 0.7,
+                p: 3,
+                backgroundColor: isLight ? "white" : "rgba(33, 33, 33, 0.9)", // Adjust background color for dark mode
+                filter: isLight
+                  ? "brightness(1)"
+                  : "brightness(0.7) saturate(0.8)", // Adjust brightness and saturation
+                transition: "background-color 0.5s ease, filter 0.5s ease", // Smooth transition for both background and filter
               }}
             >
-              <CircularProgress size={20} />
-              <Typography sx={{ ml: 1 }} variant="caption">
-                Updating list...
+              <Typography variant="h6" gutterBottom sx={{ color: theme.text }}>
+                Upload Document for RAG
               </Typography>
-            </Box>
-          )}
-          <TableContainer sx={{ maxHeight: 600 }}>
-            <Table stickyHeader aria-label="rag documents table">
-              <TableHead>
-                <TableRow>
-                  {/* Assuming _id and name are the relevant fields */}
-                  <TableCell sx={headerStyle}>ID</TableCell>
-                  <TableCell sx={headerStyle}>Name</TableCell>
-                  <TableCell sx={headerStyle} align="center">
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rags.map((rag) => (
-                  <TableRow hover key={rag._id}>
-                    <TableCell sx={isLight ? null : headerStyle}>{rag._id}</TableCell>
-                    <TableCell sx={isLight ? null : headerStyle}>{rag.name}</TableCell>
-                    <TableCell sx={isLight ? null : headerStyle} align="center">
-                      <IconButton
-                        aria-label="delete rag document"
-                        color="error"
-                        size="small"
-                        onClick={() => handleDeleteClick(rag)} // Use _id for deletion
-                        // Disable button for the specific item being deleted
-                        disabled={
-                          deleteMutation.isLoading &&
-                          deleteMutation.variables === rag._id
-                        }
-                      >
-                        {/* Show spinner only for the deleting item */}
-                        {deleteMutation.isLoading &&
-                        deleteMutation.variables === rag._id ? (
-                          <CircularProgress size={20} color="inherit" />
-                        ) : (
-                          <FaTrashAlt />
-                        )}
-                      </IconButton>
+              <Box
+                component="form"
+                onSubmit={(e) => {
+                  handleBulkSubmit(e);
+                }}
+                noValidate
+              >
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1, color: theme.text }}
+                >
+                  Upload a PDF document (.pdf).
+                </Typography>
+                <Button
+                  variant="outlined"
+                  component="label" // Makes the button act like a label for the hidden input
+                  fullWidth
+                  sx={{
+                    mt: 1,
+                    mb: 2,
+                    backgroundColor: theme.background,
+                    color: theme.text,
+                    borderColor: "#882024",
+                  }}
+                  disabled={createRagMutation.isLoading}
+                >
+                  {selectedFile
+                    ? `File: ${selectedFile.name}`
+                    : "Choose PDF File"}
+                  <input
+                    type="file"
+                    hidden
+                    accept=".pdf" // Accept only PDF files
+                    onChange={handleFileChange}
+                    ref={fileInputRef} // Assign ref
+                    disabled={createRagMutation.isLoading}
+                  />
+                </Button>
+                <Button
+                  sx={{
+                    mt: 1,
+                    mb: 2,
+                    backgroundColor: "#882024",
+                    color: "white",
+                  }}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={!selectedFile || loading}
+                  startIcon={
+                    loading ? (
+                      <CircularProgress size={20} color="inherit" />
+                    ) : (
+                      <FaFileUpload />
+                    )
+                  }
+                >
+                  {loading ? "Uploading..." : "Upload and Process"}
+                </Button>
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 3 }} />
+
+        {/* --- RAG Table --- */}
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{
+            textAlign: "center",
+            mb: 2,
+            color: isLight ? "black" : "white", // Text color for dark mode
+            "& .MuiInputLabel-root": {
+              color: isLight ? "black" : "white", // Label color for dark mode
+            },
+            "& .MuiInputBase-root": {
+              color: isLight ? "black" : "white", // Input text color for dark mode
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: isLight ? "grey.300" : "rgba(255, 255, 255, 0.5)", // Lighter border in dark mode
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: isLight
+                ? "primary.main"
+                : "rgba(255, 255, 255, 0.8)", // Hover border color
+            },
+          }}
+        >
+          RAG Documents
+        </Typography>
+
+        {/* Loading/Error/Empty States for Table */}
+        {isFetchingRags && (
+          <Box sx={{ display: "flex", justifyContent: "center", my: 5 }}>
+            <CircularProgress />
+          </Box>
+        )}
+
+        {fetchError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            Failed to load RAG documents: {fetchError.message}
+          </Alert>
+        )}
+
+        {!isFetchingRags && !fetchError && rags.length === 0 && (
+          <Typography
+            sx={{ textAlign: "center", mt: 4, color: "text.secondary" }}
+          >
+            No RAG documents found.
+          </Typography>
+        )}
+
+        {/* Actual Table */}
+        {!isFetchingRags && !fetchError && rags.length > 0 && (
+          <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            {/* Optional: Indicate background refetching */}
+            {isRefetchingRags && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  p: 1,
+                  opacity: 0.7,
+                }}
+              >
+                <CircularProgress size={20} />
+                <Typography sx={{ ml: 1 }} variant="caption">
+                  Updating list...
+                </Typography>
+              </Box>
+            )}
+            <TableContainer sx={{ maxHeight: 600 }}>
+              <Table stickyHeader aria-label="rag documents table">
+                <TableHead>
+                  <TableRow>
+                    {/* Assuming _id and name are the relevant fields */}
+                    <TableCell sx={headerStyle}>ID</TableCell>
+                    <TableCell sx={headerStyle}>Name</TableCell>
+                    <TableCell sx={headerStyle} align="center">
+                      Action
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            component="div"
-            count={totalRags}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{ 
-              backgroundColor: isLight ? "white" : "rgba(161, 161, 161, 0.9)",
-              // color: isLight ? "black" : "white",
-             }}
-          />
-        </Paper>
-      )}
-    </Box>
+                </TableHead>
+                <TableBody>
+                  {rags.map((rag) => (
+                    <TableRow hover key={rag._id}>
+                      <TableCell sx={isLight ? null : headerStyle}>
+                        {rag._id}
+                      </TableCell>
+                      <TableCell sx={isLight ? null : headerStyle}>
+                        {rag.name}
+                      </TableCell>
+                      <TableCell
+                        sx={isLight ? null : headerStyle}
+                        align="center"
+                      >
+                        <IconButton
+                          aria-label="delete rag document"
+                          color="error"
+                          size="small"
+                          onClick={() => handleDeleteClick(rag)} // Use _id for deletion
+                          // Disable button for the specific item being deleted
+                          disabled={
+                            deleteMutation.isLoading &&
+                            deleteMutation.variables === rag._id
+                          }
+                        >
+                          {/* Show spinner only for the deleting item */}
+                          {deleteMutation.isLoading &&
+                          deleteMutation.variables === rag._id ? (
+                            <CircularProgress size={20} color="inherit" />
+                          ) : (
+                            <FaTrashAlt />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              component="div"
+              count={totalRags}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{
+                backgroundColor: isLight ? "white" : "rgba(161, 161, 161, 0.9)",
+                // color: isLight ? "black" : "white",
+              }}
+            />
+          </Paper>
+        )}
+      </Box>
     </div>
   );
 }

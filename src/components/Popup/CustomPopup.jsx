@@ -2,7 +2,7 @@ import CompanySchedule from "./Schedule";
 import AnswerBox from "./AnswerBox";
 import { GiCancel } from "react-icons/gi";
 import { userContext } from "../../context/UserContext";
-import { useContext } from "react";
+import { use, useContext, useEffect } from "react";
 import ContractBox from "./ContractBox";
 import VideoInterview from "./VideoInterview";
 import Summary from "./Summary";
@@ -10,6 +10,7 @@ import Summary from "./Summary";
 export default function CustomPopup() {
   const { isLight, update, setUpdate } = useContext(userContext);
   const { answer, contract, video, summary, phase, handleClose, handleNext, handleFail, refetch } = update.settings;
+ 
   // console.log(update)
   const PopupPicker = () => {
     console.log(update)
@@ -56,6 +57,7 @@ export default function CustomPopup() {
         applicant={update.user}
         phase={phase}
         handleClose={handleClose}
+        refetch={refetch}
       />
     );
   };

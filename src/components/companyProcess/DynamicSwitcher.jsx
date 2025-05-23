@@ -2,7 +2,7 @@ import '../../ComponentsStyles/CompanyProcess/calender_switcher.css';
 
 const DynamicSwitcher = (({ getter, setter, id }) => {
   
-  console.log(id);
+  // console.log(id);
   return (
     <div className="calendar-switcher">
     <input

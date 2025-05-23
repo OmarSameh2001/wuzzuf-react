@@ -1,133 +1,162 @@
 :root {
-    --primary: #901b21;
-    --primary-dark: #722732;
-    --secondary: #2d2d2d;
-    --bg-light: #f9f9f9;
-    --font-size-lg: 1.25rem;
-    --font-size-md: 1.1rem;
-    --font-size-sm: 1rem;
-    --radius-md: 0.75rem;
-    --transition-fast: 0.3s ease;
-    --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.1);
+  --primary: #901b21;
+  --primary-dark: #722732;
+  --secondary: #2d2d2d;
+  --bg-light: #f9f9f9;
+  --font-size-lg: 1.25rem;
+  --font-size-md: 1.1rem;
+  --font-size-sm: 1rem;
+  --radius-md: 0.75rem;
+  --transition-fast: 0.3s ease;
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-container {
+  padding: 2rem 1.5rem;
+  max-width: 480px;
+  margin: auto;
+  z-index: 10;
+  background-color: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.applicant-name {
+  margin-bottom: 1.25rem;
+  color: var(--secondary);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.section-title {
+  margin-bottom: 0.5rem;
+  color: var(--secondary);
+  font-size: var(--font-size-md);
+  font-weight: 500;
+}
+
+.datetime-section,
+.link-section {
+  margin-bottom: 1.5rem;
+}
+
+.submit-button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  background-color: var(--primary);
+  color: white;
+  text-transform: none;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow
+    var(--transition-fast);
+}
+
+.submit-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: var(--primary) !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: var(--primary) !important;
+}
+
+.MuiPickersDay-root.Mui-selected {
+  background-color: var(--primary) !important;
+}
+
+.MuiClock-pin,
+.MuiClockPointer-root,
+.MuiClockPointer-thumb {
+  background-color: var(--primary) !important;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
   .schedule-container {
-    padding: 2rem 1.5rem;
-    max-width: 480px;
-    margin: auto;
-    /* position: relative; */
-    z-index: 10;
-    background-color: #fff;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    animation: fadeIn 0.4s ease-out;
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
   }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .applicant-name {
-    margin-bottom: 1.25rem;
-    color: var(--secondary);
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-  }
-  
+
+  .applicant-name,
   .section-title {
-    margin-bottom: 0.5rem;
-    color: var(--secondary);
-    font-size: var(--font-size-md);
-    font-weight: 500;
+    font-size: var(--font-size-sm);
   }
-  
-  .datetime-section,
-  .link-section {
-    margin-bottom: 1.5rem;
-  }
-  
+
   .submit-button {
-    margin-top: 1rem;
-    padding: 0.75rem 1.25rem;
-    font-weight: 600;
+    padding: 0.5rem 1rem;
+    width: 100%;
+  }
+
+  /* Fix for date picker z-index */
+  .MuiPickersPopper-root {
+    z-index: 1300 !important;
+  }
+
+  .MuiPaper-root.MuiDialog-paper {
     border-radius: var(--radius-md);
-    background-color: var(--primary);
-    color: white;
-    text-transform: none;
-    transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  
-  .submit-button:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+    background-color: #fff4f2;
+    border: 1px solid #e0d6d2;
+    margin: 0;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
   }
-  
-  .MuiOutlinedInput-root.Mui-focused fieldset {
-    border-color: var(--primary) !important;
-  }
-  
-  .MuiInputLabel-root.Mui-focused {
-    color: var(--primary) !important;
-  }
-  
+
   .MuiPickersDay-root.Mui-selected {
     background-color: var(--primary) !important;
+    color: #fff !important;
   }
-  
-  .MuiClock-pin,
-  .MuiClockPointer-root,
-  .MuiClockPointer-thumb {
-    background-color: var(--primary) !important;
+
+  .MuiPickersDay-root:hover {
+    background-color: #f5e3e1 !important;
   }
-  
-  @media (max-width: 600px) {
-    .schedule-container {
-      padding: 1rem;
-    }
-  
-    .applicant-name,
-    .section-title {
-      font-size: var(--font-size-sm);
-    }
-  
-    .submit-button {
-      padding: 0.5rem 1rem;
-    }
-    .MuiPickersPopper-root {
-      z-index: 1300; /* ensure it's above modals, if needed */
-    }
-    
-    .MuiPaper-root.MuiDialog-paper {
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      background-color: #fff4f2;
-      border: 1px solid #e0d6d2;
-    }
-    
-    .MuiPickersDay-root.Mui-selected {
-      background-color: var(--primary) !important;
-      color: #fff !important;
-    }
-    
-    .MuiPickersDay-root:hover {
-      background-color: #f5e3e1 !important;
-    }
-    
-    .MuiClock-pin,
-    .MuiClockPointer-root,
-    .MuiClockPointer-thumb {
-      background-color: var(--primary) !important;
-    }
-    
-    .MuiDialogActions-root {
-      background-color: #fdf7f6;
-      padding: 0.75rem 1rem;
-    }
-    html,
+
+  .MuiDialogActions-root {
+    background-color: #fdf7f6;
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Prevent overscroll behavior */
+html,
 body {
   overscroll-behavior: contain;
 }
-  }
-  
+
+/* Ensure dialog content is visible */
+.MuiDialog-paper {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.MuiDialogContent-root {
+  overflow-y: auto !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+}

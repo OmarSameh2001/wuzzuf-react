@@ -75,6 +75,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
     data: applicants,
     error,
     isLoading,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey,
@@ -313,7 +314,7 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
         }}
       />
       <label className="checkbox-label" onClick={() => setSuccess(!success)} style={{cursor:'pointer'}}>Non failed applicants only</label>
-      {applicants?.length < 1 && (
+      {applicants?.length < 1 && !isFetching && (
         <div className="no-applicants-message">
           <p>There are no applicants in the current phase of this job.</p>
         </div>
@@ -418,8 +419,14 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                       disabled={applicant.fail}
                     />
                   </TableCell>
-                  <TableCell style={{cursor: "pointer"}} onClick={() => navigate(`/company/talents/${applicant.id}`)}>{index + 1}</TableCell>
-                  <TableCell style={{cursor: "pointer"}} onClick={() => navigate(`/company/talents/${applicant.id}`)}>{applicant.user_name}</TableCell>
+                  <TableCell style={{cursor: "pointer"}} onClick={(event) => {
+                    event.preventDefault();
+                    window.open(`/company/talents/${applicant.user}`, '_blank');
+                  }}>{index + 1}</TableCell>
+                  <TableCell style={{cursor: "pointer"}} onClick={(event) => {
+                    event.preventDefault();
+                    window.open(`/company/talents/${applicant.user}`, '_blank');
+                  }}>{applicant.user_name}</TableCell>
                   <TableCell>{applicant.user_phone}</TableCell>
                   <TableCell>{applicant.user_email}</TableCell>
 
@@ -500,11 +507,12 @@ function ApplicantsTable({ phase, setFilters, fetch, job }) {
                             setUpdate({
                               user: applicant,
                               settings: {
-                                answer,
+                                // answer,
                                 phase,
                                 handleClose,
                                 handleNext,
                                 handleFail,
+                                refetch,
                               },
                             });
                           }}
