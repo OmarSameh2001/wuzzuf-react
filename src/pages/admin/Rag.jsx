@@ -28,6 +28,7 @@ import { set } from "date-fns";
 import { userContext } from "../../context/UserContext";
 import {
   showConfirmToast,
+  showInfoToast,
   showSuccessToast,
 } from "../../confirmAlert/toastConfirm";
 
@@ -80,18 +81,19 @@ function AdminRag() {
     setFeedback({ message, severity });
     // Optional: auto-hide feedback after a delay
     // setTimeout(() => setFeedback({ message: "", severity: "info" }), 5000);
+    showInfoToast(message, 4000, isLight);
   };
 
   // --- Invalidate Query and Reset Forms ---
   const handleMutationSuccess = (successMessage) => {
-    showFeedback(successMessage, "success");
+    // showFeedback(successMessage, "success");
     queryClient.invalidateQueries({ queryKey: ["rags"] });
     // Reset file input
     setSelectedFile(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Reset file input visually
     }
-    showSuccessToast(successMessage, 2000, isLight);
+    showSuccessToast(successMessage, 4000, isLight);
     setLoading(false);
   };
 
@@ -126,7 +128,7 @@ function AdminRag() {
     mutationFn: createRag, // Our placeholder or actual service call
     onSuccess: (data) =>
       handleMutationSuccess(
-        data.message || "File uploaded and will be processed then reflect in the table."
+        "File uploaded and will be processed then reflect in the table."
       ),
     onError: (error) => handleMutationError(error, "Failed to upload file."),
   });
@@ -198,7 +200,12 @@ function AdminRag() {
     color: "#ffffff",
     fontWeight: "bold",
   };
-
+  const handleUrl = (rag) => {
+    if (rag.url) {
+      const url = rag.url;
+      window.open(url, "_blank");
+    }
+  };
   return (
     <div
       style={{
@@ -432,7 +439,10 @@ function AdminRag() {
                       <TableCell sx={isLight ? null : headerStyle}>
                         {rag._id}
                       </TableCell>
-                      <TableCell sx={isLight ? null : headerStyle}>
+                      <TableCell
+                        onClick={() => handleUrl(rag)}
+                        sx={{ cursor: "pointer", ...(isLight ? null : headerStyle) }}
+                      >
                         {rag.name}
                       </TableCell>
                       <TableCell

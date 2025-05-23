@@ -40,9 +40,11 @@ function ProcessCard({ column, phases, job }) {
   const updateAts = async () => {
     showConfirmToast({
       message:
-        `Are you sure you want to send applicants with ATS score higher than ${ats}% to next phase?` +
+        (!combine
+          ? `Are you sure you want to send applicants with ATS score higher than ${ats}% to next phase?`
+          : `Are you sure you want to send applicants with (combined) ATS and Screening score higher than ${ats}% to next phase?`) +
         (fail
-          ? `\nThis will also fail applicants with ATS score lower than ${ats}%.`
+          ? `\nThis will also fail applicants with score lower than ${ats}%.`
           : ""),
       onConfirm: async () => {
         // if (ats === 50) {
@@ -57,14 +59,19 @@ function ProcessCard({ column, phases, job }) {
             old_status: column + 1,
             company: user.id,
             job: job.id,
+            combine: combine,
           };
           const response = await updateApplicationAts(data);
           setAts(50);
           setFail(false);
-          setFetch(fetch + 1);
           setDisplay(false);
           setIsLoading(false);
-          showSuccessToast(response.message, 2000, isLight);
+          if (!response.fail) {
+            setFetch(fetch + 1);
+            showSuccessToast(response.message, 4000, isLight);
+          }else {
+            showErrorToast(response.message, 4000, isLight);
+          }
         } catch (error) {
           showErrorToast("Failed to update by ATS", 2000, isLight);
           setIsLoading(false);
@@ -169,21 +176,26 @@ function ProcessCard({ column, phases, job }) {
         <div className="filter-container">
           <div className="filter-header">
             <h2 className="filter-title">Next Phase ATS Score</h2>
-            {/* {job?.questions?.find((q) => q.type === "video") && <div className="checkbox-container">
-              <Checkbox
-                checked={combine || false}
-                onChange={(e) => setCombine(e.target.checked)}
-                sx={{
-                  color: "#d43132",
-                  "&.Mui-checked": {
+            {job?.questions?.find((q) => q.type === "video") && (
+              <div className="checkbox-container">
+                <Checkbox
+                  checked={combine || false}
+                  onChange={(e) => setCombine(e.target.checked)}
+                  sx={{
                     color: "#d43132",
-                  },
-                }}
-              />
-              <label className="checkbox-label">
-                Combine ATS and Screening
-              </label>
-            </div>} */}
+                    "&.Mui-checked": {
+                      color: "#d43132",
+                    },
+                  }}
+                />
+                <label
+                  className="checkbox-label"
+                  onClick={() => setCombine(!combine)}
+                >
+                  Combine with Screening
+                </label>
+              </div>
+            )}
             <span className="filter-badge">{ats}%</span>
           </div>
 
@@ -224,7 +236,7 @@ function ProcessCard({ column, phases, job }) {
                   },
                 }}
               />
-              <label className="checkbox-label">
+              <label className="checkbox-label" onClick={() => setFail(!fail)}>
                 Fail applicants under {ats}%
               </label>
             </div>
