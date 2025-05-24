@@ -5,12 +5,15 @@ import { getCompanyById } from "../../../services/Auth";
 import "../../../ComponentsStyles/job/job_details.css";
 import { FaRegBuilding } from "react-icons/fa";
 import UserJobs from "./Jobs";
-import { useContext } from "react";
-import { userContext } from "../../../context/UserContext";
-import "../../../styles/user/usersinglecompanyjob.css"
+import { useContext , useEffect , useState} from "react";
+import { userContext  } from "../../../context/UserContext";
+import "../../../styles/user/usersinglecompanyjob.css";
+import Loading from "../../helpers/Loading";
+
 const SingleCompany = () => {
   const { id } = useParams();
-  const {isLight} = useContext(userContext)
+  const {isLight} = useContext(userContext);
+  const [initialThemeLoaded, setInitialThemeLoaded] = useState(false);
   const {
     data: company,
     error: companyError,
@@ -23,6 +26,29 @@ const SingleCompany = () => {
       return res || {};
     },
   });
+  useEffect(() => {
+    // Set initial theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    setInitialThemeLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (initialThemeLoaded) {
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    }
+  }, [isLight, initialThemeLoaded]);
+
+  if (!initialThemeLoaded || companyLoading) {
+    return <Loading minHeight="100vh" />;
+  }
+
+  if (companyError) {
+    return <div>Error loading company data</div>;
+  }
+
+
   console.log(company);
   return (
     <div className={`company-container ${isLight ? 'light' : 'dark'}`}>

@@ -1,15 +1,39 @@
 /* Company Profile Styles */
 
 /* Dark Mode Styles */
-.company-container.dark {
+[data-theme='light'] .company-container {
+  background: #ffffff;
+  color: #2d3748;
+}
+
+[data-theme='dark'] .company-container {
   background: #121212;
   color: #e0e0e0;
 }
 
-.company-container.dark .company-header-container,
-.company-container.dark .company-details-section {
+[data-theme='dark'] .company-header-container,
+[data-theme='dark'] .company-details-section {
   background: #1e1e1e;
   box-shadow: 0 4px 6px rgba(255,255,255,0.05);
+}
+
+.company-container {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.company-header-container,
+.company-details-section {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.company-container.dark {
+  background: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+
+.company-container.dark .company-header-container,
+.company-container.dark .company-details-section {
+  background: #1e1e1e !important;
+  box-shadow: 0 4px 6px rgba(255,255,255,0.05) !important;
 }
 
 .company-container.dark .company-title {
