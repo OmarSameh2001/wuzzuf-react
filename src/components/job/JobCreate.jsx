@@ -85,6 +85,8 @@ const JobCreate = () => {
 
   const [questions, setQuestions] = useState([]);
   const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
 
   const {
     data: jobOld,
@@ -190,6 +192,7 @@ const JobCreate = () => {
       );
       return;
     }
+    setLoading(true);
     const jobPayload = { ...jobData, questions };
     jobPayload.company = user?.id; // Ensure company ID is set correctly
 
@@ -212,10 +215,12 @@ const JobCreate = () => {
           company: `${user?.id}`,
         });
         setQuestions([]);
+        setLoading(false);
         navigate("/company/jobs");
       } else {
         showErrorToast("Failed to create job", 2000, isLight);
         console.error("Failed to create job");
+        setLoading(false);
       }
     } catch (error) {
       showErrorToast("Failed to create job", 2000, isLight);
@@ -580,7 +585,7 @@ const JobCreate = () => {
             <button type="button" onClick={() => navigate(-1)} className="cancel-btn">
               Cancel
             </button>
-            <button type="submit" className="submit-btn">
+            <button type="submit" className="submit-btn" disabled={loading}>
               {update ? "Update Job" : "Submit Job"}
             </button>
           </div>
